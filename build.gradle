@@ -1,0 +1,90 @@
+apply plugin: "idea"
+apply plugin: TemplatesPlugin
+
+class Template {
+
+   private File parent
+
+   void d(String name, Closure closure = {}) {
+      directory(name, closure)
+   }
+
+   void dir(String name, Closure closure = {}) {
+      directory(name, closure)
+   }
+
+   void directory(String name, Closure closure = {}) {
+      println "Creating new Directory: ${name}, parent: ${parent?.path}"
+      if (parent) {
+         parent = new File(parent, name)
+      } else {
+         parent = new File(name)
+      }
+      parent.mkdirs()
+      println "   made"
+      closure.delegate = this
+      closure()
+      parent = parent.parentFile
+   }
+
+   void f(Map args = [:], String name) {
+      file(args, name)
+   }
+
+   void file(Map args = [:], String name) {
+      println "Creating new File: ${name}, parent dir: ${parent?.path}"
+      println "    args: ${args}"
+      File file
+      if (parent) {
+         file = new File(parent, name)
+      } else {
+         file = new File(name)
+      }
+      file.exists() ?: file.createNewFile()
+   }
+
+   def methodMissing(String name, def args) {
+      println "MethodMissing: ${name}, args: ${args}"
+      if(args) {
+         def arg = args[0]
+         if(arg instanceof Closure) {
+            d(name, arg)
+         } else if(arg instanceof Map) {
+            f(arg, name)
+         }
+      }
+   }
+}
+
+class TemplatesPlugin implements Plugin<Project> {
+   def void apply(Project project) {
+      project.task('init-layout') << {
+         println "Hello from the TemplatePlugin"
+         new Template().directory(System.getProperty("user.dir")) {
+            directory("src") {
+               dir("main") {
+                  d("java") {
+                     file("Test.java", content: "one two three")
+                  }
+                  d("resources") {
+                     f("context.xml")
+                  }
+                  webapp {
+                     "WEB-INF" {
+                        "web.xml" content: "Blah blah blah"
+                     }
+                  }
+               }
+               d("test") {
+                  d("java") {
+                     file("TestSuite.java", content: "1 2 3")
+                  }
+                  d("resources") {
+                     file("TestSuite-context.xml")
+                  }
+               }
+            }
+         }
+      }
+   }
+}
