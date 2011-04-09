@@ -1,7 +1,8 @@
+apply plugin: "groovy"
 apply plugin: "idea"
 apply plugin: TemplatesPlugin
 
-class Template {
+class ProjectTemplate {
 
    private File parent
 
@@ -14,14 +15,12 @@ class Template {
    }
 
    void directory(String name, Closure closure = {}) {
-      println "Creating new Directory: ${name}, parent: ${parent?.path}"
       if (parent) {
          parent = new File(parent, name)
       } else {
          parent = new File(name)
       }
       parent.mkdirs()
-      println "   made"
       closure.delegate = this
       closure()
       parent = parent.parentFile
@@ -31,9 +30,11 @@ class Template {
       file(args, name)
    }
 
+   void f(String name, String content) {
+      file(name, content)
+   }
+
    void file(Map args = [:], String name) {
-      println "Creating new File: ${name}, parent dir: ${parent?.path}"
-      println "    args: ${args}"
       File file
       if (parent) {
          file = new File(parent, name)
@@ -41,50 +42,146 @@ class Template {
          file = new File(name)
       }
       file.exists() ?: file.createNewFile()
+      if(args.content) {
+         def content = args.content.stripIndent()
+         if(args.append) {
+            file.append(content)
+         } else {
+            file.text = content
+         }
+      }
+   }
+
+   void file(String name, String content) {
+      file([content: content], name)
+   }
+
+   void root(String path, Closure closure = {}) {
+      directory(path, closure)
+   }
+
+   void root(File pathFile, Closure closure = {}) {
+      directory(pathFile.path, closure)
    }
 
    def methodMissing(String name, def args) {
-      println "MethodMissing: ${name}, args: ${args}"
-      if(args) {
+      if (args) {
          def arg = args[0]
-         if(arg instanceof Closure) {
-            d(name, arg)
-         } else if(arg instanceof Map) {
-            f(arg, name)
+         if (arg instanceof Closure) {
+            directory(name, arg)
+         } else if (arg instanceof Map) {
+            file(arg, name)
+         } else if (arg instanceof String || arg instanceof GString) {
+            file([content: arg], name)
+         } else {
+            println "Couldn't figure out what to do. name: ${name}, arg: ${arg}, type: ${arg.getClass()}, isString: ${arg instanceof String}"
          }
       }
    }
 }
 
 class TemplatesPlugin implements Plugin<Project> {
+   
+   void prependPlugin(String plugin, File gradleFile) {
+      def oldText = gradleFile.text
+      gradleFile.text = ""
+      gradleFile.withPrintWriter { pw ->
+         pw.println "apply plugin: \"${plugin}\""
+         pw.print oldText
+      }
+   }
+
+   def prompt(String message) {
+      System.console().readLine("> ${message}")
+   }
+
    def void apply(Project project) {
-      project.task('init-layout') << {
-         println "Hello from the TemplatePlugin"
-         new Template().directory(System.getProperty("user.dir")) {
-            directory("src") {
-               dir("main") {
-                  d("java") {
-                     file("Test.java", content: "one two three")
-                  }
-                  d("resources") {
-                     f("context.xml")
-                  }
-                  webapp {
+      project.task("init-gradle-plugin", dependsOn: "init-groovy-project") << {
+         File rootPath = new File(System.getProperty("user.dir"))
+         new ProjectTemplate().root(rootPath) {
+            "src/main/resources/META-INF/gradle-plugins" {
+               "${project.name}.properties" ""
+            }
+         }
+         if(!hasProperty('pluginName')) {
+            pluginName = prompt("What is your plugin's label?[${project.name.toLowerCase()}]: ")
+            println "pluginName: ${pluginName}"
+         }
+      }
+      project.task("init-groovy-project") << {
+         File rootPath = new File(System.getProperty("user.dir"))
+         new ProjectTemplate().root(rootPath) {
+            "src" {
+               "main" {
+                  "groovy" {}
+                  "resources" {}
+               }
+               "test" {
+                  "groovy" {}
+                  "resources" {}
+               }
+            }
+            "LICENSE.txt" "// Your License Goes here"
+         }
+
+         prependPlugin "groovy", new File(rootPath, "build.gradle")
+      }
+      project.task("init-java-project") << {
+         File rootPath = new File(System.getProperty("user.dir"))
+         new ProjectTemplate().root(rootPath) {
+            "src" {
+               "main" {
+                  "java" {}
+                  "resources" {}
+               }
+               "test" {
+                  "java" {}
+                  "resources" {}
+               }
+            }
+            "LICENSE.txt" "// Your License Goes here"
+         }
+
+         prependPlugin "java", new File(rootPath, "build.gradle")
+      }
+      project.task("init-war-project") << {
+         File rootPath = new File(System.getProperty("user.dir"))
+         new ProjectTemplate().root(rootPath) {
+            "src" {
+               "main" {
+                  "java" {}
+                  "resources" {}
+                  "webapp" {
                      "WEB-INF" {
-                        "web.xml" content: "Blah blah blah"
+                        "web.xml" """<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>
+                        <!DOCTYPE web-app
+                            PUBLIC \"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\"
+                            \"http://java.sun.com/dtd/web-app_2_3.dtd\">
+
+                        <web-app>
+                           <!-- General description of your web application -->
+                           <display-name>${project.name} - Webapp</display-name>
+                              <description>
+                                 Describe the ${project.name} Webapp here.
+                                 ${System.getProperty('user.name')}@example.com
+
+                                 See http://tomcat.apache.org/tomcat-6.0-doc/appdev/web.xml.txt for more information
+                                 regarding this Web Descriptor File.
+                           </description>
+                        </web-app>
+                        """
                      }
                   }
                }
-               d("test") {
-                  d("java") {
-                     file("TestSuite.java", content: "1 2 3")
-                  }
-                  d("resources") {
-                     file("TestSuite-context.xml")
-                  }
+               "test" {
+                  "java" {}
+                  "resources" {}
                }
             }
+            "LICENSE.txt" "// Your License Goes here"
          }
+
+         prependPlugin "war", new File(rootPath, "build.gradle")
       }
    }
 }
