@@ -1,10 +1,11 @@
-apply plugin: "groovy"
 apply plugin: "idea"
 apply plugin: TemplatesPlugin
 
 class ProjectTemplate {
 
    private File parent
+
+   private ProjectTemplate() {}
 
    void d(String name, Closure closure = {}) {
       directory(name, closure)
@@ -15,6 +16,7 @@ class ProjectTemplate {
    }
 
    void directory(String name, Closure closure = {}) {
+      File oldParent = parent
       if (parent) {
          parent = new File(parent, name)
       } else {
@@ -23,7 +25,7 @@ class ProjectTemplate {
       parent.mkdirs()
       closure.delegate = this
       closure()
-      parent = parent.parentFile
+      parent = oldParent
    }
 
    void f(Map args = [:], String name) {
@@ -42,9 +44,9 @@ class ProjectTemplate {
          file = new File(name)
       }
       file.exists() ?: file.createNewFile()
-      if(args.content) {
+      if (args.content) {
          def content = args.content.stripIndent()
-         if(args.append) {
+         if (args.append) {
             file.append(content)
          } else {
             file.text = content
@@ -56,12 +58,16 @@ class ProjectTemplate {
       file([content: content], name)
    }
 
-   void root(String path, Closure closure = {}) {
-      directory(path, closure)
+   static void root(Closure closure = {}) {
+      new ProjectTemplate().directory(System.getProperty("user.dir"), closure)
    }
 
-   void root(File pathFile, Closure closure = {}) {
-      directory(pathFile.path, closure)
+   static void root(String path, Closure closure = {}) {
+      new ProjectTemplate().directory(path, closure)
+   }
+
+   static void root(File pathFile, Closure closure = {}) {
+      new ProjectTemplate().directory(pathFile.path, closure)
    }
 
    def methodMissing(String name, def args) {
@@ -80,8 +86,19 @@ class ProjectTemplate {
    }
 }
 
+class TemplatesPluginConvention {
+   String gradlePluginApplyLabel
+   String gradlePluginClassName
+   String sourceBasePackage
+
+   def templates(Closure closure) {
+      closure.delegate = this
+      closure()
+   }
+}
+
 class TemplatesPlugin implements Plugin<Project> {
-   
+
    void prependPlugin(String plugin, File gradleFile) {
       def oldText = gradleFile.text
       gradleFile.text = ""
@@ -92,25 +109,55 @@ class TemplatesPlugin implements Plugin<Project> {
    }
 
    def prompt(String message) {
-      System.console().readLine("> ${message}")
+      System.console().readLine("> ${message}: ")
    }
 
    def void apply(Project project) {
-      project.task("init-gradle-plugin", dependsOn: "init-groovy-project") << {
-         File rootPath = new File(System.getProperty("user.dir"))
-         new ProjectTemplate().root(rootPath) {
-            "src/main/resources/META-INF/gradle-plugins" {
-               "${project.name}.properties" ""
-            }
+      project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
+
+      project.task("gradle-plugin-inputs") << {
+         String lProjectName = project.name.toLowerCase()
+         String cProjectName = project.name.capitalize();
+         TemplatesPluginConvention convention = project.convention.plugins.templatePlugin
+         if (!convention.gradlePluginApplyLabel) {
+            convention.gradlePluginApplyLabel = prompt("Plugin 'apply' label?(${lProjectName})") ?: lProjectName
          }
-         if(!hasProperty('pluginName')) {
-            pluginName = prompt("What is your plugin's label?[${project.name.toLowerCase()}]: ")
-            println "pluginName: ${pluginName}"
+         if (!convention.gradlePluginClassName) {
+            convention.gradlePluginClassName = prompt("Plugin class name?(${lProjectName}.${cProjectName})") ?: "${lProjectName}.${cProjectName}"
+         }
+      }
+      project.task("init-gradle-plugin", dependsOn: ["gradle-plugin-inputs", "init-groovy-project"]) << {
+         TemplatesPluginConvention convention = project.convention.plugins.templatePlugin
+         String pluginApplyLabel = convention.gradlePluginApplyLabel
+         String pluginClassName = convention.gradlePluginClassName
+         println "pluginClassName: ${pluginClassName}"
+         
+         ProjectTemplate.root() {
+            "src/main/" {
+               "resources/META-INF/gradle-plugins" {
+                  "${pluginApplyLabel}.properties" "implementation-class=${pluginClassName}"
+               }
+               "groovy" {
+                  if (pluginClassName.indexOf(".")) {
+                     def parts = pluginClassName.split("\\.") as List
+                     def className = parts.pop()
+                     def path = parts.join(File.separator)
+                     "${path}" {
+                        "${className}.groovy" """
+                        package ${parts.join('.')}
+                        class ${className} implements Plugin<Project> {
+                           void apply (Project project) {
+                              // add your plugin tasks here.
+                           }
+                        }"""
+                     }
+                  }
+               }
+            }
          }
       }
       project.task("init-groovy-project") << {
-         File rootPath = new File(System.getProperty("user.dir"))
-         new ProjectTemplate().root(rootPath) {
+         ProjectTemplate.root() {
             "src" {
                "main" {
                   "groovy" {}
@@ -124,11 +171,10 @@ class TemplatesPlugin implements Plugin<Project> {
             "LICENSE.txt" "// Your License Goes here"
          }
 
-         prependPlugin "groovy", new File(rootPath, "build.gradle")
+         prependPlugin "groovy", new File("build.gradle")
       }
       project.task("init-java-project") << {
-         File rootPath = new File(System.getProperty("user.dir"))
-         new ProjectTemplate().root(rootPath) {
+         ProjectTemplate.root() {
             "src" {
                "main" {
                   "java" {}
@@ -142,21 +188,21 @@ class TemplatesPlugin implements Plugin<Project> {
             "LICENSE.txt" "// Your License Goes here"
          }
 
-         prependPlugin "java", new File(rootPath, "build.gradle")
+         prependPlugin "java", new File("build.gradle")
       }
       project.task("init-war-project") << {
-         File rootPath = new File(System.getProperty("user.dir"))
-         new ProjectTemplate().root(rootPath) {
+         ProjectTemplate.root() {
             "src" {
                "main" {
                   "java" {}
                   "resources" {}
                   "webapp" {
                      "WEB-INF" {
-                        "web.xml" """<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>
+                        "web.xml" """
+                        <?xml version="1.0" encoding="ISO-8859-1"?>
                         <!DOCTYPE web-app
-                            PUBLIC \"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\"
-                            \"http://java.sun.com/dtd/web-app_2_3.dtd\">
+                            PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+                            "http://java.sun.com/dtd/web-app_2_3.dtd">
 
                         <web-app>
                            <!-- General description of your web application -->
@@ -181,7 +227,7 @@ class TemplatesPlugin implements Plugin<Project> {
             "LICENSE.txt" "// Your License Goes here"
          }
 
-         prependPlugin "war", new File(rootPath, "build.gradle")
+         prependPlugin "war", new File("build.gradle")
       }
    }
 }
