@@ -1,233 +1,35 @@
+apply plugin: "groovy"
 apply plugin: "idea"
-apply plugin: TemplatesPlugin
 
-class ProjectTemplate {
+version = 0.5
+group = 'gradle-templates'
 
-   private File parent
-
-   private ProjectTemplate() {}
-
-   void d(String name, Closure closure = {}) {
-      directory(name, closure)
-   }
-
-   void dir(String name, Closure closure = {}) {
-      directory(name, closure)
-   }
-
-   void directory(String name, Closure closure = {}) {
-      File oldParent = parent
-      if (parent) {
-         parent = new File(parent, name)
-      } else {
-         parent = new File(name)
-      }
-      parent.mkdirs()
-      closure.delegate = this
-      closure()
-      parent = oldParent
-   }
-
-   void f(Map args = [:], String name) {
-      file(args, name)
-   }
-
-   void f(String name, String content) {
-      file(name, content)
-   }
-
-   void file(Map args = [:], String name) {
-      File file
-      if (parent) {
-         file = new File(parent, name)
-      } else {
-         file = new File(name)
-      }
-      file.exists() ?: file.createNewFile()
-      if (args.content) {
-         def content = args.content.stripIndent()
-         if (args.append) {
-            file.append(content)
-         } else {
-            file.text = content
-         }
-      }
-   }
-
-   void file(String name, String content) {
-      file([content: content], name)
-   }
-
-   static void root(Closure closure = {}) {
-      new ProjectTemplate().directory(System.getProperty("user.dir"), closure)
-   }
-
-   static void root(String path, Closure closure = {}) {
-      new ProjectTemplate().directory(path, closure)
-   }
-
-   static void root(File pathFile, Closure closure = {}) {
-      new ProjectTemplate().directory(pathFile.path, closure)
-   }
-
-   def methodMissing(String name, def args) {
-      if (args) {
-         def arg = args[0]
-         if (arg instanceof Closure) {
-            directory(name, arg)
-         } else if (arg instanceof Map) {
-            file(arg, name)
-         } else if (arg instanceof String || arg instanceof GString) {
-            file([content: arg], name)
-         } else {
-            println "Couldn't figure out what to do. name: ${name}, arg: ${arg}, type: ${arg.getClass()}, isString: ${arg instanceof String}"
-         }
-      }
-   }
+repositories {
+    mavenCentral()
 }
 
-class TemplatesPluginConvention {
-   String gradlePluginApplyLabel
-   String gradlePluginClassName
-   String sourceBasePackage
-
-   def templates(Closure closure) {
-      closure.delegate = this
-      closure()
-   }
+dependencies {
+    compile gradleApi()
+    groovy localGroovy()
+    testCompile 'junit:junit:4.8.2'
 }
 
-class TemplatesPlugin implements Plugin<Project> {
+jar {
+   baseName = 'templates'
+}
 
-   void prependPlugin(String plugin, File gradleFile) {
-      def oldText = gradleFile.text
-      gradleFile.text = ""
-      gradleFile.withPrintWriter { pw ->
-         pw.println "apply plugin: \"${plugin}\""
-         pw.print oldText
-      }
-   }
+task('install-plugin', type: Copy, dependsOn: 'build') {
+	def gradleInstallDir = gradle.gradleHomeDir
+   group = "installation"
+   description = "Installs the plugin jar in your gradle distribution."
+   from "${buildDir}/libs/templates-${version}.jar"
+   into "/${gradleInstallDir}/lib/plugins"
+   println "Plugin installed in: ${gradleInstallDir}/lib/plugins"
+}
 
-   def prompt(String message) {
-      System.console().readLine("> ${message}: ")
-   }
-
-   def void apply(Project project) {
-      project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
-
-      project.task("gradle-plugin-inputs") << {
-         String lProjectName = project.name.toLowerCase()
-         String cProjectName = project.name.capitalize();
-         TemplatesPluginConvention convention = project.convention.plugins.templatePlugin
-         if (!convention.gradlePluginApplyLabel) {
-            convention.gradlePluginApplyLabel = prompt("Plugin 'apply' label?(${lProjectName})") ?: lProjectName
-         }
-         if (!convention.gradlePluginClassName) {
-            convention.gradlePluginClassName = prompt("Plugin class name?(${lProjectName}.${cProjectName})") ?: "${lProjectName}.${cProjectName}"
-         }
-      }
-      project.task("init-gradle-plugin", dependsOn: ["gradle-plugin-inputs", "init-groovy-project"]) << {
-         TemplatesPluginConvention convention = project.convention.plugins.templatePlugin
-         String pluginApplyLabel = convention.gradlePluginApplyLabel
-         String pluginClassName = convention.gradlePluginClassName
-         println "pluginClassName: ${pluginClassName}"
-         
-         ProjectTemplate.root() {
-            "src/main/" {
-               "resources/META-INF/gradle-plugins" {
-                  "${pluginApplyLabel}.properties" "implementation-class=${pluginClassName}"
-               }
-               "groovy" {
-                  if (pluginClassName.indexOf(".")) {
-                     def parts = pluginClassName.split("\\.") as List
-                     def className = parts.pop()
-                     def path = parts.join(File.separator)
-                     "${path}" {
-                        "${className}.groovy" """
-                        package ${parts.join('.')}
-                        class ${className} implements Plugin<Project> {
-                           void apply (Project project) {
-                              // add your plugin tasks here.
-                           }
-                        }"""
-                     }
-                  }
-               }
-            }
-         }
-      }
-      project.task("init-groovy-project") << {
-         ProjectTemplate.root() {
-            "src" {
-               "main" {
-                  "groovy" {}
-                  "resources" {}
-               }
-               "test" {
-                  "groovy" {}
-                  "resources" {}
-               }
-            }
-            "LICENSE.txt" "// Your License Goes here"
-         }
-
-         prependPlugin "groovy", new File("build.gradle")
-      }
-      project.task("init-java-project") << {
-         ProjectTemplate.root() {
-            "src" {
-               "main" {
-                  "java" {}
-                  "resources" {}
-               }
-               "test" {
-                  "java" {}
-                  "resources" {}
-               }
-            }
-            "LICENSE.txt" "// Your License Goes here"
-         }
-
-         prependPlugin "java", new File("build.gradle")
-      }
-      project.task("init-war-project") << {
-         ProjectTemplate.root() {
-            "src" {
-               "main" {
-                  "java" {}
-                  "resources" {}
-                  "webapp" {
-                     "WEB-INF" {
-                        "web.xml" """
-                        <?xml version="1.0" encoding="ISO-8859-1"?>
-                        <!DOCTYPE web-app
-                            PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-                            "http://java.sun.com/dtd/web-app_2_3.dtd">
-
-                        <web-app>
-                           <!-- General description of your web application -->
-                           <display-name>${project.name} - Webapp</display-name>
-                              <description>
-                                 Describe the ${project.name} Webapp here.
-                                 ${System.getProperty('user.name')}@example.com
-
-                                 See http://tomcat.apache.org/tomcat-6.0-doc/appdev/web.xml.txt for more information
-                                 regarding this Web Descriptor File.
-                           </description>
-                        </web-app>
-                        """
-                     }
-                  }
-               }
-               "test" {
-                  "java" {}
-                  "resources" {}
-               }
-            }
-            "LICENSE.txt" "// Your License Goes here"
-         }
-
-         prependPlugin "war", new File("build.gradle")
-      }
-   }
+task('uninstall-plugin', type: Delete) {
+	def gradleInstallDir = gradle.gradleHomeDir
+   group = "installation"
+   description = "Removes the plugin from your gradle distribution."
+   delete("/${gradleInstallDir}/lib/plugins/templates-${version}.jar")
 }
