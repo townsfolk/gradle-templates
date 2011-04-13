@@ -5,6 +5,8 @@ import org.gradle.api.Plugin
 
 class TemplatesPlugin implements Plugin<Project> {
 
+   static final String group = "Template"
+
    static void prependPlugin(String plugin, File gradleFile) {
       def oldText = gradleFile.text
       gradleFile.text = ""
