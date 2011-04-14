@@ -34,7 +34,7 @@ class JavaTemplatesPlugin implements Plugin<Project> {
                      package ${classParts.join('.')};
                      
                      public class ${className} {
-                        public ${className} {
+                        public ${className}() {
                         }
                      }
                      """

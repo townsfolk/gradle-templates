@@ -23,6 +23,7 @@ class TemplatesPlugin implements Plugin<Project> {
    def void apply(Project project) {
       project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
       project.apply(plugin: 'java-templates')
+      project.apply(plugin: 'groovy-templates')
 
       project.task("gradle-plugin-inputs") << {
          String lProjectName = project.name.toLowerCase()
@@ -64,6 +65,7 @@ class TemplatesPlugin implements Plugin<Project> {
             }
          }
       }
+      /*
       project.task("init-groovy-project") << {
          ProjectTemplate.root() {
             "src" {
