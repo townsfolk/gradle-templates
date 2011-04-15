@@ -45,7 +45,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
          }
       }
       project.task("create-groovy-project", group: TemplatesPlugin.group, description: "Creates a new Gradle Groovy project in a new directory named after your project.") << {
-         def projectName = TemplatesPlugin.prompt("Project Name")
+         def projectName = TemplatesPlugin.prompt("Project Name:")
          if (projectName) {
             createBase(projectName)
             ProjectTemplate.root(projectName) {
@@ -63,7 +63,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
       }
       project.task("init-groovy-project", group: TemplatesPlugin.group, description: "Initializes a new Gradle Groovy project in the current directory.") << {
          createBase()
-         prependPlugin "groovy", new File("build.gradle")
+         TemplatesPlugin.prependPlugin "groovy", new File("build.gradle")
       }
 
    }

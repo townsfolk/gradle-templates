@@ -1,11 +1,13 @@
 package templates
 
-import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.Project
 
 class TemplatesPlugin implements Plugin<Project> {
 
    static final String group = "Template"
+   static final String lineSep = System.getProperty("line.separator")
+   static final String inputPrompt = "${lineSep}?>"
 
    static void prependPlugin(String plugin, File gradleFile) {
       def oldText = gradleFile.text
@@ -16,14 +18,27 @@ class TemplatesPlugin implements Plugin<Project> {
       }
    }
 
-   static def prompt(String message) {
-      System.console().readLine("> ${message}: ")
+   static String prompt(String message, String defaultValue = null) {
+      if(defaultValue) {
+         return System.console().readLine("${inputPrompt} ${message} [${defaultValue}] ") ?: defaultValue
+      }
+      return System.console().readLine("${inputPrompt} ${message} ") ?: defaultValue
+   }
+
+   static boolean promptYesOrNo(String message, boolean defaultValue = false) {
+      def defaultStr = defaultValue ? "Y" : "n"
+      String consoleVal = System.console().readLine("${inputPrompt} ${message} (Y|n)[${defaultStr}] ")
+      if(consoleVal) {
+         return consoleVal.toLowerCase.startsWith("y")
+      }
+      return defaultValue
    }
 
    def void apply(Project project) {
       project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
       project.apply(plugin: 'java-templates')
       project.apply(plugin: 'groovy-templates')
+      project.apply(plugin: 'webapp-templates')
 
       project.task("gradle-plugin-inputs") << {
          String lProjectName = project.name.toLowerCase()
@@ -101,7 +116,6 @@ class TemplatesPlugin implements Plugin<Project> {
 
          prependPlugin "java", new File("build.gradle")
       }
-      */
       project.task("init-war-project") << {
          ProjectTemplate.root() {
             "src" {
@@ -141,5 +155,6 @@ class TemplatesPlugin implements Plugin<Project> {
 
          prependPlugin "war", new File("build.gradle")
       }
+      */
    }
 }
