@@ -6,7 +6,7 @@ import org.gradle.api.Plugin
 class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Project> {
    void createBase(String path = System.getProperty("user.dir"), String projectName) {
       super.createBase(path)
-      ProjectTemplate.root(path) {
+      ProjectTemplate.fromRoot(path) {
          "src/main/webapp/WEB-INF" {
             "web.xml" template: "/templates/webapp/web-xml.tmpl", project: [name: projectName]
          }
@@ -20,7 +20,7 @@ class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Projec
          def projectName = TemplatesPlugin.prompt("Project Name:")
          if (projectName) {
             createBase(projectName, projectName)
-            ProjectTemplate.root(projectName) {
+            ProjectTemplate.fromRoot(projectName) {
                "build.gradle" "apply plugin: 'war'"
             }
          } else {

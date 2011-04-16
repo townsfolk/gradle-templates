@@ -6,19 +6,30 @@ import groovy.text.GStringTemplateEngine
  *
  * Eg.
  * <code>
- * ProjectTemplate.root {*    directory("src") { // creates new directory named 'src'
+ * ProjectTemplate.fromUserDir {
+ *    directory("src") { // creates new directory named 'src'
  *       dir("main") { // creates a new directory named 'main'
  *          d("java") { // creates a new directory named 'java'
  *             file("Class1.java") // creates a new file named 'Class1.java'
  *             f("Class2.java") // creates a new file named 'Class2.java'
- *}*}*}*}* </code>
+ *          }
+ *       }
+ *    }
+ * }
+ * </code>
  *
  * Can also be used without method calls for directory and file.
  * Eg.
  * <code>
- * ProjectTemplate.root {*    "src/main" { // creates the directories 'src', and 'main'.
- *       "java" {*          "Class1.java" "public class Class1 {}" // creates the file 'Class1.java' with some initial content.
- *}*       "resources {}*}*}* </code>
+ * ProjectTemplate.fromUserDir {
+ *    "src/main" { // creates the directories 'src', and 'main'.
+ *       "java" {
+ *          "Class1.java" "public class Class1 {}" // creates the file 'Class1.java' with some initial content.
+ *       }
+ *       "resources {}
+ *    }
+ * }
+ * </code>
  * @author: elberry
  * Date: 4/9/11 6:04 PM
  */
@@ -27,7 +38,7 @@ class ProjectTemplate {
    private File parent
 
    /**
-    * Private so that it can't be accessed. Use one of the static 'root' methods to start building a template.
+    * Private so that it can't be accessed. Use one of the static 'fromUserDir' methods to start building a template.
     */
    private ProjectTemplate() {}
 
@@ -143,7 +154,7 @@ class ProjectTemplate {
     * Starts the ProjectTemplate in the "user.dir" directory.
     * @param closure
     */
-   static void root(Closure closure = {}) {
+   static void fromUserDir(Closure closure = {}) {
       new ProjectTemplate().directory(System.getProperty("user.dir"), closure)
    }
 
@@ -152,7 +163,7 @@ class ProjectTemplate {
     * @param path String path to the root of the new project.
     * @param closure
     */
-   static void root(String path, Closure closure = {}) {
+   static void fromRoot(String path, Closure closure = {}) {
       new ProjectTemplate().directory(path, closure)
    }
 
@@ -161,7 +172,7 @@ class ProjectTemplate {
     * @param pathFile File path to the root of the new project.
     * @param closure
     */
-   static void root(File pathFile, Closure closure = {}) {
+   static void fromRoot(File pathFile, Closure closure = {}) {
       new ProjectTemplate().directory(pathFile.path, closure)
    }
 

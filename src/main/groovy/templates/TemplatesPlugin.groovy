@@ -56,7 +56,7 @@ class TemplatesPlugin implements Plugin<Project> {
          String pluginApplyLabel = convention.gradlePluginApplyLabel
          String pluginClassName = convention.gradlePluginClassName
 
-         ProjectTemplate.root() {
+         ProjectTemplate.fromUserDir() {
             "src/main/" {
                "resources/META-INF/gradle-plugins" {
                   "${pluginApplyLabel}.properties" "implementation-class=${pluginClassName}"
@@ -82,7 +82,7 @@ class TemplatesPlugin implements Plugin<Project> {
       }
       /*
       project.task("init-groovy-project") << {
-         ProjectTemplate.root() {
+         ProjectTemplate.fromUserDir() {
             "src" {
                "main" {
                   "groovy" {}
@@ -100,7 +100,7 @@ class TemplatesPlugin implements Plugin<Project> {
       }
       /*
       project.task("init-java-project") << {
-         ProjectTemplate.root() {
+         ProjectTemplate.fromUserDir() {
             "src" {
                "main" {
                   "java" {}
@@ -117,7 +117,7 @@ class TemplatesPlugin implements Plugin<Project> {
          prependPlugin "java", new File("build.gradle")
       }
       project.task("init-war-project") << {
-         ProjectTemplate.root() {
+         ProjectTemplate.fromUserDir() {
             "src" {
                "main" {
                   "java" {}

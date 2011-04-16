@@ -5,7 +5,7 @@ import org.gradle.api.Plugin
 
 class GroovyTemplatesPlugin implements Plugin<Project> {
    void createBase(String path = System.getProperty("user.dir")) {
-      ProjectTemplate.root(path) {
+      ProjectTemplate.fromRoot(path) {
          "src" {
             "main" {
                "groovy" {}
@@ -27,7 +27,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
             def classParts = fullClassName.split("\\.") as List
             def className = classParts.pop()
             def classPackage = classParts.join(File.separator)
-            ProjectTemplate.root {
+            ProjectTemplate.fromUserDir {
                "src/main/groovy" {
                   "${classPackage}" {
                      "${className}.groovy" """
@@ -48,7 +48,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
          def projectName = TemplatesPlugin.prompt("Project Name:")
          if (projectName) {
             createBase(projectName)
-            ProjectTemplate.root(projectName) {
+            ProjectTemplate.fromRoot(projectName) {
                "build.gradle" """
                apply plugin: 'groovy'
 
