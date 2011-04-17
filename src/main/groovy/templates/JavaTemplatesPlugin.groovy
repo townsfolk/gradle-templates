@@ -26,18 +26,14 @@ class JavaTemplatesPlugin implements Plugin<Project> {
          if (fullClassName) {
             def classParts = fullClassName.split("\\.") as List
             def className = classParts.pop()
-            def classPackage = classParts.join(File.separator)
+            def classPackagePath = classParts.join(File.separator)
+            def classPackage = classParts.join('.')
             ProjectTemplate.fromUserDir {
                "src/main/java" {
-                  "${classPackage}" {
-                     "${className}.java" """
-                     package ${classParts.join('.')};
-                     
-                     public class ${className} {
-                        public ${className}() {
-                        }
-                     }
-                     """
+                  "${classPackagePath}" {
+                     "${className}.java" template: "/templates/java/java-class.tmpl",
+                           classPackage: classPackage,
+                           className: className
                   }
                }
             }
@@ -50,7 +46,7 @@ class JavaTemplatesPlugin implements Plugin<Project> {
          if (projectName) {
             createBase(projectName)
             ProjectTemplate.fromRoot(projectName) {
-               "build.gradle" "apply plugin: 'java'"
+               "build.gradle" template: "/templates/java/build.gradle.tmpl"
             }
          } else {
             println "No project name provided."

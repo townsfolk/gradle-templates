@@ -26,17 +26,14 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
          if (fullClassName) {
             def classParts = fullClassName.split("\\.") as List
             def className = classParts.pop()
-            def classPackage = classParts.join(File.separator)
+            def classPackagePath = classParts.join(File.separator)
+            def classPackage = classParts.join('.')
             ProjectTemplate.fromUserDir {
                "src/main/groovy" {
-                  "${classPackage}" {
-                     "${className}.groovy" """
-                     package ${classParts.join('.')}
-
-                     class ${className} {
-                        
-                     }
-                     """
+                  "${classPackagePath}" {
+                     "${className}.groovy" template: "/templates/groovy/groovy-class.tmpl",
+                           className: className,
+                           classPackage: classPackage
                   }
                }
             }
@@ -49,13 +46,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
          if (projectName) {
             createBase(projectName)
             ProjectTemplate.fromRoot(projectName) {
-               "build.gradle" """
-               apply plugin: 'groovy'
-
-               dependencies {
-                  groovy localGroovy()
-               }
-               """
+               "build.gradle" template: "/templates/groovy/build.gradle.tmpl"
             }
          } else {
             println "No project name provided."

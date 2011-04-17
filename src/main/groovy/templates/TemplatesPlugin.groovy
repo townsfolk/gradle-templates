@@ -29,7 +29,7 @@ class TemplatesPlugin implements Plugin<Project> {
       def defaultStr = defaultValue ? "Y" : "n"
       String consoleVal = System.console().readLine("${inputPrompt} ${message} (Y|n)[${defaultStr}] ")
       if(consoleVal) {
-         return consoleVal.toLowerCase.startsWith("y")
+         return consoleVal.toLowerCase().startsWith("y")
       }
       return defaultValue
    }
@@ -81,41 +81,6 @@ class TemplatesPlugin implements Plugin<Project> {
          }
       }
       /*
-      project.task("init-groovy-project") << {
-         ProjectTemplate.fromUserDir() {
-            "src" {
-               "main" {
-                  "groovy" {}
-                  "resources" {}
-               }
-               "test" {
-                  "groovy" {}
-                  "resources" {}
-               }
-            }
-            "LICENSE.txt" "// Your License Goes here"
-         }
-
-         prependPlugin "groovy", new File("build.gradle")
-      }
-      /*
-      project.task("init-java-project") << {
-         ProjectTemplate.fromUserDir() {
-            "src" {
-               "main" {
-                  "java" {}
-                  "resources" {}
-               }
-               "test" {
-                  "java" {}
-                  "resources" {}
-               }
-            }
-            "LICENSE.txt" "// Your License Goes here"
-         }
-
-         prependPlugin "java", new File("build.gradle")
-      }
       project.task("init-war-project") << {
          ProjectTemplate.fromUserDir() {
             "src" {
