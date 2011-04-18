@@ -127,11 +127,9 @@ class ProjectTemplate {
    }
 
    String renderTemplate(Map params = [:], String template) {
-      def tLoc
-      try {
-         tLoc = getClass().getResource(template)
-      } catch (Exception e) {
-         tLoc = new File(template)
+      def tLoc = new File(template)
+      if(!tLoc.exists()) {
+      	tLoc = getClass().getResource(template)
       }
       def tReader = tLoc?.newReader()
       if (tReader) {
