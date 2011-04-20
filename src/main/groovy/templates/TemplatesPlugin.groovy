@@ -29,7 +29,7 @@ class TemplatesPlugin implements Plugin<Project> {
       promptOptions(message, "", options)
    }
 
-   static int promptOptions(String message, String defaultValue, List options = []) {
+   static int promptOptions(String message, int defaultValue, List options = []) {
       String consoleMessage = "${inputPrompt} ${message}"
       consoleMessage += "${lineSep}    Pick an option ${1..options.size()}"
       options.eachWithIndex { option, index ->
@@ -42,7 +42,7 @@ class TemplatesPlugin implements Plugin<Project> {
       }
       try {
          def range = 0..options.size() - 1
-         int choice = Integer.parseInt(System.console().readLine(consoleMessage) ?: defaultValue) - 1
+         int choice = Integer.parseInt(System.console().readLine(consoleMessage) ?: "${defaultValue}") - 1
          if(range.containsWithinBounds(choice)) {
             return choice
          } else {
