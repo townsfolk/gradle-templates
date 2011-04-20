@@ -1,3 +1,5 @@
+import templates.TemplatesPlugin
+
 apply plugin: "groovy"
 apply plugin: "idea"
 //apply plugin: "templates"
@@ -6,13 +8,13 @@ version = 0.5
 group = 'gradle-templates'
 
 repositories {
-    mavenCentral()
+   mavenCentral()
 }
 
 dependencies {
-    compile gradleApi()
-    groovy localGroovy()
-    testCompile 'junit:junit:4.8.2'
+   compile gradleApi()
+   groovy localGroovy()
+   testCompile 'junit:junit:4.8.2'
 }
 
 jar {
@@ -20,7 +22,7 @@ jar {
 }
 
 task('installPlugin', type: Copy, dependsOn: 'build') {
-	def gradleInstallDir = gradle.gradleHomeDir
+   def gradleInstallDir = gradle.gradleHomeDir
    group = "installation"
    description = "Installs the plugin jar in your gradle distribution."
    from "${buildDir}/libs/templates-${version}.jar"
@@ -29,7 +31,7 @@ task('installPlugin', type: Copy, dependsOn: 'build') {
 }
 
 task('uninstallPlugin', type: Delete) {
-	def gradleInstallDir = gradle.gradleHomeDir
+   def gradleInstallDir = gradle.gradleHomeDir
    group = "installation"
    description = "Removes the plugin from your gradle distribution."
    delete("/${gradleInstallDir}/lib/plugins/templates-${version}.jar")

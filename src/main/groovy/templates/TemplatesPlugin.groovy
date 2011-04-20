@@ -7,7 +7,7 @@ class TemplatesPlugin implements Plugin<Project> {
 
    static final String group = "Template"
    static final String lineSep = System.getProperty("line.separator")
-   static final String inputPrompt = "${lineSep}?>"
+   static final String inputPrompt = "${lineSep}??>"
 
    static void prependPlugin(String plugin, File gradleFile) {
       def oldText = gradleFile.text
@@ -19,16 +19,38 @@ class TemplatesPlugin implements Plugin<Project> {
    }
 
    static String prompt(String message, String defaultValue = null) {
-      if(defaultValue) {
+      if (defaultValue) {
          return System.console().readLine("${inputPrompt} ${message} [${defaultValue}] ") ?: defaultValue
       }
       return System.console().readLine("${inputPrompt} ${message} ") ?: defaultValue
    }
 
+   static int promptOptions(String message, List options = []) {
+      promptOptions(message, "", options)
+   }
+
+   static int promptOptions(String message, String defaultValue, List options = []) {
+      String consoleMessage = "${inputPrompt} ${message}"
+      consoleMessage += "${lineSep}    Pick an option ${1..options.size()}"
+      options.eachWithIndex { option, index ->
+         consoleMessage += "${lineSep}     (${index + 1}): ${option}"
+      }
+      if (defaultValue) {
+         consoleMessage += "${inputPrompt} [${defaultValue}] "
+      } else {
+         consoleMessage += "${inputPrompt} "
+      }
+      try {
+         return Integer.parseInt(System.console().readLine(consoleMessage) ?: defaultValue)
+      } catch (Exception e) {
+         throw new IllegalArgumentException("Option is not valid.", e)
+      }
+   }
+
    static boolean promptYesOrNo(String message, boolean defaultValue = false) {
       def defaultStr = defaultValue ? "Y" : "n"
       String consoleVal = System.console().readLine("${inputPrompt} ${message} (Y|n)[${defaultStr}] ")
-      if(consoleVal) {
+      if (consoleVal) {
          return consoleVal.toLowerCase().startsWith("y")
       }
       return defaultValue
