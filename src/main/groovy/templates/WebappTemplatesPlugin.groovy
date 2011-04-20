@@ -16,7 +16,7 @@ class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Projec
    void apply(Project project) {
       project.apply(plugin: "java-templates")
       
-      project.task("create-webapp-project", group: TemplatesPlugin.group, description: "Creates a new Gradle Webapp project in a new directory named after your project.") << {
+      project.task("createWebappProject", group: TemplatesPlugin.group, description: "Creates a new Gradle Webapp project in a new directory named after your project.") << {
          def projectName = TemplatesPlugin.prompt("Project Name:")
          def useJetty = TemplatesPlugin.promptYesOrNo("Use Jetty Plugin?")
          if (projectName) {
@@ -28,7 +28,7 @@ class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Projec
             println "No project name provided."
          }
       }
-      project.task("init-webapp-project", group: TemplatesPlugin.group, description: "Initializes a new Gradle Webapp project in the current directory.") << {
+      project.task("initWebappProject", group: TemplatesPlugin.group, description: "Initializes a new Gradle Webapp project in the current directory.") << {
          createBase(project.name)
          def useJetty = TemplatesPlugin.promptYesOrNo("Use Jetty Plugin?")
          if(useJetty) {

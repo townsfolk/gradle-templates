@@ -21,7 +21,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
    }
 
    void apply(Project project) {
-      project.task("create-groovy-class", group: TemplatesPlugin.group, description: "Creates a new Groovy class in the current project.") << {
+      project.task("createGroovyClass", group: TemplatesPlugin.group, description: "Creates a new Groovy class in the current project.") << {
          def fullClassName = TemplatesPlugin.prompt("Class name (com.example.MyClass)")
          if (fullClassName) {
             def classParts = fullClassName.split("\\.") as List
@@ -41,7 +41,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
             println "No class name provided."
          }
       }
-      project.task("create-groovy-project", group: TemplatesPlugin.group, description: "Creates a new Gradle Groovy project in a new directory named after your project.") << {
+      project.task("createGroovyProject", group: TemplatesPlugin.group, description: "Creates a new Gradle Groovy project in a new directory named after your project.") << {
          def projectName = TemplatesPlugin.prompt("Project Name:")
          if (projectName) {
             createBase(projectName)
@@ -52,7 +52,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
             println "No project name provided."
          }
       }
-      project.task("init-groovy-project", group: TemplatesPlugin.group, description: "Initializes a new Gradle Groovy project in the current directory.") << {
+      project.task("initGroovyProject", group: TemplatesPlugin.group, description: "Initializes a new Gradle Groovy project in the current directory.") << {
          createBase()
          TemplatesPlugin.prependPlugin "groovy", new File("build.gradle")
       }

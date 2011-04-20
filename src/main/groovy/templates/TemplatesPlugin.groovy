@@ -40,7 +40,7 @@ class TemplatesPlugin implements Plugin<Project> {
       project.apply(plugin: 'groovy-templates')
       project.apply(plugin: 'webapp-templates')
 
-      project.task("gradle-plugin-inputs") << {
+      project.task("gradlePluginInputs") << {
          String lProjectName = project.name.toLowerCase()
          String cProjectName = project.name.capitalize();
          TemplatesPluginConvention convention = project.convention.plugins.templatePlugin
@@ -51,7 +51,7 @@ class TemplatesPlugin implements Plugin<Project> {
             convention.gradlePluginClassName = prompt("Plugin class name?(${lProjectName}.${cProjectName})") ?: "${lProjectName}.${cProjectName}"
          }
       }
-      project.task("init-gradle-plugin", dependsOn: ["gradle-plugin-inputs", "init-groovy-project"]) << {
+      project.task("initGradlePlugin", dependsOn: ["gradlePluginInputs", "initGroovyProject"]) << {
          TemplatesPluginConvention convention = project.convention.plugins.templatePlugin
          String pluginApplyLabel = convention.gradlePluginApplyLabel
          String pluginClassName = convention.gradlePluginClassName

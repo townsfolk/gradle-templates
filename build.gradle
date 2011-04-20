@@ -19,7 +19,7 @@ jar {
    baseName = 'templates'
 }
 
-task('install-plugin', type: Copy, dependsOn: 'build') {
+task('installPlugin', type: Copy, dependsOn: 'build') {
 	def gradleInstallDir = gradle.gradleHomeDir
    group = "installation"
    description = "Installs the plugin jar in your gradle distribution."
@@ -28,7 +28,7 @@ task('install-plugin', type: Copy, dependsOn: 'build') {
    println "Plugin installed in: ${gradleInstallDir}/lib/plugins"
 }
 
-task('uninstall-plugin', type: Delete) {
+task('uninstallPlugin', type: Delete) {
 	def gradleInstallDir = gradle.gradleHomeDir
    group = "installation"
    description = "Removes the plugin from your gradle distribution."

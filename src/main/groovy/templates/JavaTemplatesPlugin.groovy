@@ -21,7 +21,7 @@ class JavaTemplatesPlugin implements Plugin<Project> {
    }
 
    void apply(Project project) {
-      project.task("create-java-class", group: TemplatesPlugin.group, description: "Creates a new Java class in the current project.") << {
+      project.task("createJavaClass", group: TemplatesPlugin.group, description: "Creates a new Java class in the current project.") << {
          def fullClassName = TemplatesPlugin.prompt("Class name (com.example.MyClass)")
          if (fullClassName) {
             def classParts = fullClassName.split("\\.") as List
@@ -41,7 +41,7 @@ class JavaTemplatesPlugin implements Plugin<Project> {
             println "No class name provided."
          }
       }
-      project.task("create-java-project", group: TemplatesPlugin.group, description: "Creates a new Gradle Java project in a new directory named after your project.") << {
+      project.task("createJavaProject", group: TemplatesPlugin.group, description: "Creates a new Gradle Java project in a new directory named after your project.") << {
          def projectName = TemplatesPlugin.prompt("Project Name:")
          if (projectName) {
             createBase(projectName)
@@ -52,7 +52,7 @@ class JavaTemplatesPlugin implements Plugin<Project> {
             println "No project name provided."
          }
       }
-      project.task("init-java-project", group: TemplatesPlugin.group, description: "Initializes a new Gradle Java project in the current directory.") << {
+      project.task("initJavaProject", group: TemplatesPlugin.group, description: "Initializes a new Gradle Java project in the current directory.") << {
          createBase()
          TemplatesPlugin.prependPlugin "java", new File("build.gradle")
       }
