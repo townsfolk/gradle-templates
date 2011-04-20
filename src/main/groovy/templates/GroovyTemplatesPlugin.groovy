@@ -20,8 +20,25 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
       }
    }
 
+   static String findMainGroovyDir(Project project) {
+      File rootDir = project.projectDir
+      def mainSrcDir = project.sourceSets?.main?.groovy?.srcDirs*.path
+      mainSrcDir = mainSrcDir?.first()
+      mainSrcDir = mainSrcDir?.minus(rootDir.path)
+      return mainSrcDir
+   }
+
    void apply(Project project) {
       project.task("createGroovyClass", group: TemplatesPlugin.group, description: "Creates a new Groovy class in the current project.") << {
+         
+         def mainSrcDir = null
+         try {
+            // get main groovy dir, and check to see if Groovy plugin is installed.
+            mainSrcDir = findMainGroovyDir(project)
+         } catch (Exception e) {
+            throw new IllegalStateException("It seems that the Groovy plugin is not installed, I cannot determine the main groovy source directory.", e)
+         }
+
          def fullClassName = TemplatesPlugin.prompt("Class name (com.example.MyClass)")
          if (fullClassName) {
             def classParts = fullClassName.split("\\.") as List
@@ -29,7 +46,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
             def classPackagePath = classParts.join(File.separator)
             def classPackage = classParts.join('.')
             ProjectTemplate.fromUserDir {
-               "src/main/groovy" {
+               "${mainSrcDir}" {
                   "${classPackagePath}" {
                      "${className}.groovy" template: "/templates/groovy/groovy-class.tmpl",
                            className: className,

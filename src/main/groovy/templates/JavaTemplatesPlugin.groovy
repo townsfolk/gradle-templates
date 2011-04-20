@@ -2,6 +2,7 @@ package templates
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.file.RelativePath
 
 class JavaTemplatesPlugin implements Plugin<Project> {
    void createBase(String path = System.getProperty("user.dir")) {
@@ -20,8 +21,25 @@ class JavaTemplatesPlugin implements Plugin<Project> {
       }
    }
 
+   static String findMainJavaDir(Project project) {
+      File rootDir = project.projectDir
+      def mainSrcDir = project.sourceSets?.main?.java?.srcDirs*.path
+      mainSrcDir = mainSrcDir?.first()
+      mainSrcDir = mainSrcDir?.minus(rootDir.path)
+      return mainSrcDir
+   }
+
    void apply(Project project) {
       project.task("createJavaClass", group: TemplatesPlugin.group, description: "Creates a new Java class in the current project.") << {
+
+         def mainSrcDir = null
+         try {
+            // get main java dir, and check to see if Java plugin is installed.
+            mainSrcDir = findMainJavaDir(project)
+         } catch (Exception e) {
+            throw new IllegalStateException("It seems that the Java plugin is not installed, I cannot determine the main java source directory.", e)
+         }
+
          def fullClassName = TemplatesPlugin.prompt("Class name (com.example.MyClass)")
          if (fullClassName) {
             def classParts = fullClassName.split("\\.") as List
@@ -29,7 +47,7 @@ class JavaTemplatesPlugin implements Plugin<Project> {
             def classPackagePath = classParts.join(File.separator)
             def classPackage = classParts.join('.')
             ProjectTemplate.fromUserDir {
-               "src/main/java" {
+               "${mainSrcDir}" {
                   "${classPackagePath}" {
                      "${className}.java" template: "/templates/java/java-class.tmpl",
                            classPackage: classPackage,
