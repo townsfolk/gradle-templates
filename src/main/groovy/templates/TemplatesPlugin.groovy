@@ -41,7 +41,13 @@ class TemplatesPlugin implements Plugin<Project> {
          consoleMessage += "${inputPrompt} "
       }
       try {
-         return Integer.parseInt(System.console().readLine(consoleMessage) ?: defaultValue)
+         def range = 0..options.size() - 1
+         int choice = Integer.parseInt(System.console().readLine(consoleMessage) ?: defaultValue) - 1
+         if(range.containsWithinBounds(choice)) {
+            return choice
+         } else {
+            throw new IllegalArgumentException("Option is not valid.")
+         }
       } catch (Exception e) {
          throw new IllegalArgumentException("Option is not valid.", e)
       }
