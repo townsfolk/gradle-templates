@@ -1,0 +1,13 @@
+
+task("installPlugin", group: "Installation", type: Copy, dependsOn: 'build',
+      description: "Installs the plugin jar in your gradle distribution.") {
+   def gradleInstallDir = gradle.gradleHomeDir
+   from "\${project.buildDir}/libs/\${jar.archiveName}"
+   into "/\${gradleInstallDir}/lib/plugins"
+}
+
+task("uninstallPlugin", group: "Installation", type: Delete,
+      description: "Removes the plugin from your gradle distribution.") {
+   def gradleInstallDir = gradle.gradleHomeDir
+   delete("/\${gradleInstallDir}/lib/plugins/\${jar.archiveName}")
+}

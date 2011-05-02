@@ -5,6 +5,16 @@ import org.gradle.api.Plugin
 import org.gradle.api.file.RelativePath
 
 class JavaTemplatesPlugin implements Plugin<Project> {
+
+   static def getClassParts(String fullClassName) {
+      def classParts = fullClassName.split("\\.") as List
+      [
+            className: classParts.pop(),
+            classPackagePath: classParts.join(File.separator),
+            classPackage: classParts.join('.')
+      ]
+   }
+
    void createBase(String path = System.getProperty("user.dir")) {
       ProjectTemplate.fromRoot(path) {
          "src" {
@@ -42,16 +52,13 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 
          def fullClassName = TemplatesPlugin.prompt("Class name (com.example.MyClass)")
          if (fullClassName) {
-            def classParts = fullClassName.split("\\.") as List
-            def className = classParts.pop()
-            def classPackagePath = classParts.join(File.separator)
-            def classPackage = classParts.join('.')
+            def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)
             ProjectTemplate.fromUserDir {
                "${mainSrcDir}" {
-                  "${classPackagePath}" {
-                     "${className}.java" template: "/templates/java/java-class.tmpl",
-                           classPackage: classPackage,
-                           className: className
+                  "${classParts.classPackagePath}" {
+                     "${classParts.className}.java" template: "/templates/java/java-class.tmpl",
+                           classPackage: classParts.classPackage,
+                           className: classParts.className
                   }
                }
             }

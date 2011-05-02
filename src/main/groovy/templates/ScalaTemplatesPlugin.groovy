@@ -3,16 +3,17 @@ package templates
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 
-class GroovyTemplatesPlugin implements Plugin<Project> {
+class ScalaTemplatesPlugin implements Plugin<Project> {
+   
    void createBase(String path = System.getProperty("user.dir")) {
       ProjectTemplate.fromRoot(path) {
          "src" {
             "main" {
-               "groovy" {}
+               "scala" {}
                "resources" {}
             }
             "test" {
-               "groovy" {}
+               "scala" {}
                "resources" {}
             }
          }
@@ -20,23 +21,15 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
       }
    }
 
-   static String findMainGroovyDir(Project project) {
-      File rootDir = project.projectDir
-      def mainSrcDir = project.sourceSets?.main?.groovy?.srcDirs*.path
-      mainSrcDir = mainSrcDir?.first()
-      mainSrcDir = mainSrcDir?.minus(rootDir.path)
-      return mainSrcDir
-   }
-
    void apply(Project project) {
-      project.task("createGroovyClass", group: TemplatesPlugin.group, description: "Creates a new Groovy class in the current project.") << {
-         
+      project.task("createScalaClass", group: TemplatesPlugin.group, description: "Creates a new Scala class in the current project.") << {
+
          def mainSrcDir = null
          try {
             // get main groovy dir, and check to see if Groovy plugin is installed.
             mainSrcDir = findMainGroovyDir(project)
          } catch (Exception e) {
-            throw new IllegalStateException("It seems that the Groovy plugin is not installed, I cannot determine the main groovy source directory.", e)
+            throw new IllegalStateException("It seems that the Scala plugin is not installed, I cannot determine the main scala source directory.", e)
          }
 
          def fullClassName = TemplatesPlugin.prompt("Class name (com.example.MyClass)")
@@ -55,8 +48,7 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
             println "No class name provided."
          }
       }
-      project.task("createGroovyProject", group: TemplatesPlugin.group,
-            description: "Creates a new Gradle Groovy project in a new directory named after your project.") << {
+      project.task("createScalaProject", group: TemplatesPlugin.group, description: "Creates a new Gradle Scala project in a new directory named after your project.") << {
          def projectName = TemplatesPlugin.prompt("Project Name:")
          if (projectName) {
             createBase(projectName)
@@ -67,11 +59,9 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
             println "No project name provided."
          }
       }
-      project.task("initGroovyProject", group: TemplatesPlugin.group,
-            description: "Initializes a new Gradle Groovy project in the current directory.") << {
+      project.task("initScalaProject", group: TemplatesPlugin.group, description: "Initializes a new Gradle Scala project in the current directory.") << {
          createBase()
          TemplatesPlugin.prependPlugin "groovy", new File("build.gradle")
       }
-
    }
 }

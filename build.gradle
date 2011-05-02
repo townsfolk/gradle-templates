@@ -1,5 +1,3 @@
-import templates.TemplatesPlugin
-
 apply plugin: "groovy"
 apply plugin: "idea"
 //apply plugin: "templates"
@@ -21,18 +19,15 @@ jar {
    baseName = 'templates'
 }
 
-task('installPlugin', type: Copy, dependsOn: 'build') {
+task("installPlugin", group: "Installation", type: Copy, dependsOn: 'build',
+      description: "Installs the plugin jar in your gradle distribution.") {
    def gradleInstallDir = gradle.gradleHomeDir
-   group = "installation"
-   description = "Installs the plugin jar in your gradle distribution."
-   from "${buildDir}/libs/templates-${version}.jar"
+   from "${project.buildDir}/libs/${jar.archiveName}"
    into "/${gradleInstallDir}/lib/plugins"
-   println "Plugin installed in: ${gradleInstallDir}/lib/plugins"
 }
 
-task('uninstallPlugin', type: Delete) {
+task("uninstallPlugin", group: "Installation", type: Delete,
+      description: "Removes the plugin from your gradle distribution.") {
    def gradleInstallDir = gradle.gradleHomeDir
-   group = "installation"
-   description = "Removes the plugin from your gradle distribution."
-   delete("/${gradleInstallDir}/lib/plugins/templates-${version}.jar")
+   delete("/${gradleInstallDir}/lib/plugins/${jar.archiveName}")
 }
