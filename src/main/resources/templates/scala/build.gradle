@@ -1,0 +1,25 @@
+apply plugin: "scala"
+
+repositories {
+	mavenCentral()
+}
+
+scalaVersion = "${scalaVersion}"
+
+dependencies {
+	// Libraries needed to run the scala tools
+	scalaTools "org.scala-lang:scala-compiler:\${scalaVersion}"
+	scalaTools "org.scala-lang:scala-library:\${scalaVersion}"
+
+	// Libraries needed for scala api
+	compile "org.scala-lang:scala-library:\${scalaVersion}"
+}
+
+<% if (useFastCompiler) { %>
+compileScala {
+	scalaCompileOptions.useCompileDaemon = true
+
+	// optionally specify host and port of the daemon:
+	scalaCompileOptions.daemonServer = "localhost:4243"
+}
+<% } %>

@@ -2,8 +2,8 @@ apply plugin: "groovy"
 apply plugin: "idea"
 //apply plugin: "templates"
 
-version = 0.5
-group = 'gradle-templates'
+version = 1.0
+group = "gradle-templates"
 
 repositories {
    mavenCentral()
@@ -12,11 +12,11 @@ repositories {
 dependencies {
    compile gradleApi()
    groovy localGroovy()
-   testCompile 'junit:junit:4.8.2'
+   testCompile "junit:junit:4.8.2"
 }
 
 jar {
-   baseName = 'templates'
+   baseName = "templates"
 }
 
 task("installPlugin", group: "Installation", type: Copy, dependsOn: 'build',

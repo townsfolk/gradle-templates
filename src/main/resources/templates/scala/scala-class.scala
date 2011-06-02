@@ -1,0 +1,9 @@
+package ${classPackage}
+
+/**
+ * @author ${System.getProperty("user.name")}
+ * Created: ${new Date()}
+ */
+${object ? 'object' : 'class'} ${className} {
+
+}
