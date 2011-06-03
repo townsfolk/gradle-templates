@@ -5,14 +5,9 @@ apply plugin: "idea"
 version = 1.0
 group = "gradle-templates"
 
-repositories {
-   mavenCentral()
-}
-
 dependencies {
    compile gradleApi()
    groovy localGroovy()
-   testCompile "junit:junit:4.8.2"
 }
 
 jar {
