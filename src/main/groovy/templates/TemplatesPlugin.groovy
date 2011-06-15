@@ -13,7 +13,7 @@ class TemplatesPlugin implements Plugin<Project> {
       def oldText = gradleFile.text
       gradleFile.text = ""
       gradleFile.withPrintWriter { pw ->
-         pw.println "apply plugin: \"${plugin}\""
+         pw.println "apply plugin: '${plugin}'"
          pw.print oldText
       }
    }
