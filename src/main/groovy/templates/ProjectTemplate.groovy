@@ -7,11 +7,11 @@ import groovy.text.GStringTemplateEngine
  * Eg.
  * <code>
  * ProjectTemplate.fromUserDir {
- *    directory("src") { // creates new directory named 'src'
- *       dir("main") { // creates a new directory named 'main'
- *          d("java") { // creates a new directory named 'java'
- *             file("Class1.java") // creates a new file named 'Class1.java'
- *             f("Class2.java") // creates a new file named 'Class2.java'
+ *    directory('src') { // creates new directory named 'src'
+ *       dir('main') { // creates a new directory named 'main'
+ *          d('java') { // creates a new directory named 'java'
+ *             file('Class1.java') // creates a new file named 'Class1.java'
+ *             f('Class2.java') // creates a new file named 'Class2.java'
  *          }
  *       }
  *    }
@@ -22,11 +22,11 @@ import groovy.text.GStringTemplateEngine
  * Eg.
  * <code>
  * ProjectTemplate.fromUserDir {
- *    "src/main" { // creates the directories 'src', and 'main'.
- *       "java" {
- *          "Class1.java" "public class Class1 {}" // creates the file 'Class1.java' with some initial content.
+ *    'src/main' { // creates the directories 'src', and 'main'.
+ *       'java' {
+ *          'Class1.java' 'public class Class1 {}' // creates the file 'Class1.java' with some initial content.
  *       }
- *       "resources {}
+ *       'resources' {}
  *    }
  * }
  * </code>
@@ -153,7 +153,7 @@ class ProjectTemplate {
     * @param closure
     */
    static void fromUserDir(Closure closure = {}) {
-      new ProjectTemplate().directory(System.getProperty("user.dir"), closure)
+      new ProjectTemplate().directory(System.getProperty('user.dir'), closure)
    }
 
    /**
