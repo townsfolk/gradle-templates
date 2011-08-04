@@ -12,7 +12,7 @@ class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 		String projectGroup = props['projectGroup'] ?: TemplatesPlugin.prompt('Group:', lProjectName)
 		String projectVersion = props['projectVersion'] ?: TemplatesPlugin.prompt('Version:', '1.0')
 		String pluginApplyLabel = props['pluginApplyLabel'] ?: TemplatesPlugin.prompt('Plugin \'apply\' label:', lProjectName)
-		String pluginClassName = props['pluginClassName'] ?: TemplatesPlugin.prompt('Plugin class name:', "${projectGroup}.${cProjectName}")
+		String pluginClassName = props['pluginClassName'] ?: TemplatesPlugin.prompt('Plugin class name:', "${projectGroup}.${cProjectName}Plugin")
 
 		super.createBase(path)
 
