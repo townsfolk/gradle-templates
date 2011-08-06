@@ -81,7 +81,8 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
 			buildFile.exists() ?: buildFile.createNewFile()
 			TemplatesPlugin.prependPlugin 'groovy', buildFile
 		}
-		project.task('exportGroovyTemplates') << {
+		project.task('exportGroovyTemplates', group: TemplatesPlugin.group,
+				description: 'Exports the default groovy template files into the current directory.') << {
 			def _ = '/templates/groovy'
 			def templates = [
 					"$_/build.gradle.tmpl",

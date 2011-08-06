@@ -81,6 +81,7 @@ class TemplatesPlugin implements Plugin<Project> {
 
 		project.task('exportAllTemplates', dependsOn: [
 				'exportJavaTemplates', 'exportGroovyTemplates', 'exportScalaTemplates', 'exportWebappTemplates',
-				'exportPluginTemplates']) {}
+				'exportPluginTemplates'], group: TemplatesPlugin.group,
+				description: 'Exports all the default template files into the current directory.') {}
 	}
 }

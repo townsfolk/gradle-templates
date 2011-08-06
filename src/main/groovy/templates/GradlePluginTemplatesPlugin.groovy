@@ -55,7 +55,8 @@ class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 			}
 		}
 
-		project.task('exportPluginTemplates') << {
+		project.task('exportPluginTemplates', group: TemplatesPlugin.group,
+				description: 'Exports the default plugin template files into the current directory.') << {
 			def _ = '/templates/plugin'
 			def templates = [
 					"$_/build.gradle.tmpl",
