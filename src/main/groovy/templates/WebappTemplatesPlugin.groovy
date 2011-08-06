@@ -44,6 +44,13 @@ class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Projec
 				TemplatesPlugin.prependPlugin 'war', buildFile
 			}
 		}
-
+		project.task('exportWebappTemplates') << {
+			def _ = '/templates/webapp'
+			def templates = [
+					"$_/build.gradle.tmpl",
+					"$_/web-xml.tmpl"
+			]
+			TemplatesPlugin.exportTemplates(templates)
+		}
 	}
 }

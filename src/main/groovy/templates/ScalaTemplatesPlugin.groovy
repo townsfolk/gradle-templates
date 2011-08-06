@@ -100,5 +100,13 @@ class ScalaTemplatesPlugin implements Plugin<Project> {
 			createBase()
 			setupBuildFile(project)
 		}
+		project.task('exportScalaTemplates') << {
+			def _ = '/templates/scala'
+			def templates = [
+					"$_/build.gradle.tmpl",
+					"$_/scala-class.tmpl"
+			]
+			TemplatesPlugin.exportTemplates(templates)
+		}
 	}
 }

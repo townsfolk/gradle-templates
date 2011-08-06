@@ -88,6 +88,14 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 			buildFile.exists() ?: buildFile.createNewFile()
 			TemplatesPlugin.prependPlugin 'java', buildFile
 		}
+		project.task('exportJavaTemplates') << {
+			def _ = '/templates/java'
+			def templates = [
+					"$_/build.gradle.tmpl",
+					"$_/java-class.tmpl"
+			]
+			TemplatesPlugin.exportTemplates(templates)
+		}
 
 	}
 }
