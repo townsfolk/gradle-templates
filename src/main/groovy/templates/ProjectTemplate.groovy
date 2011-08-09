@@ -1,3 +1,5 @@
+package templates
+
 import groovy.text.GStringTemplateEngine
 
 /**
@@ -127,17 +129,17 @@ class ProjectTemplate {
 	}
 
 	String renderTemplate(Map params = [:], String template) {
-		println "Rendering template - path: ${template}, params: ${params}"
+		//println "Rendering template - path: ${template}, params: ${params}"
 		def tLoc = new File(template)
 		if (!tLoc.exists()) { // check given path
-			println '   couldn\'t find file at given path, trying relative path.'
+			//println '   couldn\'t find file at given path, trying relative path.'
 			def rTemplate = template
 			if (rTemplate.startsWith('/')) {
 				rTemplate = rTemplate - '/'
 			}
 			tLoc = new File(System.getProperty('user.dir'), rTemplate)
 			if (!tLoc.exists()) { // check relative path from current working dir.
-				println '   couldn\'t find at relative path either, using classpath.'
+				//println '   couldn\'t find at relative path either, using classpath.'
 				tLoc = getClass().getResource(template) // last ditch, use classpath.
 			}
 		}
