@@ -2,8 +2,17 @@ package templates
 
 import org.gradle.api.Project
 
+/**
+ * Adds basic tasks for bootstrapping gradle plugin projects. Adds createGradlePlugin, exportPluginTemplates, and
+ * initGradlePlugin tasks. Also applies the groovy-templates plugin.
+ */
 class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 
+	/**
+	 * Creates the default project structure for a new gradle plugin.
+	 * @param path The root path of the project. optional, defaults to user.dir.
+	 * @param project A project object.
+	 */
 	void createBase(String path = System.getProperty('user.dir'), def project) {
 
 		def props = project.properties

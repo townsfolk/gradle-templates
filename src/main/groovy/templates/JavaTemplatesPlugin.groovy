@@ -3,8 +3,17 @@ package templates
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * Adds basic tasks for bootstrapping Java projects. Adds createJavaClass, createJavaProject,
+ * exportJavaTemplates, and initJavaProject tasks.
+ */
 class JavaTemplatesPlugin implements Plugin<Project> {
 
+	/**
+	 * Pulls a fully qualified classname into it's parts - package, and name.
+	 * @param fullClassName
+	 * @return Map containing the classname, package, and package as a path.
+	 */
 	static def getClassParts(String fullClassName) {
 		def classParts = fullClassName.split(/\./) as List
 		[
@@ -14,6 +23,10 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 		]
 	}
 
+	/**
+	 * Creates the basic Java project directory structure.
+	 * @param path the root of the project. Optional,defaults to user.dir.
+	 */
 	void createBase(String path = System.getProperty('user.dir')) {
 		ProjectTemplate.fromRoot(path) {
 			'src' {
@@ -30,6 +43,11 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 		}
 	}
 
+	/**
+	 * Finds the path to the main java source directory.
+	 * @param project The project.
+	 * @return The path to the main java source directory.
+	 */
 	static String findMainJavaDir(Project project) {
 		File rootDir = project.projectDir
 		def mainSrcDir = project.sourceSets?.main?.java?.srcDirs*.path
@@ -82,12 +100,6 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 				println 'No project name provided.'
 			}
 		}
-		project.task('initJavaProject', group: TemplatesPlugin.group, description: 'Initializes a new Gradle Java project in the current directory.') << {
-			createBase()
-			File buildFile = new File('build.gradle')
-			buildFile.exists() ?: buildFile.createNewFile()
-			TemplatesPlugin.prependPlugin 'java', buildFile
-		}
 		project.task('exportJavaTemplates', group: TemplatesPlugin.group,
 				description: 'Exports the default java template files into the current directory.') << {
 			def _ = '/templates/java'
@@ -97,6 +109,11 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 			]
 			TemplatesPlugin.exportTemplates(templates)
 		}
-
+		project.task('initJavaProject', group: TemplatesPlugin.group, description: 'Initializes a new Gradle Java project in the current directory.') << {
+			createBase()
+			File buildFile = new File('build.gradle')
+			buildFile.exists() ?: buildFile.createNewFile()
+			TemplatesPlugin.prependPlugin 'java', buildFile
+		}
 	}
 }

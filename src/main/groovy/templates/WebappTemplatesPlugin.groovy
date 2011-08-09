@@ -3,7 +3,15 @@ package templates
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * Adds basic tasks for bootstrapping Webapp projects. Adds createWebappProject, exportWebappTemplates, and
+ * initWebappProject tasks. Also applies the java-templates plugin.
+ */
 class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Project> {
+	/**
+	 * Creates the basic Groovy project directory structure.
+	 * @param path the root of the project. Optional,defaults to user.dir.
+	 */
 	void createBase(String path = System.getProperty('user.dir'), String projectName) {
 		super.createBase(path)
 		ProjectTemplate.fromRoot(path) {
@@ -33,6 +41,15 @@ class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Projec
 				println 'No project name provided.'
 			}
 		}
+		project.task('exportWebappTemplates', group: TemplatesPlugin.group,
+				description: 'Exports the default webapp template files into the current directory.') << {
+			def _ = '/templates/webapp'
+			def templates = [
+					"$_/build.gradle.tmpl",
+					"$_/web-xml.tmpl"
+			]
+			TemplatesPlugin.exportTemplates(templates)
+		}
 		project.task('initWebappProject', group: TemplatesPlugin.group, description: 'Initializes a new Gradle Webapp project in the current directory.') << {
 			createBase(project.name)
 			def useJetty = props['useJettyPlugin'] ?: TemplatesPlugin.promptYesOrNo('Use Jetty Plugin?')
@@ -43,15 +60,6 @@ class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Projec
 			} else {
 				TemplatesPlugin.prependPlugin 'war', buildFile
 			}
-		}
-		project.task('exportWebappTemplates', group: TemplatesPlugin.group,
-				description: 'Exports the default webapp template files into the current directory.') << {
-			def _ = '/templates/webapp'
-			def templates = [
-					"$_/build.gradle.tmpl",
-					"$_/web-xml.tmpl"
-			]
-			TemplatesPlugin.exportTemplates(templates)
 		}
 	}
 }

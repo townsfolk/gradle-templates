@@ -3,7 +3,15 @@ package templates
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * Adds basic tasks for bootstrapping Groovy projects. Adds createGroovyClass, createGroovyProject,
+ * exportGroovyTemplates, and initGroovyProject tasks.
+ */
 class GroovyTemplatesPlugin implements Plugin<Project> {
+	/**
+	 * Creates the basic Groovy project directory structure.
+	 * @param path the root of the project. Optional,defaults to user.dir.
+	 */
 	void createBase(String path = System.getProperty('user.dir')) {
 		ProjectTemplate.fromRoot(path) {
 			'src' {
@@ -19,7 +27,11 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
 			'LICENSE.txt' '// Your License Goes here'
 		}
 	}
-
+	/**
+	 * Finds the path to the main java source directory.
+	 * @param project The project.
+	 * @return The path to the main groovy source directory.
+	 */
 	static String findMainGroovyDir(Project project) {
 		File rootDir = project.projectDir
 		def mainSrcDir = project.sourceSets?.main?.groovy?.srcDirs*.path
@@ -74,13 +86,6 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
 				println 'No project name provided.'
 			}
 		}
-		project.task('initGroovyProject', group: TemplatesPlugin.group,
-				description: 'Initializes a new Gradle Groovy project in the current directory.') << {
-			createBase()
-			def buildFile = new File('build.gradle')
-			buildFile.exists() ?: buildFile.createNewFile()
-			TemplatesPlugin.prependPlugin 'groovy', buildFile
-		}
 		project.task('exportGroovyTemplates', group: TemplatesPlugin.group,
 				description: 'Exports the default groovy template files into the current directory.') << {
 			def _ = '/templates/groovy'
@@ -89,6 +94,13 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
 					"$_/groovy-class.tmpl"
 			]
 			TemplatesPlugin.exportTemplates(templates)
+		}
+		project.task('initGroovyProject', group: TemplatesPlugin.group,
+				description: 'Initializes a new Gradle Groovy project in the current directory.') << {
+			createBase()
+			def buildFile = new File('build.gradle')
+			buildFile.exists() ?: buildFile.createNewFile()
+			TemplatesPlugin.prependPlugin 'groovy', buildFile
 		}
 	}
 }

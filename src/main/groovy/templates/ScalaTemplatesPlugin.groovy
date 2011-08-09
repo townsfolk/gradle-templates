@@ -3,8 +3,17 @@ package templates
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * Adds basic tasks for bootstrapping Scala projects. Adds createScalaClass, createScalaObject, createScalaProject,
+ * exportScalaTemplates, and initScalaProject tasks.
+ */
 class ScalaTemplatesPlugin implements Plugin<Project> {
 
+	/**
+	 * Finds the path to the main java source directory.
+	 * @param project The project.
+	 * @return The path to the main groovy source directory.
+	 */
 	static String findMainScalaDir(Project project) {
 		File rootDir = project.projectDir
 		def mainSrcDir = project.sourceSets?.main?.scala?.srcDirs*.path
@@ -13,6 +22,10 @@ class ScalaTemplatesPlugin implements Plugin<Project> {
 		return mainSrcDir
 	}
 
+	/**
+	 * Creates the basic Scala project directory structure.
+	 * @param path the root of the project. Optional,defaults to user.dir.
+	 */
 	void createBase(String path = System.getProperty('user.dir')) {
 		ProjectTemplate.fromRoot(path) {
 			'src' {
@@ -29,6 +42,11 @@ class ScalaTemplatesPlugin implements Plugin<Project> {
 		}
 	}
 
+	/**
+	 * Initializes or creates the project's build.gradle file.
+	 * @param project The project
+	 * @param path The path to the root of the project. optional, defaults to user.dir.
+	 */
 	void setupBuildFile(Project project, String path = System.getProperty('user.dir')) {
 		def props = project.properties
 		String scalaVersion = props['scalaVersion'] ?: TemplatesPlugin.prompt('Scala Version:', '2.9.0')
@@ -42,6 +60,11 @@ class ScalaTemplatesPlugin implements Plugin<Project> {
 		}
 	}
 
+	/**
+	 * Creates a Scala class, or object in the currect working directory.
+	 * @param project The project.
+	 * @param object Is this a Scala class, or object.
+	 */
 	void createScalaClass(Project project, boolean object) {
 		def mainSrcDir = null
 		try {
@@ -95,11 +118,6 @@ class ScalaTemplatesPlugin implements Plugin<Project> {
 				println 'No project name provided.'
 			}
 		}
-		project.task('initScalaProject', group: TemplatesPlugin.group,
-				description: 'Initializes a new Gradle Scala project in the current directory.') << {
-			createBase()
-			setupBuildFile(project)
-		}
 		project.task('exportScalaTemplates', group: TemplatesPlugin.group,
 				description: 'Exports the default scala template files into the current directory.') << {
 			def _ = '/templates/scala'
@@ -108,6 +126,11 @@ class ScalaTemplatesPlugin implements Plugin<Project> {
 					"$_/scala-class.tmpl"
 			]
 			TemplatesPlugin.exportTemplates(templates)
+		}
+		project.task('initScalaProject', group: TemplatesPlugin.group,
+				description: 'Initializes a new Gradle Scala project in the current directory.') << {
+			createBase()
+			setupBuildFile(project)
 		}
 	}
 }

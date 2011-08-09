@@ -5,20 +5,31 @@ import groovy.text.GStringTemplateEngine
  * can be used to set up the necessary files and directories needed for new projects.
  *
  * Eg.
- * <code>
- * ProjectTemplate.fromUserDir {*    directory('src') { // creates new directory named 'src'
+ * <pre>
+ * ProjectTemplate.fromUserDir {
+ *    directory('src') { // creates new directory named 'src'
  *       dir('main') { // creates a new directory named 'main'
  *          d('java') { // creates a new directory named 'java'
  *             file('Class1.java') // creates a new file named 'Class1.java'
  *             f('Class2.java') // creates a new file named 'Class2.java'
- *}*}*}*}* </code>
+ *          }
+ *       }
+ *    }
+ * }
+ * </pre>
  *
  * Can also be used without method calls for directory and file.
  * Eg.
- * <code>
- * ProjectTemplate.fromUserDir {*    'src/main' { // creates the directories 'src', and 'main'.
- *       'java' {*          'Class1.java' 'public class Class1 {}' // creates the file 'Class1.java' with some initial content.
- *}*       'resources' {}*}*}* </code>
+ * <pre>
+ * ProjectTemplate.fromUserDir {
+ *    'src/main' { // creates the directories 'src', and 'main'.
+ *       'java' {
+ *          'Class1.java' 'public class Class1 {}' // creates the file 'Class1.java' with some initial content.
+ *       }
+ *       'resources' {}
+ *    }
+ * }
+ * </pre>
  * @author: elberry
  * Date: 4/9/11 6:04 PM
  */
