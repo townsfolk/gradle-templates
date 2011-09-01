@@ -1,3 +1,5 @@
+import templates.TemplatesPlugin
+
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'maven'
@@ -76,4 +78,15 @@ if (project.hasProperty('mavenRepoUrl')) {
 			repository url: project.getProperty('mavenRepoUrl')
 		}
 	}
+}
+
+task('prompts') << {
+	println TemplatesPlugin.prompt('What is your favorite color?')
+	println TemplatesPlugin.prompt('What is your favorite color?', 'Green')
+	def options = ['Red', 'Green', 'Blue']
+	println options[TemplatesPlugin.promptOptions('R, G, or B?', options)]
+	println options[TemplatesPlugin.promptOptions('R, G, or B?', 3, options)]
+	println TemplatesPlugin.promptYesOrNo('Did this work for you?')
+	println TemplatesPlugin.promptYesOrNo('Did this work for you?', true)
+	println TemplatesPlugin.promptYesOrNo('Did this work for you?', false)
 }

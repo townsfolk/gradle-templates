@@ -2,6 +2,7 @@ package templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.GradleException
 
 class TemplatesPlugin implements Plugin<Project> {
 
@@ -20,7 +21,7 @@ class TemplatesPlugin implements Plugin<Project> {
 
 	static void prependPlugin(String plugin, File gradleFile) {
 		def oldText = gradleFile.text
-		gradleFile.text = ""
+		gradleFile.text = ''
 		gradleFile.withPrintWriter { pw ->
 			pw.println "apply plugin: '${plugin}'"
 			pw.print oldText
@@ -35,9 +36,9 @@ class TemplatesPlugin implements Plugin<Project> {
 	}
 
 	static int promptOptions(String message, List options = []) {
-		promptOptions(message, "", options)
+		promptOptions(message, 0, options)
 	}
-
+	
 	static int promptOptions(String message, int defaultValue, List options = []) {
 		String consoleMessage = "${inputPrompt} ${message}"
 		consoleMessage += "${lineSep}    Pick an option ${1..options.size()}"
@@ -51,22 +52,26 @@ class TemplatesPlugin implements Plugin<Project> {
 		}
 		try {
 			def range = 0..options.size() - 1
-			int choice = Integer.parseInt(System.console().readLine(consoleMessage) ?: "${defaultValue}") - 1
+			int choice = Integer.parseInt(System.console().readLine(consoleMessage) ?: "${defaultValue}")
+			if(choice == 0) {
+				throw new GradleException('No option provided')
+			}
+			choice--
 			if (range.containsWithinBounds(choice)) {
 				return choice
 			} else {
-				throw new IllegalArgumentException("Option is not valid.")
+				throw new IllegalArgumentException('Option is not valid.')
 			}
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Option is not valid.", e)
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException('Option is not valid.', e)
 		}
 	}
 
 	static boolean promptYesOrNo(String message, boolean defaultValue = false) {
-		def defaultStr = defaultValue ? "Y" : "n"
+		def defaultStr = defaultValue ? 'Y' : 'n'
 		String consoleVal = System.console().readLine("${inputPrompt} ${message} (Y|n)[${defaultStr}] ")
 		if (consoleVal) {
-			return consoleVal.toLowerCase().startsWith("y")
+			return consoleVal.toLowerCase().startsWith('y')
 		}
 		return defaultValue
 	}
