@@ -22,7 +22,7 @@ class WebappTemplatesPlugin extends JavaTemplatesPlugin implements Plugin<Projec
 	}
 
 	void apply(Project project) {
-		project.apply(plugin: 'java-templates')
+		project.apply(plugin: JavaTemplatesPlugin)
 
 		def props = project.properties
 

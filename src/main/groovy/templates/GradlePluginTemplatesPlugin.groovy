@@ -51,7 +51,7 @@ class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 	}
 
 	void apply(Project project) {
-		project.apply(plugin: 'groovy-templates')
+		project.apply(plugin: GroovyTemplatesPlugin)
 		def props = project.properties
 
 		project.task('createGradlePlugin', group: TemplatesPlugin.group,

@@ -1,8 +1,8 @@
 package templates
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.GradleException
 
 class TemplatesPlugin implements Plugin<Project> {
 
@@ -38,7 +38,7 @@ class TemplatesPlugin implements Plugin<Project> {
 	static int promptOptions(String message, List options = []) {
 		promptOptions(message, 0, options)
 	}
-	
+
 	static int promptOptions(String message, int defaultValue, List options = []) {
 		String consoleMessage = "${inputPrompt} ${message}"
 		consoleMessage += "${lineSep}    Pick an option ${1..options.size()}"
@@ -53,7 +53,7 @@ class TemplatesPlugin implements Plugin<Project> {
 		try {
 			def range = 0..options.size() - 1
 			int choice = Integer.parseInt(System.console().readLine(consoleMessage) ?: "${defaultValue}")
-			if(choice == 0) {
+			if (choice == 0) {
 				throw new GradleException('No option provided')
 			}
 			choice--
@@ -78,11 +78,11 @@ class TemplatesPlugin implements Plugin<Project> {
 
 	def void apply(Project project) {
 		project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
-		project.apply(plugin: 'gradle-plugin-templates')
-		project.apply(plugin: 'groovy-templates')
-		project.apply(plugin: 'java-templates')
-		project.apply(plugin: 'scala-templates')
-		project.apply(plugin: 'webapp-templates')
+		project.apply(plugin: GradlePluginTemplatesPlugin)
+		project.apply(plugin: GroovyTemplatesPlugin)
+		project.apply(plugin: JavaTemplatesPlugin)
+		project.apply(plugin: ScalaTemplatesPlugin)
+		project.apply(plugin: WebappTemplatesPlugin)
 
 		project.task('exportAllTemplates', dependsOn: [
 				'exportJavaTemplates', 'exportGroovyTemplates', 'exportScalaTemplates', 'exportWebappTemplates',

@@ -1,10 +1,10 @@
-import templates.TemplatesPlugin
+//import templates.TemplatesPlugin
 
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'maven'
 
-version = 1.1
+version = 1.2
 group = 'gradle-templates'
 
 repositories { mavenCentral() }
