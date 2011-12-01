@@ -10,5 +10,7 @@ buildscript {
 		classpath 'gradle-templates:templates:1.1'
 	}
 }
-
-apply plugin: templates.TemplatesPlugin
+// Check to make sure templates.TemplatesPlugin isn't already added.
+if (!project.plugins.findPlugin(templates.TemplatesPlugin)) {
+	project.apply(plugin: templates.TemplatesPlugin)
+}

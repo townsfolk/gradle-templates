@@ -51,7 +51,10 @@ class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 	}
 
 	void apply(Project project) {
-		project.apply(plugin: GroovyTemplatesPlugin)
+		// Check to make sure GroovyTemplatesPlugin isn't already added.
+		if (!project.plugins.findPlugin(GroovyTemplatesPlugin)) {
+			project.apply(plugin: GroovyTemplatesPlugin)
+		}
 		def props = project.properties
 
 		project.task('createGradlePlugin', group: TemplatesPlugin.group,
