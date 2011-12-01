@@ -78,8 +78,8 @@ class TemplatesPlugin implements Plugin<Project> {
 
 	def void apply(Project project) {
 		project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
-		project.apply(plugin: GradlePluginTemplatesPlugin)
 		project.apply(plugin: GroovyTemplatesPlugin)
+		project.apply(plugin: GradlePluginTemplatesPlugin)
 		project.apply(plugin: JavaTemplatesPlugin)
 		project.apply(plugin: ScalaTemplatesPlugin)
 		project.apply(plugin: WebappTemplatesPlugin)
