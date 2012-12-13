@@ -1,6 +1,6 @@
 task('unversionedJar', type: Jar, dependsOn: 'jar') {
 	version = null
-	from sourceSets.main.classes
+	from sourceSets.main.output
 }
 
 task('installPlugin', type: Copy, dependsOn: 'unversionedJar') {
