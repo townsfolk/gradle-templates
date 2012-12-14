@@ -45,7 +45,6 @@ class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 				}
 			}
 			'build.gradle' template: '/templates/plugin/build.gradle.tmpl', projectGroup: projectGroup
-			'build.gradle' template: '/templates/plugin/installation-tasks.tmpl', append: true
 			'gradle.properties' content: "version=${projectVersion}", append: true
 		}
 	}
@@ -73,7 +72,6 @@ class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 			def templates = [
 					"$_/build.gradle.tmpl",
 					"$_/convention-class.tmpl",
-					"$_/installation-tasks.tmpl",
 					"$_/plugin-class.tmpl"
 			]
 			TemplatesPlugin.exportTemplates(templates)
