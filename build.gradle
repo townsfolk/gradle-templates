@@ -1,14 +1,7 @@
-//import templates.TemplatesPlugin
-
 apply plugin: 'groovy'
 apply plugin: 'idea'
-apply plugin: 'maven'
-
-group = 'gradle-templates'
 
 repositories { mavenCentral() }
-
-configurations { deployerJars }
 
 dependencies {
 	compile gradleApi()
