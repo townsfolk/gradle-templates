@@ -2,11 +2,12 @@ buildscript {
 	repositories {
 		ivy {
 			name = 'gradle_templates'
-			artifactPattern "http://launchpad.net/[organization]/trunk/[revision]/+download/[artifact]-[revision].jar"
+			artifactPattern 'http://tellurianring.com/projects/gradle-plugins/[module]/[revision]/[artifact]-[revision].[ext]'
+			ivyPattern 'http://tellurianring.com/projects/gradle-plugins/[module]/[revision]/[artifact]-[revision].[ext]'
 		}
 	}
 	dependencies {
-		classpath 'gradle-templates:templates:1.2'
+		classpath 'gradle-templates:gradle-templates:1.3'
 	}
 }
 // Check to make sure templates.TemplatesPlugin isn't already added.

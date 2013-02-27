@@ -10,7 +10,7 @@ buildscript {
 	dependencies {
 		def templatesVersion = project.hasProperty('gradle.templates.ver') ? project.getProperty('gradle.templates.ver') :
                                                                          project.version
-		classpath "gradle-templates:templates:${templatesVersion}"
+		classpath "gradle-templates:gradle-templates:${templatesVersion}"
 	}
 }
 // Check to make sure templates.TemplatesPlugin isn't already added.

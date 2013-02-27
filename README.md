@@ -14,11 +14,11 @@ To install the plugin with Gradle M3 and above you should use the apply script p
 
 To use the apply script, add this to your `build.gradle` file:
 
-	apply from: 'http://launchpad.net/gradle-templates/trunk/1.2/+download/apply.groovy'
+	apply from: 'http://www.tellurianring.com/projects/gradle-plugins/gradle-templates/1.3/apply.groovy'
 
 You can use the 'latest' apply script to automatically get updated when there are new releases.
 
-	apply from: 'http://launchpad.net/gradle-templates/trunk/latest/+download/apply.groovy'
+	apply from: 'http://www.tellurianring.com/projects/gradle-plugins/gradle-templates/apply.groovy'
 
 This apply script will always point to the latest release available.
 ### Installing from source
@@ -117,7 +117,7 @@ Using [Gradle init scripts](http://gradle.org/docs/current/userguide/init_script
 Simply add the following to your `~/.gradle/init.gradle` script:
 
 	gradle.beforeProject { prj ->
-		prj.apply from: 'http://launchpad.net/gradle-templates/trunk/latest/+download/apply.groovy'
+		prj.apply from: 'http://www.tellurianring.com/projects/gradle-plugins/gradle-templates/apply.groovy'
 	}
 
 A smaller quick start is available on [my blog](http://eric-berry.blogspot.com/2011/05/gradle-templates-plugin.html).
