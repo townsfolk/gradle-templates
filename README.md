@@ -7,6 +7,9 @@ The Gradle Templates plugin helps you get started using Gradle by providing conv
 Which will prompt you for your new project's name and create a new directory with it. It will also create a standard directory structure in your project's directory that works with Gradle's default configurations.
 
 The plugin also makes it easy to create your own templates which can be useful in creating new projects, or creating components within your projects. Eg. It's easy to create a simple task to generate a new GSP that fits your company's standard layout. Or to create a more complex task to generate a new servlet and add the entry into your webapp's web.xml file.
+
+Current Version: 1.3
+
 ## Installation
 ### Binaries
 

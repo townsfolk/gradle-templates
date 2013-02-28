@@ -20,6 +20,8 @@ updateVersion << {
 	def oldVersion = project.getProperty("release.oldVersion")
 	def newVersion = project.getProperty("release.newVersion")
 	ant.replace(file: applyFile, token: "${group}:${name}:${oldVersion}", value: "${group}:${name}:${newVersion}")
+	ant.replaceregexp(file: readmeFile, match: "Current Version: .*?\$", replace: "Current Version: ${oldVersion}", byline: true)
+	ant.replaceregexp(file: readmeFile, match: "gradle-templates/\\d+\\.\\d+/apply.groovy", replace: "gradle-templates/${oldVersion}/apply.groovy", byline: true)
 }
 
 artifacts {
