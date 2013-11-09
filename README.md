@@ -42,9 +42,9 @@ You also need to set two properties in your `gradle.properties` file, or supply 
 	
 Note that the version property should be equal to version found in `[gradle-templates]/gradle.properties`
 
-## Alternate Installation from Source
+### Alternate Installation from Source
 
-Build the plugin:
+You can also build and install the plugin locally from a maven repo by building the plugin:
 
 	cd gradle-templates
 	gradle build install
@@ -66,7 +66,7 @@ In your project, add the following to load the plugin from your maven repo:
 	}
 	apply plugin: 'templates'
 
-You should be able to add your own templates as shown below without the need for the other configuration options.
+Now, you should be able to add your own templates as shown below without the need for the other configuration options.
 
 ## Usage
 
