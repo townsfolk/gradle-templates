@@ -42,6 +42,32 @@ You also need to set two properties in your `gradle.properties` file, or supply 
 	
 Note that the version property should be equal to version found in `[gradle-templates]/gradle.properties`
 
+### Alternate Installation from Source
+
+You can also build and install the plugin locally from a maven repo by building the plugin:
+
+	cd gradle-templates
+	gradle build install
+	
+In your project, add the following to load the plugin from your maven repo:
+
+	import templates.*
+
+	apply plugin: 'maven'
+
+	buildscript {
+		repositories {
+			mavenCentral()
+			mavenLocal()
+		}
+		dependencies {
+			classpath group: 'gradle-templates', name:'gradle-templates', version: '1.4'
+		}
+	}
+	apply plugin: 'templates'
+
+Now, you should be able to add your own templates as shown below without the need for the other configuration options.
+
 ## Usage
 
 Entering `gradle tasks` will show you the available `Templates` tasks:
