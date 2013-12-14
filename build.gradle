@@ -1,9 +1,13 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'jacoco'
 
 repositories { mavenCentral() }
 
 dependencies {
 	compile gradleApi()
-	groovy localGroovy()
+	compile localGroovy()
+
+    testCompile 'junit:junit:4.11'
 }
