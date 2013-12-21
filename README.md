@@ -379,3 +379,6 @@ There are no prompts for this task.
 
 
 License: [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+Automated Build: [![Build Status](https://drone.io/github.com/cjstehno/gradle-templates/status.png)](https://drone.io/github.com/cjstehno/gradle-templates/latest)
+
