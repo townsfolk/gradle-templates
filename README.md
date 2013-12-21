@@ -34,12 +34,12 @@ Build the plugin:
 In your project, use the apply script that is found under the installation directory.
 
 	apply from: 'file:///[gradle-templates]/installation/apply-local.groovy'
-	
+
 You also need to set two properties in your `gradle.properties` file, or supply them via System properties.
 
 	gradle.templates.dir=[gradle-templates]
 	gradle.templates.ver=[version]
-	
+
 Note that the version property should be equal to version found in `[gradle-templates]/gradle.properties`
 
 ### Alternate Installation from Source
@@ -48,7 +48,7 @@ You can also build and install the plugin locally from a maven repo by building 
 
 	cd gradle-templates
 	gradle build install
-	
+
 In your project, add the following to load the plugin from your maven repo:
 
 	import templates.*
@@ -98,7 +98,7 @@ Eg. Running `createGroovyProject` will prompt you for your new project's name:
 	> Building > :createGroovyProject
 	?> Project Name: TestGroovyProject
 	:createGroovyProject
-	
+
 	BUILD SUCCESSFUL
 
 and create a directory like:
@@ -186,7 +186,7 @@ Gradle already makes it very easy to change the default directory structure, so 
 			'''
 		}
 	}
-	
+
 When you run `gradle createMyProject` now you'll be prompted for your new project's name, and then a new directory will be created based on that name.
 
 The `import` statement simply imports the `TemplatesPlugin`, and `ProjectTemplate` classes into your build script.
@@ -202,7 +202,7 @@ You can also use a template, and parameters if you don't want the content to be 
 For example, we could specify a default Java class template to be used when generating Java classes.
 
 	package ${classPackage};
-	
+
 	/**
 	* @author ${System.getProperty("user.name")}
 	* Created: ${new Date()}
@@ -229,14 +229,14 @@ Here we create a new `GString` template file called `java-class.tmpl`. Which we 
 Executing `gradle createJavaClass` prompts us for our project name, and new Java class name. The class has the default package `com.example`, and our newly generated java file looks like this:
 
 	package com.example;
-	
+
 	/**
 	* @author elberry
 	* Created: Mon Apr 18 12:45:30 PDT 2011
 	*/
 	public class MyClass {
 		public MyClass() {
-		
+
 		}
 	}
 
@@ -356,7 +356,7 @@ There are no prompts for this task.
 		<td>pluginClassName</td><td>The classname of your new plugin. Can include package, eg. 'com.example.MyClass'</td>
 	</tr>
 </table>
-	
+
 ##### initGroovyProject
 
 There are no prompts for this task.
@@ -376,3 +376,6 @@ There are no prompts for this task.
 * Project Page: https://github.com/townsfolk/gradle-templates
 * Asking Questions: https://github.com/townsfolk/gradle-templates/issues
 * Reporting Bugs: https://github.com/townsfolk/gradle-templates/issues
+
+
+License: [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html)
