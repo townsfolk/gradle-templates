@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2011,2012 Eric Berry <elberry@tellurianring.com>
  * Copyright (c) 2013 Christopher J. Stehno <chris@stehno.com>
@@ -15,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package templates
 
 import org.gradle.api.GradleException
@@ -24,9 +22,9 @@ import org.gradle.api.Project
 
 class TemplatesPlugin implements Plugin<Project> {
 
-	static final String group = "Template"
-	static final String lineSep = System.getProperty("line.separator")
-	static final String inputPrompt = "${lineSep}??>"
+	static final String group = 'Template'
+	static final String lineSep = System.getProperty( 'line.separator' )
+	static final String inputPrompt = "${lineSep}templates>"
 
 	static void exportTemplates(def templates = []) {
 		ProjectTemplate.fromUserDir {

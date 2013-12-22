@@ -28,7 +28,7 @@ buildscript {
 		}
     }
     dependencies {
-        classpath 'gradle-templates:gradle-templates:1.4.1'
+        classpath 'gradle-templates:gradle-templates:1.4.2'
     }
 }
 
@@ -52,7 +52,7 @@ Other usage documentation can be found on the project [Usage](https://github.com
 
 ## Details
 
-* Version: 1.4.1
+* Version: 1.4.2
 * Project Site: [http://cjstehno.github.io/gradle-templates](http://cjstehno.github.io/gradle-templates)
 * Project Repo: [https://github.com/cjstehno/gradle-templates](https://github.com/cjstehno/gradle-templates)
 * Wiki/Documentation: [https://github.com/cjstehno/gradle-templates/wiki](https://github.com/cjstehno/gradle-templates/wiki)

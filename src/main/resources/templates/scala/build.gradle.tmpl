@@ -1,6 +1,8 @@
 apply plugin: 'scala'
 
+<% if(projectGroup){ %>
 group = '${projectGroup}'
+<% } %>
 
 repositories {
 	mavenCentral()

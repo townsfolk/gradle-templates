@@ -66,14 +66,17 @@ class ScalaTemplatesPlugin implements Plugin<Project> {
 	 */
 	void setupBuildFile(Project project, String path = System.getProperty('user.dir')) {
 		def props = project.properties
-		String scalaVersion = props['scalaVersion'] ?: TemplatesPlugin.prompt('Scala Version:', '2.9.0')
+
+        String scalaVersion = props['scalaVersion'] ?: TemplatesPlugin.prompt('Scala Version:', '2.9.0')
+
 		boolean useFastCompiler = props['useFastScalaCompiler'] ?: TemplatesPlugin.promptYesOrNo('Use fast compiler?', false)
-		ProjectTemplate.fromRoot(path) {
+
+        ProjectTemplate.fromRoot(path) {
 			'build.gradle' template: '/templates/scala/build.gradle.tmpl', append: true,
 					scalaVersion: scalaVersion,
 					useFastCompiler: useFastCompiler,
-					projectGroup: project.projectGroup
-			'gradle.properties' content: "version=${project.projectVersion}", append: true
+					projectGroup: project.group
+			'gradle.properties' content: "version=${project.version == 'unspecified' ? '0.1' : project.version}", append: true
 		}
 	}
 
