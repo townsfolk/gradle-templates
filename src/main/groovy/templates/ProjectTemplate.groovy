@@ -189,11 +189,11 @@ class ProjectTemplate {
 	}
 
 	/**
-	 * Starts the ProjectTemplate in the "user.dir" directory.
+	 * Starts the ProjectTemplate in the "user.dir" directory, unless the init.dir system property is specified.
 	 * @param closure
 	 */
 	static void fromUserDir(Closure closure = {}) {
-		new ProjectTemplate().directory(System.getProperty('user.dir'), closure)
+		new ProjectTemplate().directory(System.getProperty( 'init.dir', System.getProperty('user.dir') ), closure)
 	}
 
 	/**

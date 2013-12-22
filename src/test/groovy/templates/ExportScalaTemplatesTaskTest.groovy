@@ -17,22 +17,18 @@
 
 package templates
 
-import org.gradle.api.tasks.TaskAction
+import org.junit.Test
 
-/**
- * Task for initializing a new Gradle Scala project in the current directory.
- */
-class InitScalaProjectTask extends AbstractScalaProjectTask {
+class ExportScalaTemplatesTaskTest extends AbstractTaskTester {
 
-    InitScalaProjectTask(){
-        name = 'initScalaProject'
-        group = TemplatesPlugin.group
-        description = 'Initializes a new Gradle Scala project in the current directory.'
+    ExportScalaTemplatesTaskTest(){
+        super( ExportScalaTemplatesTask )
     }
 
-    @TaskAction
-    def init(){
-        createBase()
-        setupBuildFile(project)
+    @Test void export(){
+        task.export()
+
+        assertFileExists folder.root, 'templates/scala/build.gradle.tmpl'
+        assertFileExists folder.root, 'templates/scala/scala-class.tmpl'
     }
 }

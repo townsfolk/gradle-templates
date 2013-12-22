@@ -17,25 +17,24 @@
 
 package templates
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
+import org.gradle.api.tasks.TaskAction
 
 /**
- * Adds basic tasks for bootstrapping Scala projects.
- *
- * Adds createScalaClass, createScalaObject, createScalaProject, exportScalaTemplates, and initScalaProject tasks.
+ * Task to export the scala templates.
  */
-class ScalaTemplatesPlugin implements Plugin<Project> {
-    // TODO: is this plugin really needed or just roll into main?
+class ExportScalaTemplatesTask extends AbstractScalaProjectTask {
 
-    void apply(Project project) {
-		project.task 'createScalaClass',   type:CreateScalaClassTask
-		project.task 'createScalaObject',  type:CreateScalaObjectTask
-        project.task 'createScalaProject', type:CreateScalaProjectTask
+    ExportScalaTemplatesTask(){
+        name = 'exportScalaTemplates'
+        group = TemplatesPlugin.group
+        description = 'Exports the default scala template files into the current directory.'
+    }
 
-        project.task 'exportScalaTemplates', type:ExportScalaTemplatesTask
-
-        project.task 'initScalaProject', type:InitScalaProjectTask
+    @TaskAction
+    void export(){
+        TemplatesPlugin.exportTemplates([
+            '/templates/scala/build.gradle.tmpl',
+            '/templates/scala/scala-class.tmpl'
+        ])
     }
 }
-

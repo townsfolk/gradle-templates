@@ -20,7 +20,7 @@ package templates
 import org.gradle.api.tasks.TaskAction
 
 /**
- * Created by cjstehno on 12/22/13.
+ * Task for creating a new Gradle Scala project in a specified directory.
  */
 class CreateScalaProjectTask extends AbstractScalaProjectTask {
 

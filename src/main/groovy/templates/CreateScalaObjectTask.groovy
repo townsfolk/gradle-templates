@@ -17,25 +17,22 @@
 
 package templates
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
+import org.gradle.api.tasks.TaskAction
 
 /**
- * Adds basic tasks for bootstrapping Scala projects.
- *
- * Adds createScalaClass, createScalaObject, createScalaProject, exportScalaTemplates, and initScalaProject tasks.
+ * Task for creating a new scala object in the current project.
  */
-class ScalaTemplatesPlugin implements Plugin<Project> {
-    // TODO: is this plugin really needed or just roll into main?
+class CreateScalaObjectTask extends CreateScalaClassTask {
+    // TODO: seems like there should be a better way to do this since its just a different property
 
-    void apply(Project project) {
-		project.task 'createScalaClass',   type:CreateScalaClassTask
-		project.task 'createScalaObject',  type:CreateScalaObjectTask
-        project.task 'createScalaProject', type:CreateScalaProjectTask
+    CreateScalaObjectTask(){
+        name = 'createScalaObject'
+        group = TemplatesPlugin.group
+        description = 'Creates a new Scala object in the current project.'
+    }
 
-        project.task 'exportScalaTemplates', type:ExportScalaTemplatesTask
-
-        project.task 'initScalaProject', type:InitScalaProjectTask
+    @Override @TaskAction
+    def create(){
+        createScalaClass project, true
     }
 }
-
