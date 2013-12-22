@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package templates
+package templates.tasks.scala
 
 import org.gradle.api.tasks.TaskAction
+import templates.TemplatesPlugin
 
 /**
  * Task for creating a new Gradle Scala project in a specified directory.

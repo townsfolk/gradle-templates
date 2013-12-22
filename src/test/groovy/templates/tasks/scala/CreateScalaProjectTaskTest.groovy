@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
-package templates
+package templates.tasks.scala
 
 import org.junit.Test
+import templates.AbstractTaskTester
+import templates.tasks.scala.CreateScalaProjectTask
 
 class CreateScalaProjectTaskTest extends AbstractTaskTester {
 

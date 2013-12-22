@@ -15,10 +15,13 @@
  * limitations under the License.
  */
 
-package templates
+package templates.tasks.scala
 
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
+import templates.JavaTemplatesPlugin
+import templates.ProjectTemplate
+import templates.TemplatesPlugin
 
 /**
  * Task for creating a new scala class in the current project.

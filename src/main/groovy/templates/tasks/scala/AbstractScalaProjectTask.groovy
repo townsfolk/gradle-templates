@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-package templates
+package templates.tasks.scala
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
+import templates.ProjectTemplate
+import templates.TemplatesPlugin
 
 /**
  * Base class for Scala tasks.

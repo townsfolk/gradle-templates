@@ -15,24 +15,22 @@
  * limitations under the License.
  */
 
-package templates
+package templates.tasks.scala
 
-import org.gradle.api.tasks.TaskAction
+import org.junit.Test
+import templates.AbstractTaskTester
+import templates.tasks.scala.ExportScalaTemplatesTask
 
-/**
- * Task for creating a new scala object in the current project.
- */
-class CreateScalaObjectTask extends CreateScalaClassTask {
-    // TODO: seems like there should be a better way to do this since its just a different property
+class ExportScalaTemplatesTaskTest extends AbstractTaskTester {
 
-    CreateScalaObjectTask(){
-        name = 'createScalaObject'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Scala object in the current project.'
+    ExportScalaTemplatesTaskTest(){
+        super( ExportScalaTemplatesTask )
     }
 
-    @Override @TaskAction
-    def create(){
-        createScalaClass project, true
+    @Test void export(){
+        task.export()
+
+        assertFileExists folder.root, 'templates/scala/build.gradle.tmpl'
+        assertFileExists folder.root, 'templates/scala/scala-class.tmpl'
     }
 }

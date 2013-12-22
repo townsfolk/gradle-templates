@@ -15,26 +15,25 @@
  * limitations under the License.
  */
 
-package templates
+package templates.tasks.scala
 
 import org.gradle.api.tasks.TaskAction
+import templates.TemplatesPlugin
 
 /**
- * Task to export the scala templates.
+ * Task for creating a new scala object in the current project.
  */
-class ExportScalaTemplatesTask extends AbstractScalaProjectTask {
+class CreateScalaObjectTask extends CreateScalaClassTask {
+    // TODO: seems like there should be a better way to do this since its just a different property
 
-    ExportScalaTemplatesTask(){
-        name = 'exportScalaTemplates'
+    CreateScalaObjectTask(){
+        name = 'createScalaObject'
         group = TemplatesPlugin.group
-        description = 'Exports the default scala template files into the current directory.'
+        description = 'Creates a new Scala object in the current project.'
     }
 
-    @TaskAction
-    void export(){
-        TemplatesPlugin.exportTemplates([
-            '/templates/scala/build.gradle.tmpl',
-            '/templates/scala/scala-class.tmpl'
-        ])
+    @Override @TaskAction
+    def create(){
+        createScalaClass project, true
     }
 }

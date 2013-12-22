@@ -19,6 +19,11 @@ package templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import templates.tasks.scala.CreateScalaClassTask
+import templates.tasks.scala.CreateScalaObjectTask
+import templates.tasks.scala.CreateScalaProjectTask
+import templates.tasks.scala.ExportScalaTemplatesTask
+import templates.tasks.scala.InitScalaProjectTask
 
 /**
  * Adds basic tasks for bootstrapping Scala projects.

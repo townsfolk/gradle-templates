@@ -15,20 +15,27 @@
  * limitations under the License.
  */
 
-package templates
+package templates.tasks.scala
 
-import org.junit.Test
+import org.gradle.api.tasks.TaskAction
+import templates.TemplatesPlugin
 
-class ExportScalaTemplatesTaskTest extends AbstractTaskTester {
+/**
+ * Task to export the scala templates.
+ */
+class ExportScalaTemplatesTask extends AbstractScalaProjectTask {
 
-    ExportScalaTemplatesTaskTest(){
-        super( ExportScalaTemplatesTask )
+    ExportScalaTemplatesTask(){
+        name = 'exportScalaTemplates'
+        group = TemplatesPlugin.group
+        description = 'Exports the default scala template files into the current directory.'
     }
 
-    @Test void export(){
-        task.export()
-
-        assertFileExists folder.root, 'templates/scala/build.gradle.tmpl'
-        assertFileExists folder.root, 'templates/scala/scala-class.tmpl'
+    @TaskAction
+    void export(){
+        TemplatesPlugin.exportTemplates([
+            '/templates/scala/build.gradle.tmpl',
+            '/templates/scala/scala-class.tmpl'
+        ])
     }
 }
