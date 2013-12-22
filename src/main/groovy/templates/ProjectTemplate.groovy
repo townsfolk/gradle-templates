@@ -49,6 +49,7 @@ import groovy.text.GStringTemplateEngine
  *    }
  * }
  * </pre>
+ *
  * @author: elberry
  * Date: 4/9/11 6:04 PM
  */
@@ -70,6 +71,7 @@ class ProjectTemplate {
 	void d(String name, Closure closure = {}) {
 		directory(name, closure)
 	}
+
 	/**
 	 * Same as the directory method.
 	 * @param name
@@ -79,6 +81,7 @@ class ProjectTemplate {
 	void dir(String name, Closure closure = {}) {
 		directory(name, closure)
 	}
+
 	/**
 	 * Creates a directory, and it's parents if they don't already exist.
 	 * @param name
@@ -107,6 +110,7 @@ class ProjectTemplate {
 	void f(Map args = [:], String name) {
 		file(args, name)
 	}
+
 	/**
 	 * Same as file method
 	 * @param args
@@ -116,6 +120,7 @@ class ProjectTemplate {
 	void f(String name, String content) {
 		file(name, content)
 	}
+
 	/**
 	 * Creates a new file with the given name. If a 'content' argument is provided it will be appended, or replace the
 	 * content of the current file (if it exists) based on the value of the 'append' argument.
@@ -145,18 +150,24 @@ class ProjectTemplate {
 		}
 	}
 
+    /**
+     * Render the template at the given path with the provided parameters. An attempt will be made to load the template path
+     * as an absolute path, then as a relative path, then lastly from the classpath.
+     *
+     * @param params
+     * @param template the template path
+     * @return the rendered template
+     */
 	String renderTemplate(Map params = [:], String template) {
-		//println "Rendering template - path: ${template}, params: ${params}"
 		def tLoc = new File(template)
 		if (!tLoc.exists()) { // check given path
-			//println '   couldn\'t find file at given path, trying relative path.'
+			// Couldn't find file at given path, trying relative path.
 			def rTemplate = template
 			if (rTemplate.startsWith('/')) {
 				rTemplate = rTemplate - '/'
 			}
 			tLoc = new File(System.getProperty('user.dir'), rTemplate)
 			if (!tLoc.exists()) { // check relative path from current working dir.
-				//println '   couldn\'t find at relative path either, using classpath.'
 				tLoc = getClass().getResource(template) // last ditch, use classpath.
 			}
 		}

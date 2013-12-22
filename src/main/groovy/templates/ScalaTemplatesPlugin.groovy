@@ -19,7 +19,6 @@ package templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-
 /**
  * Adds basic tasks for bootstrapping Scala projects. Adds createScalaClass, createScalaObject, createScalaProject,
  * exportScalaTemplates, and initScalaProject tasks.
@@ -113,44 +112,37 @@ class ScalaTemplatesPlugin implements Plugin<Project> {
 		}
 	}
 
-	void apply(Project project) {
-		def props = project.properties
-
-		project.task('createScalaClass', group: TemplatesPlugin.group,
-				description: 'Creates a new Scala class in the current project.') << {
+    @SuppressWarnings( "GroovyAssignabilityCheck" )
+    void apply(Project project) {
+		project.task( 'createScalaClass',
+            group:TemplatesPlugin.group,
+            description:'Creates a new Scala class in the current project.'
+        ) << {
 			createScalaClass(project, false)
 		}
-		project.task('createScalaObject', group: TemplatesPlugin.group,
-				description: 'Creates a new Scala object in the current project.') << {
+
+		project.task('createScalaObject',
+            group: TemplatesPlugin.group,
+            description: 'Creates a new Scala object in the current project.'
+        ) << {
 			createScalaClass(project, true)
 		}
-		project.task('createScalaProject', group: TemplatesPlugin.group,
-				description: 'Creates a new Gradle Scala project in a new directory named after your project.') << {
-			def projectName = props['newProjectName'] ?: TemplatesPlugin.prompt('Project Name:')
-			if (projectName) {
-				String projectGroup = props['projectGroup'] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
-				String projectVersion = props['projectVersion'] ?: TemplatesPlugin.prompt('Version:', '1.0')
-				project.setProperty('projectGroup', projectGroup)
-				project.setProperty('projectVersion', projectVersion)
-				createBase(projectName)
-				setupBuildFile(project, projectName)
-			} else {
-				println 'No project name provided.'
-			}
-		}
-		project.task('exportScalaTemplates', group: TemplatesPlugin.group,
-				description: 'Exports the default scala template files into the current directory.') << {
+
+        project.task 'createScalaProject', type: CreateScalaProjectTask
+
+        project.task('exportScalaTemplates',
+            group: TemplatesPlugin.group,
+            description: 'Exports the default scala template files into the current directory.'
+        ) << {
 			def _ = '/templates/scala'
 			def templates = [
-					"$_/build.gradle.tmpl",
-					"$_/scala-class.tmpl"
+                "$_/build.gradle.tmpl",
+                "$_/scala-class.tmpl"
 			]
 			TemplatesPlugin.exportTemplates(templates)
 		}
-		project.task('initScalaProject', group: TemplatesPlugin.group,
-				description: 'Initializes a new Gradle Scala project in the current directory.') << {
-			createBase()
-			setupBuildFile(project)
-		}
-	}
+
+        project.task 'initScalaProject', type: InitScalaProjectTask
+    }
 }
+

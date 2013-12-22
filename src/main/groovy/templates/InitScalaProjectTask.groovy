@@ -16,21 +16,23 @@
  */
 
 package templates
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Test
 
-class ScalaTemplatesPluginTest {
+import org.gradle.api.tasks.TaskAction
 
-    @Test void 'apply'(){
-        Project project = ProjectBuilder.builder().build()
-        project.apply plugin: 'templates'
+/**
+ * Created by cjstehno on 12/22/13.
+ */
+class InitScalaProjectTask extends AbstractScalaProjectTask {
 
-        assert project.tasks.createScalaClass
-        assert project.tasks.createScalaObject
-        assert project.tasks.createScalaProject
-        assert project.tasks.exportScalaTemplates
-        assert project.tasks.initScalaProject
+    InitScalaProjectTask(){
+        name = 'initScalaProject'
+        group = TemplatesPlugin.group
+        description = 'Initializes a new Gradle Scala project in the current directory.'
+    }
+
+    @TaskAction
+    def init(){
+        createBase()
+        setupBuildFile(project)
     }
 }
-

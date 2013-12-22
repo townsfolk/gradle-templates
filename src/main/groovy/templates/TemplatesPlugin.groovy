@@ -20,6 +20,9 @@ import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * The core of the templates plugin.
+ */
 class TemplatesPlugin implements Plugin<Project> {
 
 	static final String group = 'Template'

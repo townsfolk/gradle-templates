@@ -23,6 +23,7 @@ import org.junit.rules.TemporaryFolder
 class ProjectTemplateTest {
 
     private static final String PROJECT_NAME = 'some_project'
+
     @Rule public TemporaryFolder rootFolder = new TemporaryFolder()
 
     @Test void 'fromRoot(String): empty'(){
@@ -36,12 +37,16 @@ class ProjectTemplateTest {
     @Test void 'fromRoot(String): with content'(){
         assert !(new File( rootFolder.root, PROJECT_NAME ).exists())
 
+        File templateFile = rootFolder.newFile( 'template.tmpl' )
+        templateFile.text = 'The answer is ${bar}'
+
         ProjectTemplate.fromRoot( "${rootFolder.root}/$PROJECT_NAME" ){
             'stuff' {
                 'README.txt' '''
                     This is a generated README file.
                 '''
                 'deeper' {}
+                'foo' template:templateFile.toString(), bar:42
             }
         }
 
@@ -49,9 +54,14 @@ class ProjectTemplateTest {
         assert new File( rootFolder.root, "$PROJECT_NAME/stuff" ).exists()
         assert new File( rootFolder.root, "$PROJECT_NAME/stuff/deeper" ).exists()
 
-        def readmeFile = new File( rootFolder.root, "$PROJECT_NAME/stuff/README.txt" )
-        assert readmeFile.exists()
-        assert readmeFile.text.trim() == 'This is a generated README file.'
+        assertFileText rootFolder.root, "$PROJECT_NAME/stuff/README.txt", 'This is a generated README file.'
+        assertFileText rootFolder.root, "$PROJECT_NAME/stuff/foo", 'The answer is 42'
+    }
+
+    private void assertFileText( File dir, String path, String expectedText ){
+        def targetFile = new File( dir, path )
+        assert targetFile.exists()
+        assert targetFile.text.trim() == expectedText
     }
 
     @Test void 'fromRoot(File): empty'(){
