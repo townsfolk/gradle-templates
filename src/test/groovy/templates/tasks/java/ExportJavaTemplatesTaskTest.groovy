@@ -15,19 +15,21 @@
  * limitations under the License.
  */
 
-package templates
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
+package templates.tasks.java
+
 import org.junit.Test
+import templates.AbstractTaskTester
 
-class WebappTemplatesPluginTest {
+class ExportJavaTemplatesTaskTest extends AbstractTaskTester {
 
-    @Test void 'apply'(){
-        Project project = ProjectBuilder.builder().build()
-        project.apply plugin: 'templates'
+    ExportJavaTemplatesTaskTest(){
+        super( ExportJavaTemplatesTask )
+    }
 
-        assert project.tasks.createWebappProject
-        assert project.tasks.exportWebappTemplates
-        assert project.tasks.initWebappProject
+    @Test void export(){
+        task.export()
+
+        assertFileExists folder.root, 'templates/java/build.gradle.tmpl'
+        assertFileExists folder.root, 'templates/java/java-class.tmpl'
     }
 }

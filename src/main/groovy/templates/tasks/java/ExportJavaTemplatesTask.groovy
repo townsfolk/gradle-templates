@@ -15,19 +15,26 @@
  * limitations under the License.
  */
 
-package templates
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Test
+package templates.tasks.java
 
-class WebappTemplatesPluginTest {
+import org.gradle.api.tasks.TaskAction
+import templates.TemplatesPlugin
 
-    @Test void 'apply'(){
-        Project project = ProjectBuilder.builder().build()
-        project.apply plugin: 'templates'
+/**
+ *  Task to export the default java templates into the current directory.
+ */
+class ExportJavaTemplatesTask extends AbstractJavaProjectTask {
 
-        assert project.tasks.createWebappProject
-        assert project.tasks.exportWebappTemplates
-        assert project.tasks.initWebappProject
+    ExportJavaTemplatesTask(){
+        name = 'exportJavaTemplates'
+        group = TemplatesPlugin.group
+        description = 'Exports the default java template files into the current directory.'
+    }
+
+    @TaskAction def export(){
+        TemplatesPlugin.exportTemplates([
+            '/templates/java/build.gradle.tmpl',
+            '/templates/java/java-class.tmpl'
+        ])
     }
 }

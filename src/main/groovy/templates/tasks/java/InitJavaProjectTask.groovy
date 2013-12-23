@@ -15,19 +15,29 @@
  * limitations under the License.
  */
 
-package templates
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Test
+package templates.tasks.java
 
-class WebappTemplatesPluginTest {
+import org.gradle.api.tasks.TaskAction
+import templates.TemplatesPlugin
 
-    @Test void 'apply'(){
-        Project project = ProjectBuilder.builder().build()
-        project.apply plugin: 'templates'
+/**
+ * Task to initialize a gradle Java project in the current directory.
+ */
+class InitJavaProjectTask extends AbstractJavaProjectTask {
 
-        assert project.tasks.createWebappProject
-        assert project.tasks.exportWebappTemplates
-        assert project.tasks.initWebappProject
+    InitJavaProjectTask(){
+        name = 'initJavaProject'
+        group = TemplatesPlugin.group
+        description = 'Initializes a new Gradle Java project in the current directory.'
+    }
+
+    @TaskAction def init(){
+        createBase()
+
+        File buildFile = new File(defaultDir(), 'build.gradle')
+
+        buildFile.exists() ?: buildFile.createNewFile()
+
+        TemplatesPlugin.prependPlugin 'java', buildFile
     }
 }

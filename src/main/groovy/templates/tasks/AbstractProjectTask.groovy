@@ -15,19 +15,20 @@
  * limitations under the License.
  */
 
-package templates
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Test
+package templates.tasks
 
-class WebappTemplatesPluginTest {
+import org.gradle.api.DefaultTask
 
-    @Test void 'apply'(){
-        Project project = ProjectBuilder.builder().build()
-        project.apply plugin: 'templates'
+/**
+ * Abstract base class for project tasks.
+ */
+abstract class AbstractProjectTask extends DefaultTask {
 
-        assert project.tasks.createWebappProject
-        assert project.tasks.exportWebappTemplates
-        assert project.tasks.initWebappProject
+    /**
+     * A solution to allow external generation directory config which also allows unit testing for init.
+     * It will try a system property named 'init.dir' and then fallback to the 'user.dir' property value.
+     */
+    protected String defaultDir(){
+        System.getProperty( 'init.dir', System.getProperty('user.dir') )
     }
 }

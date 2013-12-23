@@ -15,34 +15,31 @@
  * limitations under the License.
  */
 
-package templates.tasks.scala
+package templates.tasks.java
 import org.junit.Test
 import templates.AbstractTaskTester
 
-class CreateScalaProjectTaskTest extends AbstractTaskTester {
+class CreateJavaProjectTaskTest extends AbstractTaskTester {
 
-    CreateScalaProjectTaskTest(){
-        super( CreateScalaProjectTask )
+    CreateJavaProjectTaskTest(){
+        super( CreateJavaProjectTask )
     }
 
-    @Test
-    void create(){
-        project.setProperty( CreateScalaProjectTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
-        project.setProperty( CreateScalaProjectTask.NEW_PROJECT_NAME, 'tester' )
-        project.setProperty( CreateScalaProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateScalaProjectTask.PROJECT_VERSION, '1.1.1' )
-        project.setProperty( CreateScalaProjectTask.SCALA_VERSION, '2.9.0' )
-        project.setProperty( CreateScalaProjectTask.USE_FAST_SCALA_COMPILER, true )
+    @Test void create(){
+        project.setProperty( CreateJavaProjectTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
+        project.setProperty( CreateJavaProjectTask.NEW_PROJECT_NAME, 'tester' )
+        project.setProperty( CreateJavaProjectTask.PROJECT_GROUP, 'test-group' )
+        project.setProperty( CreateJavaProjectTask.PROJECT_VERSION, '1.1.1' )
 
         task.create()
 
-        assertFileExists folder.root, 'tester/src/main/scala'
+        assertFileExists folder.root, 'tester/src/main/java'
         assertFileExists folder.root, 'tester/src/main/resources'
-        assertFileExists folder.root, 'tester/src/test/scala'
+        assertFileExists folder.root, 'tester/src/test/java'
         assertFileExists folder.root, 'tester/src/test/resources'
         assertFileExists folder.root, 'tester/LICENSE.txt'
 
-        assertFileContains folder.root, 'tester/build.gradle', 'scalaVersion = \'2.9.0\'', 'scalaCompileOptions.useCompileDaemon = true', 'group = \'test-group\''
+        assertFileContains folder.root, 'tester/build.gradle', 'group = \'test-group\''
         assertFileContains folder.root, 'tester/gradle.properties', 'version=1.1.1'
     }
 }

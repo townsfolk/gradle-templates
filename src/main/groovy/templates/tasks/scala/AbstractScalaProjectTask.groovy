@@ -17,15 +17,14 @@
 
 package templates.tasks.scala
 
-import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import templates.ProjectTemplate
 import templates.TemplatesPlugin
-
+import templates.tasks.AbstractProjectTask
 /**
  * Base class for Scala tasks.
  */
-abstract class AbstractScalaProjectTask extends DefaultTask {
+abstract class AbstractScalaProjectTask extends AbstractProjectTask {
 
     protected static final String NEW_PROJECT_NAME = 'newProjectName'
     protected static final String PROJECT_GROUP = 'projectGroup'
@@ -73,15 +72,7 @@ abstract class AbstractScalaProjectTask extends DefaultTask {
                 scalaVersion: scalaVersion,
                 useFastCompiler: useFastCompiler,
                 projectGroup: props[PROJECT_GROUP]
-            'gradle.properties' content: "version=${project.version == 'unspecified' ? '0.1' : project.version}", append: true
+            'gradle.properties' content: "version=${props[PROJECT_VERSION] ?: '0.1'}", append: true
         }
-    }
-
-    /**
-     * A solution to allow external generation directory config which also allows unit testing for init.
-     * It will try a system property named 'init.dir' and then fallback to the 'user.dir' property value.
-     */
-    private static String defaultDir(){
-        System.getProperty( 'init.dir', System.getProperty('user.dir') )
     }
 }
