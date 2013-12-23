@@ -84,12 +84,8 @@ class TemplatesPlugin implements Plugin<Project> {
 	}
 
 	static boolean promptYesOrNo(String message, boolean defaultValue = false) {
-		def defaultStr = defaultValue ? 'Y' : 'n'
-		String consoleVal = readLine("$message (Y|n)", defaultValue)
-		if (consoleVal) {
-			return consoleVal.toLowerCase().startsWith('y')
-		}
-		return defaultValue
+		String consoleVal = readLine("$message (Y|n)", defaultValue ? 'Y' : 'n')
+        return consoleVal?.toLowerCase()?.startsWith('y') ?: defaultValue
 	}
 
 	private static readLine(String message, def defaultValue = null) {
@@ -103,15 +99,21 @@ class TemplatesPlugin implements Plugin<Project> {
 
 	def void apply(Project project) {
 		project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
+
+        // FIXME: would be better to allow user to configure the desired template set rather than get them all
 		project.apply(plugin: GroovyTemplatesPlugin)
 		project.apply(plugin: GradlePluginTemplatesPlugin)
 		project.apply(plugin: JavaTemplatesPlugin)
 		project.apply(plugin: ScalaTemplatesPlugin)
 		project.apply(plugin: WebappTemplatesPlugin)
 
-		project.task('exportAllTemplates', dependsOn: [
-				'exportJavaTemplates', 'exportGroovyTemplates', 'exportScalaTemplates', 'exportWebappTemplates',
-				'exportPluginTemplates'], group: TemplatesPlugin.group,
-				description: 'Exports all the default template files into the current directory.') {}
+		project.task(
+            'exportAllTemplates',
+            dependsOn: [
+				'exportJavaTemplates', 'exportGroovyTemplates', 'exportScalaTemplates', 'exportWebappTemplates', 'exportPluginTemplates'
+            ],
+            group: TemplatesPlugin.group,
+            description: 'Exports all the default template files into the current directory.'
+        ) {}
 	}
 }

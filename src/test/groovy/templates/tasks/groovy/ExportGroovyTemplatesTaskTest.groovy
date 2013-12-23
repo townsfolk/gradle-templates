@@ -15,20 +15,22 @@
  * limitations under the License.
  */
 
-package templates
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
+package templates.tasks.groovy
+
 import org.junit.Test
+import templates.AbstractTaskTester
 
-class GroovyTemplatesPluginTest {
+class ExportGroovyTemplatesTaskTest extends AbstractTaskTester {
 
-    @Test void 'apply'(){
-        Project project = ProjectBuilder.builder().build()
-        project.apply plugin: 'templates'
+    ExportGroovyTemplatesTaskTest(){
+        super( ExportGroovyTemplatesTask )
+    }
 
-        assert project.tasks.createGroovyClass
-        assert project.tasks.createGroovyProject
-        assert project.tasks.exportGroovyTemplates
-        assert project.tasks.initGroovyProject
+    @Test void export(){
+        task.export()
+
+        assertFileExists folder.root, 'templates/groovy/build.gradle.tmpl'
+        assertFileExists folder.root, 'templates/groovy/groovy-class.tmpl'
+
     }
 }
