@@ -44,22 +44,61 @@ abstract class AbstractProjectTask extends DefaultTask {
         System.getProperty( 'init.dir', System.getProperty('user.dir') )
     }
 
+    /**
+     * Determine the project path directory based on the specified project name.
+     *
+     * If the "projectParentDir" is not specified as a property, the user will be prompted for it.
+     *
+     * @param projectName the project name
+     * @return the project directory path
+     */
     protected String projectPath( final String projectName ){
-        project.properties[PROJECT_PARENT_DIR] ? "${project.properties[PROJECT_PARENT_DIR]}/$projectName" : projectName
+        String parentDir = project.properties[PROJECT_PARENT_DIR]
+        if( parentDir ){
+            return "$parentDir/$projectName"
+        } else {
+            String dir = TemplatesPlugin.prompt( 'Project Parent Directory:', defaultDir() )
+            return "$dir/$projectName"
+        }
     }
 
+    /**
+     * Determine the project name to be used. If the 'newProjectName' is not specified as a property, the user will
+     * be prompted for it.
+     *
+     * @return the project name to be used
+     */
     protected String projectName(){
         project.properties[NEW_PROJECT_NAME] ?: TemplatesPlugin.prompt('Project Name:')
     }
 
+    /**
+     * Determine the project group to be used based on the project name. If the 'projectGroup' is not specified as a
+     * property, the user will be prompted for it.
+     *
+     * @param projectName the project name
+     * @return the project group
+     */
     protected String projectGroup( final String projectName ){
         project.properties[PROJECT_GROUP] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
     }
 
+    /**
+     * Determine the project version to be used. If the 'projectVersion' is not specified as a property the user will
+     * be prompted for it.
+     *
+     * @return the project version
+     */
     protected String projectVersion(){
         project.properties[PROJECT_VERSION] ?: TemplatesPlugin.prompt('Version:', '0.1')
     }
 
+    /**
+     * Ensures that the specified file exists under the current default directory. The file reference is returned.
+     *
+     * @param file the file suffix to ensure
+     * @return the existing file
+     */
     protected File ensureFileExists( final String file ){
         File buildFile = new File(defaultDir(), file)
 
