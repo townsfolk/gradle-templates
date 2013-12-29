@@ -16,9 +16,7 @@
  */
 
 package templates.tasks.scala
-
 import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
 
 /**
  * Task for creating a new scala object in the current project.
@@ -27,8 +25,8 @@ class CreateScalaObjectTask extends CreateScalaClassTask {
     // TODO: seems like there should be a better way to do this since its just a different property
 
     CreateScalaObjectTask(){
+        super()
         name = 'createScalaObject'
-        group = TemplatesPlugin.group
         description = 'Creates a new Scala object in the current project.'
     }
 

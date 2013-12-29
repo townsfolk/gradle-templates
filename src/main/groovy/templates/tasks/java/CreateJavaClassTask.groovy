@@ -32,9 +32,10 @@ class CreateJavaClassTask extends AbstractJavaProjectTask {
     public static final String NEW_CLASS_NAME = 'newClassName'
 
     CreateJavaClassTask(){
-        name = 'createJavaClass'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Java class in the current project.'
+        super(
+            'createJavaClass',
+            'Creates a new Java class in the current project.'
+        )
     }
 
     @TaskAction def create(){

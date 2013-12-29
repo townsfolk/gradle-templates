@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class CreateScalaProjectTask extends AbstractScalaProjectTask {
 
     CreateScalaProjectTask(){
-        name = 'createScalaProject'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Gradle Scala project in a new directory named after your project.'
+        super(
+            'createScalaProject',
+            'Creates a new Gradle Scala project in a new directory named after your project.'
+        )
     }
 
     @TaskAction

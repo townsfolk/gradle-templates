@@ -28,14 +28,14 @@ import templates.TemplatesPlugin
  */
 class CreateScalaClassTask extends AbstractScalaProjectTask {
 
-
     protected static final String NEW_CLASS_NAME = 'newClassName'
     protected static final String NEW_OBJECT_NAME = 'newObjectName'
 
     CreateScalaClassTask(){
-        name = 'createScalaClass'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Scala class in the current project.'
+        super(
+            'createScalaClass',
+            'Creates a new Scala class in the current project.'
+        )
     }
 
     @TaskAction

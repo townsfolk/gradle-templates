@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class ExportPluginTemplatesTask extends AbstractGradleProjectTask {
 
     ExportPluginTemplatesTask(){
-        name = 'exportPluginTemplates'
-        group = TemplatesPlugin.group
-        description = 'Exports the default plugin template files into the current directory.'
+        super(
+            'exportPluginTemplates',
+            'Exports the default plugin template files into the current directory.'
+        )
     }
 
     @TaskAction def export(){

@@ -21,6 +21,7 @@ import org.gradle.api.Project
 import templates.ProjectTemplate
 import templates.TemplatesPlugin
 import templates.tasks.AbstractProjectTask
+
 /**
  * Base class for Scala tasks.
  */
@@ -32,6 +33,12 @@ abstract class AbstractScalaProjectTask extends AbstractProjectTask {
     protected static final String PROJECT_PARENT_DIR = 'projectParentDir'
     protected static final String SCALA_VERSION = 'scalaVersion'
     protected static final String USE_FAST_SCALA_COMPILER = 'useFastScalaCompiler'
+
+    AbstractScalaProjectTask( final String name, final String description ){
+        this.name = name
+        this.group = TemplatesPlugin.group
+        this.description = description
+    }
 
     /**
      * Creates the basic Scala project directory structure.

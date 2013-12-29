@@ -18,18 +18,30 @@
 package templates.tasks.groovy
 
 import templates.ProjectTemplate
+import templates.TemplatesPlugin
 import templates.tasks.AbstractProjectTask
 
 /**
- * Created by cjstehno on 12/23/13.
+ *
  */
-class AbstractGroovyProjectTask extends AbstractProjectTask {
+abstract class AbstractGroovyProjectTask extends AbstractProjectTask {
+
+    static final String PROJECT_PARENT_DIR = 'projectParentDir'
+    static final String NEW_PROJECT_NAME = 'newProjectName'
+    static final String PROJECT_GROUP = 'projectGroup'
+    static final String PROJECT_VERSION = 'projectVersion'
+
+    AbstractGroovyProjectTask( final String name, final String description ){
+        this.name = name
+        this.group = TemplatesPlugin.group
+        this.description = description
+    }
 
     /**
      * Creates the basic Groovy project directory structure.
      * @param path the root of the project. Optional,defaults to user.dir.
      */
-    void createBase(String path = defaultDir() ) {
+    protected void createBase(String path = defaultDir() ) {
         ProjectTemplate.fromRoot(path) {
             'src' {
                 'main' {

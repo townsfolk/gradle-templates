@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class InitJavaProjectTask extends AbstractJavaProjectTask {
 
     InitJavaProjectTask(){
-        name = 'initJavaProject'
-        group = TemplatesPlugin.group
-        description = 'Initializes a new Gradle Java project in the current directory.'
+        super(
+            'initJavaProject',
+            'Initializes a new Gradle Java project in the current directory.'
+        )
     }
 
     @TaskAction def init(){

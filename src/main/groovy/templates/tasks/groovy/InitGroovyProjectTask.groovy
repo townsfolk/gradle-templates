@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class InitGroovyProjectTask extends AbstractGroovyProjectTask {
 
     InitGroovyProjectTask(){
-        name = 'initGroovyProject'
-        group = TemplatesPlugin.group
-        description = 'Initializes a new Gradle Groovy project in the current directory.'
+        super(
+            'initGroovyProject',
+            'Initializes a new Gradle Groovy project in the current directory.'
+        )
     }
 
     // FIXME: these init() methods are all very similar, refactor into something common

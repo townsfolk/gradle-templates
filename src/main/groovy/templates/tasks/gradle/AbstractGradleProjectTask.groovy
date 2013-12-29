@@ -23,23 +23,29 @@ import templates.TemplatesPlugin
 import templates.tasks.AbstractProjectTask
 
 /**
- * Created by cjstehno on 12/23/13.
+ *
  */
-class AbstractGradleProjectTask extends AbstractProjectTask {
+abstract class AbstractGradleProjectTask extends AbstractProjectTask {
+
+    static final String PROJECT_GROUP = 'projectGroup'
+    static final String PROJECT_VERSION = 'projectVersion'
+    static final String PLUGIN_APPLY_LABEL = 'pluginApplyLabel'
+    static final String PLUGIN_CLASS_NAME = 'pluginClassName'
+    static final String NEW_PROJECT_NAME = 'newProjectName'
+    static final String PROJECT_PARENT_DIR = 'projectParentDir'
+
+    AbstractGradleProjectTask( final String name, final String description ){
+        this.name = name
+        this.group = TemplatesPlugin.group
+        this.description = description
+    }
 
     /**
      * Creates the default project structure for a new gradle plugin.
      * @param path The root path of the project. optional, defaults to user.dir.
      * @param project A project object.
      */
-    public static final String PROJECT_GROUP = 'projectGroup'
-    public static final String PROJECT_VERSION = 'projectVersion'
-    public static final String PLUGIN_APPLY_LABEL = 'pluginApplyLabel'
-    public static final String PLUGIN_CLASS_NAME = 'pluginClassName'
-    public static final String NEW_PROJECT_NAME = 'newProjectName'
-    static final String PROJECT_PARENT_DIR = 'projectParentDir'
-
-    void createBase(String path = defaultDir(), def project) {
+    protected void createBase(String path = defaultDir(), def project) {
 
         def props = project.properties
         String lProjectName = project.name.toLowerCase()

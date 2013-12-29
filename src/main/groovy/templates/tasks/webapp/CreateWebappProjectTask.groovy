@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class CreateWebappProjectTask extends AbstractWebappProjectTask {
 
     CreateWebappProjectTask(){
-        name = 'createWebappProject'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Gradle Webapp project in a new directory named after your project.'
+        super(
+            'createWebappProject',
+            'Creates a new Gradle Webapp project in a new directory named after your project.'
+        )
     }
 
     @TaskAction def create(){

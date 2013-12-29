@@ -25,12 +25,11 @@ import templates.TemplatesPlugin
  */
 class CreateGradlePluginTask extends AbstractGradleProjectTask {
 
-    protected static final String PROJECT_PARENT_DIR = 'projectParentDir'
-
     CreateGradlePluginTask(){
-        name = 'createGradlePlugin'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Gradle Plugin project in a new directory named after your project.'
+        super(
+            'createGradlePlugin',
+            'Creates a new Gradle Plugin project in a new directory named after your project.'
+        )
     }
 
     @TaskAction def create(){

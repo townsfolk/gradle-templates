@@ -16,9 +16,7 @@
  */
 
 package templates.tasks.gradle
-
 import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
 
 /**
  * Task to initialize a new gradle plugin project in the current directory.
@@ -26,12 +24,13 @@ import templates.TemplatesPlugin
 class InitGradlePluginTask extends AbstractGradleProjectTask {
 
     InitGradlePluginTask(){
-        name = 'initGradlePlugin'
-        group = TemplatesPlugin.group
-        description = 'Initializes a new Gradle Plugin project in the current directory.'
+        super(
+            'initGradlePlugin',
+            'Initializes a new Gradle Plugin project in the current directory.'
+        )
     }
 
     @TaskAction def init(){
-        createBase(project)
+        createBase project
     }
 }

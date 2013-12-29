@@ -26,15 +26,11 @@ import templates.TemplatesPlugin
  */
 class CreateGroovyProjectTask extends AbstractGroovyProjectTask {
 
-    protected static final String PROJECT_PARENT_DIR = 'projectParentDir'
-    public static final String NEW_PROJECT_NAME = 'newProjectName'
-    public static final String PROJECT_GROUP = 'projectGroup'
-    public static final String PROJECT_VERSION = 'projectVersion'
-
     CreateGroovyProjectTask(){
-        name = 'createGroovyProject'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Gradle Groovy project in a new directory named after your project.'
+        super(
+            'createGroovyProject',
+            'Creates a new Gradle Groovy project in a new directory named after your project.'
+        )
     }
 
     // FIXME: these create() methods are all very similar, refactor into something common

@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class InitWebappProjectTask extends AbstractWebappProjectTask {
 
     InitWebappProjectTask(){
-        name = 'initWebappProject'
-        group = TemplatesPlugin.group
-        description = 'Initializes a new Gradle Webapp project in the current directory.'
+        super(
+            'initWebappProject',
+            'Initializes a new Gradle Webapp project in the current directory.'
+        )
     }
 
     @TaskAction def init(){

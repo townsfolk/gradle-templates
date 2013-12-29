@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class ExportWebappTemplatesTask extends AbstractWebappProjectTask {
 
     ExportWebappTemplatesTask(){
-        name = 'exportWebappTemplates'
-        group = TemplatesPlugin.group
-        description = 'Exports the default webapp template files into the current directory.'
+        super(
+            'exportWebappTemplates',
+            'Exports the default webapp template files into the current directory.'
+        )
     }
 
     @TaskAction def export(){

@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class ExportGroovyTemplatesTask extends AbstractGroovyProjectTask {
 
     ExportGroovyTemplatesTask(){
-        name = 'exportGroovyTemplates'
-        group = TemplatesPlugin.group
-        description = 'Exports the default groovy template files into the current directory.'
+        super(
+            'exportGroovyTemplates',
+            'Exports the default groovy template files into the current directory.'
+        )
     }
 
     // FIXME: these export() methods are all very similar, refactor into something common

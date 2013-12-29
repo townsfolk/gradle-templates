@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class ExportScalaTemplatesTask extends AbstractScalaProjectTask {
 
     ExportScalaTemplatesTask(){
-        name = 'exportScalaTemplates'
-        group = TemplatesPlugin.group
-        description = 'Exports the default scala template files into the current directory.'
+        super(
+            'exportScalaTemplates',
+            'Exports the default scala template files into the current directory.'
+        )
     }
 
     @TaskAction

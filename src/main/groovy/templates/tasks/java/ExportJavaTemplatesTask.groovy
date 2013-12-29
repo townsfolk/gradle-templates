@@ -26,9 +26,10 @@ import templates.TemplatesPlugin
 class ExportJavaTemplatesTask extends AbstractJavaProjectTask {
 
     ExportJavaTemplatesTask(){
-        name = 'exportJavaTemplates'
-        group = TemplatesPlugin.group
-        description = 'Exports the default java template files into the current directory.'
+        super(
+            'exportJavaTemplates',
+            'Exports the default java template files into the current directory.'
+        )
     }
 
     @TaskAction def export(){

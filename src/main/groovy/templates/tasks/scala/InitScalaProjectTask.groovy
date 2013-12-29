@@ -16,19 +16,17 @@
  */
 
 package templates.tasks.scala
-
 import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
-
 /**
  * Task for initializing a new Gradle Scala project in the current directory.
  */
 class InitScalaProjectTask extends AbstractScalaProjectTask {
 
     InitScalaProjectTask(){
-        name = 'initScalaProject'
-        group = TemplatesPlugin.group
-        description = 'Initializes a new Gradle Scala project in the current directory.'
+        super(
+            'initScalaProject',
+            'Initializes a new Gradle Scala project in the current directory.'
+        )
     }
 
     @TaskAction

@@ -31,9 +31,10 @@ class CreateGroovyClassTask extends AbstractGroovyProjectTask {
     public static final String NEW_CLASS_NAME = 'newClassName'
 
     CreateGroovyClassTask(){
-        name = 'createGroovyClass'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Groovy class in the current project.'
+        super(
+            'createGroovyClass',
+            'Creates a new Groovy class in the current project.'
+        )
     }
 
     @TaskAction def create(){
@@ -45,7 +46,7 @@ class CreateGroovyClassTask extends AbstractGroovyProjectTask {
             throw new IllegalStateException('It seems that the Groovy plugin is not installed, I cannot determine the main groovy source directory.', e)
         }
 
-        def fullClassName = project.properties[ NEW_CLASS_NAME ] ?: TemplatesPlugin.prompt('Class name (com.example.MyClass)')
+        def fullClassName = project.properties[NEW_CLASS_NAME] ?: TemplatesPlugin.prompt('Class name (com.example.MyClass)')
 
         if (fullClassName) {
             def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)

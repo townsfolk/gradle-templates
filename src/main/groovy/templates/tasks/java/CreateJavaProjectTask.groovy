@@ -25,15 +25,11 @@ import templates.TemplatesPlugin
  */
 class CreateJavaProjectTask extends AbstractJavaProjectTask {
 
-    public static final String NEW_PROJECT_NAME = 'newProjectName'
-    public static final String PROJECT_GROUP = 'projectGroup'
-    public static final String PROJECT_VERSION = 'projectVersion'
-    public static final String PROJECT_PARENT_DIR = 'projectParentDir'
-
     CreateJavaProjectTask(){
-        name = 'createJavaProject'
-        group = TemplatesPlugin.group
-        description = 'Creates a new Gradle Java project in a new directory named after your project.'
+        super(
+            'createJavaProject',
+            'Creates a new Gradle Java project in a new directory named after your project.'
+        )
     }
 
     @TaskAction def create(){
