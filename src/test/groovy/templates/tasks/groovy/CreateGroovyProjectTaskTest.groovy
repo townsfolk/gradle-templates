@@ -26,10 +26,10 @@ class CreateGroovyProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void create(){
-        project.setProperty( CreateGroovyProjectTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
-        project.setProperty( CreateGroovyProjectTask.NEW_PROJECT_NAME, 'tester' )
-        project.setProperty( CreateGroovyProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateGroovyProjectTask.PROJECT_VERSION, '1.1.1' )
+        project.ext[ CreateGroovyProjectTask.PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[ CreateGroovyProjectTask.NEW_PROJECT_NAME] = 'tester'
+        project.ext[ CreateGroovyProjectTask.PROJECT_GROUP] = 'test-group'
+        project.ext[ CreateGroovyProjectTask.PROJECT_VERSION] = '1.1.1'
 
         task.create()
 

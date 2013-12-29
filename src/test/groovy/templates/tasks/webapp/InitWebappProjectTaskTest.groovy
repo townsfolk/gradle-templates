@@ -19,6 +19,9 @@ package templates.tasks.webapp
 import org.junit.Test
 import templates.AbstractTaskTester
 
+import static templates.tasks.webapp.AbstractWebappProjectTask.PROJECT_GROUP
+import static templates.tasks.webapp.AbstractWebappProjectTask.USE_JETTY_PLUGIN
+
 class InitWebappProjectTaskTest extends AbstractTaskTester {
 
     InitWebappProjectTaskTest(){
@@ -26,8 +29,8 @@ class InitWebappProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void 'init: jetty'(){
-        project.setProperty( CreateWebappProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateWebappProjectTask.USE_JETTY_PLUGIN, 'y' )
+        project.ext[PROJECT_GROUP] = 'test-group'
+        project.ext[USE_JETTY_PLUGIN] = 'y'
 
         task.init()
 
@@ -41,8 +44,8 @@ class InitWebappProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void 'init: war'(){
-        project.setProperty( CreateWebappProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateWebappProjectTask.USE_JETTY_PLUGIN, 'n' )
+        project.ext[PROJECT_GROUP] = 'test-group'
+        project.ext[USE_JETTY_PLUGIN] = 'n'
 
         task.init()
 

@@ -16,10 +16,10 @@
  */
 
 package templates.tasks.groovy
-
 import org.junit.Test
 import templates.AbstractTaskTester
-import templates.tasks.scala.CreateScalaProjectTask
+
+import static templates.tasks.scala.AbstractScalaProjectTask.PROJECT_GROUP
 
 class InitGroovyProjectTaskTest extends AbstractTaskTester {
 
@@ -28,7 +28,7 @@ class InitGroovyProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void init(){
-        project.setProperty( CreateScalaProjectTask.PROJECT_GROUP, 'test-group' )
+        project.ext[PROJECT_GROUP] = 'test-group'
 
         task.init()
 

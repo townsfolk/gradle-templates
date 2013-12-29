@@ -19,25 +19,26 @@ package templates.tasks.gradle
 import org.junit.Test
 import templates.AbstractTaskTester
 
+import static AbstractGradleProjectTask.NEW_PROJECT_NAME
+import static AbstractGradleProjectTask.PROJECT_PARENT_DIR
+import static AbstractGradleProjectTask.PROJECT_GROUP
+import static AbstractGradleProjectTask.PROJECT_VERSION
+import static AbstractGradleProjectTask.PLUGIN_CLASS_NAME
+import static AbstractGradleProjectTask.PLUGIN_APPLY_LABEL
+
 class CreateGradlePluginTaskTest extends AbstractTaskTester {
-
-    /*
-        FIXME: creating props dynamic is deprecated, fix
-
-        Creating properties on demand (a.k.a. dynamic properties) has been deprecated and is scheduled to be removed in Gradle 2.0. Please read http://gradle.org/docs/current/dsl/org.gradle.api.plugins.ExtraPropertiesExtension.html for information on the replacement for dynamic properties.
-     */
 
     CreateGradlePluginTaskTest(){
         super( CreateGradlePluginTask )
     }
 
     @Test void create(){
-        project.setProperty( CreateGradlePluginTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
-        project.setProperty( CreateGradlePluginTask.NEW_PROJECT_NAME, 'tester' )
-        project.setProperty( CreateGradlePluginTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateGradlePluginTask.PROJECT_VERSION, '1.1.1' )
-        project.setProperty( CreateGradlePluginTask.PLUGIN_APPLY_LABEL, 'test-foo' )
-        project.setProperty( CreateGradlePluginTask.PLUGIN_CLASS_NAME, 'com.test' )
+        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[NEW_PROJECT_NAME] = 'tester'
+        project.ext[PROJECT_GROUP] = 'test-group'
+        project.ext[PROJECT_VERSION] = '1.1.1'
+        project.ext[PLUGIN_APPLY_LABEL] = 'test-foo'
+        project.ext[PLUGIN_CLASS_NAME] = 'com.test'
 
         task.create()
 

@@ -19,6 +19,8 @@ package templates.tasks.gradle
 import org.junit.Test
 import templates.AbstractTaskTester
 
+import static templates.tasks.gradle.AbstractGradleProjectTask.*
+
 class InitGradlePluginTaskTest extends AbstractTaskTester{
 
     InitGradlePluginTaskTest(){
@@ -26,11 +28,11 @@ class InitGradlePluginTaskTest extends AbstractTaskTester{
     }
 
     @Test void init(){
-        project.setProperty( CreateGradlePluginTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
-        project.setProperty( CreateGradlePluginTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateGradlePluginTask.PROJECT_VERSION, '1.1.1' )
-        project.setProperty( CreateGradlePluginTask.PLUGIN_APPLY_LABEL, 'test-foo' )
-        project.setProperty( CreateGradlePluginTask.PLUGIN_CLASS_NAME, 'com.test' )
+        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[PROJECT_GROUP] = 'test-group'
+        project.ext[PROJECT_VERSION] = '1.1.1'
+        project.ext[PLUGIN_APPLY_LABEL] = 'test-foo'
+        project.ext[PLUGIN_CLASS_NAME] = 'com.test'
 
         task.init()
 

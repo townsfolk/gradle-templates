@@ -19,6 +19,12 @@ package templates.tasks.webapp
 import org.junit.Test
 import templates.AbstractTaskTester
 
+import static templates.tasks.webapp.AbstractWebappProjectTask.NEW_PROJECT_NAME
+import static templates.tasks.webapp.AbstractWebappProjectTask.PROJECT_GROUP
+import static templates.tasks.webapp.AbstractWebappProjectTask.PROJECT_PARENT_DIR
+import static templates.tasks.webapp.AbstractWebappProjectTask.PROJECT_VERSION
+import static templates.tasks.webapp.AbstractWebappProjectTask.USE_JETTY_PLUGIN
+
 class CreateWebappProjectTaskTest extends AbstractTaskTester {
 
     CreateWebappProjectTaskTest(){
@@ -26,11 +32,11 @@ class CreateWebappProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void 'create: jetty'(){
-        project.setProperty( CreateWebappProjectTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
-        project.setProperty( CreateWebappProjectTask.NEW_PROJECT_NAME, 'tester' )
-        project.setProperty( CreateWebappProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateWebappProjectTask.PROJECT_VERSION, '1.1.1' )
-        project.setProperty( CreateWebappProjectTask.USE_JETTY_PLUGIN, 'y' )
+        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[NEW_PROJECT_NAME] = 'tester'
+        project.ext[PROJECT_GROUP] = 'test-group'
+        project.ext[PROJECT_VERSION] = '1.1.1'
+        project.ext[USE_JETTY_PLUGIN] = 'y'
 
         task.create()
 
@@ -45,11 +51,11 @@ class CreateWebappProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void 'create: war'(){
-        project.setProperty( CreateWebappProjectTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
-        project.setProperty( CreateWebappProjectTask.NEW_PROJECT_NAME, 'tester' )
-        project.setProperty( CreateWebappProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateWebappProjectTask.PROJECT_VERSION, '1.1.1' )
-        project.setProperty( CreateWebappProjectTask.USE_JETTY_PLUGIN, 'n' )
+        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[NEW_PROJECT_NAME] = 'tester'
+        project.ext[PROJECT_GROUP] = 'test-group'
+        project.ext[PROJECT_VERSION] = '1.1.1'
+        project.ext[USE_JETTY_PLUGIN] = 'n'
 
         task.create()
 

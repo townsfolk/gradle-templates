@@ -18,6 +18,9 @@
 package templates.tasks.groovy
 import org.junit.Test
 import templates.AbstractTaskTester
+
+import static templates.tasks.groovy.CreateGroovyClassTask.NEW_CLASS_NAME
+
 /**
  * Created by cjstehno on 12/23/13.
  */
@@ -30,7 +33,7 @@ class CreateGroovyClassTaskTest extends AbstractTaskTester {
     @Test void create(){
         project.apply plugin:'groovy'
 
-        project.setProperty( CreateGroovyClassTask.NEW_CLASS_NAME, 'foo.Something' )
+        project.ext[NEW_CLASS_NAME] = 'foo.Something'
 
         task.create()
 

@@ -19,6 +19,13 @@ package templates.tasks.scala
 import org.junit.Test
 import templates.AbstractTaskTester
 
+import static templates.tasks.scala.AbstractScalaProjectTask.NEW_PROJECT_NAME
+import static templates.tasks.scala.AbstractScalaProjectTask.PROJECT_GROUP
+import static templates.tasks.scala.AbstractScalaProjectTask.PROJECT_PARENT_DIR
+import static templates.tasks.scala.AbstractScalaProjectTask.PROJECT_VERSION
+import static templates.tasks.scala.AbstractScalaProjectTask.SCALA_VERSION
+import static templates.tasks.scala.AbstractScalaProjectTask.USE_FAST_SCALA_COMPILER
+
 class CreateScalaProjectTaskTest extends AbstractTaskTester {
 
     CreateScalaProjectTaskTest(){
@@ -27,12 +34,12 @@ class CreateScalaProjectTaskTest extends AbstractTaskTester {
 
     @Test
     void create(){
-        project.setProperty( CreateScalaProjectTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
-        project.setProperty( CreateScalaProjectTask.NEW_PROJECT_NAME, 'tester' )
-        project.setProperty( CreateScalaProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateScalaProjectTask.PROJECT_VERSION, '1.1.1' )
-        project.setProperty( CreateScalaProjectTask.SCALA_VERSION, '2.9.0' )
-        project.setProperty( CreateScalaProjectTask.USE_FAST_SCALA_COMPILER, true )
+        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[NEW_PROJECT_NAME] = 'tester'
+        project.ext[PROJECT_GROUP] = 'test-group'
+        project.ext[PROJECT_VERSION] = '1.1.1'
+        project.ext[SCALA_VERSION] = '2.9.0'
+        project.ext[USE_FAST_SCALA_COMPILER] = true
 
         task.create()
 

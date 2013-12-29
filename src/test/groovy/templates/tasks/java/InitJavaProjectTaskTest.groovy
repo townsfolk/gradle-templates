@@ -19,6 +19,8 @@ package templates.tasks.java
 import org.junit.Test
 import templates.AbstractTaskTester
 
+import static templates.tasks.java.AbstractJavaProjectTask.PROJECT_GROUP
+
 class InitJavaProjectTaskTest extends AbstractTaskTester {
 
     InitJavaProjectTaskTest(){
@@ -26,7 +28,7 @@ class InitJavaProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void init(){
-        project.setProperty( CreateJavaProjectTask.PROJECT_GROUP, 'test-group' )
+        project.ext[PROJECT_GROUP] = 'test-group'
 
         task.init()
 

@@ -16,11 +16,12 @@
  */
 
 package templates.tasks.scala
-
 import org.junit.Test
 import templates.AbstractTaskTester
-import templates.tasks.scala.CreateScalaProjectTask
-import templates.tasks.scala.InitScalaProjectTask
+
+import static templates.tasks.scala.AbstractScalaProjectTask.PROJECT_GROUP
+import static templates.tasks.scala.AbstractScalaProjectTask.SCALA_VERSION
+import static templates.tasks.scala.AbstractScalaProjectTask.USE_FAST_SCALA_COMPILER
 
 class InitScalaProjectTaskTest extends AbstractTaskTester {
 
@@ -29,9 +30,9 @@ class InitScalaProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void init(){
-        project.setProperty( CreateScalaProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateScalaProjectTask.SCALA_VERSION, '2.9.0' )
-        project.setProperty( CreateScalaProjectTask.USE_FAST_SCALA_COMPILER, true )
+        project.ext[PROJECT_GROUP] = 'test-group'
+        project.ext[SCALA_VERSION] = '2.9.0'
+        project.ext[USE_FAST_SCALA_COMPILER] = true
 
         task.init()
 

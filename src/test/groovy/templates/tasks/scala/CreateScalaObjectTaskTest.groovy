@@ -16,10 +16,10 @@
  */
 
 package templates.tasks.scala
-
 import org.junit.Test
 import templates.AbstractTaskTester
-import templates.tasks.scala.CreateScalaObjectTask
+
+import static templates.tasks.scala.CreateScalaClassTask.NEW_CLASS_NAME
 
 class CreateScalaObjectTaskTest extends AbstractTaskTester {
 
@@ -30,7 +30,7 @@ class CreateScalaObjectTaskTest extends AbstractTaskTester {
     @Test void create(){
         project.apply plugin:'scala'
 
-        project.setProperty( CreateScalaObjectTask.NEW_CLASS_NAME, 'foo.Something' )
+        project.ext[NEW_CLASS_NAME] = 'foo.Something'
 
         task.create()
 
