@@ -26,10 +26,10 @@ class CreateJavaProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void create(){
-        project.setProperty( CreateJavaProjectTask.PROJECT_PARENT_DIR, folder.getRoot() as String )
-        project.setProperty( CreateJavaProjectTask.NEW_PROJECT_NAME, 'tester' )
-        project.setProperty( CreateJavaProjectTask.PROJECT_GROUP, 'test-group' )
-        project.setProperty( CreateJavaProjectTask.PROJECT_VERSION, '1.1.1' )
+        project.ext[CreateJavaProjectTask.PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[CreateJavaProjectTask.NEW_PROJECT_NAME] = 'tester'
+        project.ext[CreateJavaProjectTask.PROJECT_GROUP] = 'test-group'
+        project.ext[CreateJavaProjectTask.PROJECT_VERSION] = '1.1.1'
 
         task.create()
 

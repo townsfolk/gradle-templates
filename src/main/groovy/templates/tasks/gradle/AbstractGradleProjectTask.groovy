@@ -27,12 +27,8 @@ import templates.tasks.AbstractProjectTask
  */
 abstract class AbstractGradleProjectTask extends AbstractProjectTask {
 
-    static final String PROJECT_GROUP = 'projectGroup'
-    static final String PROJECT_VERSION = 'projectVersion'
     static final String PLUGIN_APPLY_LABEL = 'pluginApplyLabel'
     static final String PLUGIN_CLASS_NAME = 'pluginClassName'
-    static final String NEW_PROJECT_NAME = 'newProjectName'
-    static final String PROJECT_PARENT_DIR = 'projectParentDir'
 
     AbstractGradleProjectTask( final String name, final String description ){
         this.name = name

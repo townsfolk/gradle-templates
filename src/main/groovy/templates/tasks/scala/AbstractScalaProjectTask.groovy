@@ -27,12 +27,8 @@ import templates.tasks.AbstractProjectTask
  */
 abstract class AbstractScalaProjectTask extends AbstractProjectTask {
 
-    protected static final String NEW_PROJECT_NAME = 'newProjectName'
-    protected static final String PROJECT_GROUP = 'projectGroup'
-    protected static final String PROJECT_VERSION = 'projectVersion'
-    protected static final String PROJECT_PARENT_DIR = 'projectParentDir'
-    protected static final String SCALA_VERSION = 'scalaVersion'
-    protected static final String USE_FAST_SCALA_COMPILER = 'useFastScalaCompiler'
+    static final String SCALA_VERSION = 'scalaVersion'
+    static final String USE_FAST_SCALA_COMPILER = 'useFastScalaCompiler'
 
     AbstractScalaProjectTask( final String name, final String description ){
         this.name = name
@@ -78,8 +74,8 @@ abstract class AbstractScalaProjectTask extends AbstractProjectTask {
             'build.gradle' template: '/templates/scala/build.gradle.tmpl', append: true,
                 scalaVersion: scalaVersion,
                 useFastCompiler: useFastCompiler,
-                projectGroup: props[PROJECT_GROUP]
-            'gradle.properties' content: "version=${props[PROJECT_VERSION] ?: '0.1'}", append: true
+                projectGroup: props[AbstractProjectTask.PROJECT_GROUP]
+            'gradle.properties' content: "version=${props[AbstractProjectTask.PROJECT_VERSION] ?: '0.1'}", append: true
         }
     }
 }

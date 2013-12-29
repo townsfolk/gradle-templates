@@ -24,6 +24,11 @@ import org.gradle.api.DefaultTask
  */
 abstract class AbstractProjectTask extends DefaultTask {
 
+    static final String NEW_PROJECT_NAME = 'newProjectName'
+    static final String PROJECT_GROUP = 'projectGroup'
+    static final String PROJECT_VERSION = 'projectVersion'
+    static final String PROJECT_PARENT_DIR = 'projectParentDir'
+
     /**
      * A solution to allow external generation directory config which also allows unit testing for init.
      * It will try a system property named 'init.dir' and then fallback to the 'user.dir' property value.

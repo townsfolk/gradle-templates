@@ -19,6 +19,8 @@ package templates.tasks.java
 import org.junit.Test
 import templates.AbstractTaskTester
 
+import static templates.tasks.java.CreateJavaClassTask.NEW_CLASS_NAME
+
 class CreateJavaClassTaskTest extends AbstractTaskTester {
 
     CreateJavaClassTaskTest(){
@@ -28,7 +30,7 @@ class CreateJavaClassTaskTest extends AbstractTaskTester {
     @Test void create(){
         project.apply plugin:'java'
 
-        project.setProperty( CreateJavaClassTask.NEW_CLASS_NAME, 'foo.Something' )
+        project.ext[NEW_CLASS_NAME] = 'foo.Something'
 
         task.create()
 

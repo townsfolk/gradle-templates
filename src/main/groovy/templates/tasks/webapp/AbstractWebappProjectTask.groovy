@@ -26,10 +26,6 @@ import templates.tasks.AbstractProjectTask
  */
 abstract class AbstractWebappProjectTask extends AbstractProjectTask {
 
-    static final String NEW_PROJECT_NAME = 'newProjectName'
-    static final String PROJECT_GROUP = 'projectGroup'
-    static final String PROJECT_VERSION = 'projectVersion'
-    static final String PROJECT_PARENT_DIR = 'projectParentDir'
     static final String USE_JETTY_PLUGIN = 'useJettyPlugin'
 
     AbstractWebappProjectTask( final String name, final String description ){

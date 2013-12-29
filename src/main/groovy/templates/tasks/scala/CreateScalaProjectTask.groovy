@@ -42,8 +42,8 @@ class CreateScalaProjectTask extends AbstractScalaProjectTask {
             String projectGroup = props[PROJECT_GROUP] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
             String projectVersion = props[PROJECT_VERSION] ?: TemplatesPlugin.prompt('Version:', '1.0')
 
-            project.setProperty PROJECT_GROUP, projectGroup
-            project.setProperty PROJECT_VERSION, projectVersion
+            project.ext[PROJECT_GROUP] = projectGroup
+            project.ext[PROJECT_VERSION] = projectVersion
 
             String projectPath = props[PROJECT_PARENT_DIR] ? "${props[PROJECT_PARENT_DIR]}/$projectName" : projectName
 
