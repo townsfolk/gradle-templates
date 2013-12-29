@@ -35,9 +35,7 @@ class InitJavaProjectTask extends AbstractJavaProjectTask {
     @TaskAction def init(){
         createBase()
 
-        File buildFile = new File(defaultDir(), 'build.gradle')
-
-        buildFile.exists() ?: buildFile.createNewFile()
+        File buildFile = ensureFileExists( 'build.gradle')
 
         TemplatesPlugin.prependPlugin 'java', buildFile
     }

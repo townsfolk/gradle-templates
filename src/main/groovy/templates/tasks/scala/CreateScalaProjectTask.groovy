@@ -16,9 +16,7 @@
  */
 
 package templates.tasks.scala
-
 import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
 
 /**
  * Task for creating a new Gradle Scala project in a specified directory.
@@ -32,26 +30,19 @@ class CreateScalaProjectTask extends AbstractScalaProjectTask {
         )
     }
 
-    @TaskAction
-    def create(){
-        def props = project.properties
-
-        String projectName = props[NEW_PROJECT_NAME] ?: TemplatesPlugin.prompt('Project Name:')
-
+    @TaskAction void create(){
+        String projectName = projectName()
         if (projectName) {
-            String projectGroup = props[PROJECT_GROUP] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
-            String projectVersion = props[PROJECT_VERSION] ?: TemplatesPlugin.prompt('Version:', '1.0')
+            project.ext[PROJECT_GROUP] = projectGroup( projectName )
+            project.ext[PROJECT_VERSION] = projectVersion()
 
-            project.ext[PROJECT_GROUP] = projectGroup
-            project.ext[PROJECT_VERSION] = projectVersion
-
-            String projectPath = props[PROJECT_PARENT_DIR] ? "${props[PROJECT_PARENT_DIR]}/$projectName" : projectName
+            String projectPath = projectPath( projectName )
 
             createBase projectPath
             setupBuildFile project, projectPath
 
         } else {
-            // TODO: this should probably be an error or something more useful.
+            // FIXME: error
             println 'No project name provided.'
         }
     }

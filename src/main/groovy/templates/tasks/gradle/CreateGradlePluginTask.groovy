@@ -16,9 +16,7 @@
  */
 
 package templates.tasks.gradle
-
 import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
 
 /**
  * Task to create a gradle project in a new directory.
@@ -32,13 +30,16 @@ class CreateGradlePluginTask extends AbstractGradleProjectTask {
         )
     }
 
-    @TaskAction def create(){
-        def props = project.properties
-        def projectName = props[NEW_PROJECT_NAME] ?: TemplatesPlugin.prompt('Project Name:')
+    @TaskAction void create(){
+        def projectName = projectName()
         if (projectName) {
-            String projectPath = props[PROJECT_PARENT_DIR] ? "${props[PROJECT_PARENT_DIR]}/$projectName" : projectName
-
-            createBase(projectPath, [name: projectName, properties: project.properties])
+            createBase(
+                projectPath( projectName ),
+                [
+                    name:projectName,
+                    properties:project.properties
+                ]
+            )
 
         } else {
             // FIXME: error

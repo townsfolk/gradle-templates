@@ -48,6 +48,14 @@ abstract class AbstractWebappProjectTask extends AbstractProjectTask {
         }
     }
 
+    protected boolean useJetty(){
+        if( project.properties[USE_JETTY_PLUGIN] ){
+            return project.properties[USE_JETTY_PLUGIN]?.toLowerCase() == 'y'
+        } else {
+            return TemplatesPlugin.promptYesOrNo('Use Jetty Plugin?')
+        }
+    }
+
     // FIXME: copied from AbstractJavaProjectTask
     private void createJavaBase(String path = defaultDir() ){
         ProjectTemplate.fromRoot(path) {

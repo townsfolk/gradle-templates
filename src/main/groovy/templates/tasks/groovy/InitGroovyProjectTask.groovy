@@ -21,7 +21,7 @@ import org.gradle.api.tasks.TaskAction
 import templates.TemplatesPlugin
 
 /**
- * Created by cjstehno on 12/23/13.
+ * Task to initialize a groovy project.
  */
 class InitGroovyProjectTask extends AbstractGroovyProjectTask {
 
@@ -32,13 +32,10 @@ class InitGroovyProjectTask extends AbstractGroovyProjectTask {
         )
     }
 
-    // FIXME: these init() methods are all very similar, refactor into something common
     @TaskAction def init(){
         createBase()
 
-        File buildFile = new File(defaultDir(), 'build.gradle')
-
-        buildFile.exists() ?: buildFile.createNewFile()
+        File buildFile = ensureFileExists('build.gradle')
 
         TemplatesPlugin.prependPlugin 'groovy', buildFile
     }

@@ -18,7 +18,6 @@
 package templates.tasks.java
 import org.gradle.api.tasks.TaskAction
 import templates.ProjectTemplate
-import templates.TemplatesPlugin
 
 /**
  * Task that creates a new java project in a specified directory.
@@ -32,26 +31,20 @@ class CreateJavaProjectTask extends AbstractJavaProjectTask {
         )
     }
 
-    @TaskAction def create(){
-        def props = project.properties
-
-        String projectName = props[NEW_PROJECT_NAME] ?: TemplatesPlugin.prompt('Project Name:')
-
+    @TaskAction void create(){
+        String projectName = projectName()
         if (projectName) {
-            String projectGroup = props[PROJECT_GROUP] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
-            String projectVersion = props[PROJECT_VERSION] ?: TemplatesPlugin.prompt('Version:', '0.1')
-
-            String projectPath = props[PROJECT_PARENT_DIR] ? "${props[PROJECT_PARENT_DIR]}/$projectName" : projectName
+            String projectPath = projectPath( projectName )
 
             createBase projectPath
 
             ProjectTemplate.fromRoot(projectPath) {
-                'build.gradle' template: '/templates/java/build.gradle.tmpl', projectGroup:projectGroup
-                'gradle.properties' content: "version=$projectVersion", append:true
+                'build.gradle' template:'/templates/java/build.gradle.tmpl', projectGroup:projectGroup(projectName)
+                'gradle.properties' content:"version=${projectVersion()}", append:true
             }
 
         } else {
-            // TODO: should be an error
+            // FIXME: should be an error
             println 'No project name provided.'
         }
     }

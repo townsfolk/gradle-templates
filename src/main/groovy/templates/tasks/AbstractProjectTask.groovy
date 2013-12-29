@@ -18,6 +18,7 @@
 package templates.tasks
 
 import org.gradle.api.DefaultTask
+import templates.TemplatesPlugin
 
 /**
  * Abstract base class for project tasks.
@@ -35,5 +36,31 @@ abstract class AbstractProjectTask extends DefaultTask {
      */
     protected String defaultDir(){
         System.getProperty( 'init.dir', System.getProperty('user.dir') )
+    }
+
+    protected String projectPath( final String projectName ){
+        project.properties[PROJECT_PARENT_DIR] ? "${project.properties[PROJECT_PARENT_DIR]}/$projectName" : projectName
+    }
+
+    protected String projectName(){
+        project.properties[NEW_PROJECT_NAME] ?: TemplatesPlugin.prompt('Project Name:')
+    }
+
+    protected String projectGroup( final String projectName ){
+        project.properties[PROJECT_GROUP] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
+    }
+
+    protected String projectVersion(){
+        project.properties[PROJECT_VERSION] ?: TemplatesPlugin.prompt('Version:', '0.1')
+    }
+
+    protected File ensureFileExists( final String file ){
+        File buildFile = new File(defaultDir(), file)
+
+        if( !buildFile.exists() ){
+            buildFile.createNewFile()
+        }
+
+        return buildFile
     }
 }

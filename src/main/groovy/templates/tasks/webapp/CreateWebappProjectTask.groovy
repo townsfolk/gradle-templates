@@ -18,8 +18,6 @@
 package templates.tasks.webapp
 import org.gradle.api.tasks.TaskAction
 import templates.ProjectTemplate
-import templates.TemplatesPlugin
-
 /**
  * Task to create a new gradle web app project in a directory.
  */
@@ -33,28 +31,15 @@ class CreateWebappProjectTask extends AbstractWebappProjectTask {
     }
 
     @TaskAction def create(){
-        def props = project.properties
-
-        String projectName = props[NEW_PROJECT_NAME] ?: TemplatesPlugin.prompt('Project Name:')
-
-        boolean useJetty = false
-        if( props[USE_JETTY_PLUGIN] ){
-            useJetty = props[USE_JETTY_PLUGIN]?.toLowerCase() == 'y'
-        } else {
-            useJetty = TemplatesPlugin.promptYesOrNo('Use Jetty Plugin?')
-        }
-
+        String projectName = projectName()
         if (projectName) {
-            String projectGroup = props[PROJECT_GROUP] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
-            String projectVersion = props[PROJECT_VERSION] ?: TemplatesPlugin.prompt('Version:', '1.0')
-
-            String projectPath = props[PROJECT_PARENT_DIR] ? "${props[PROJECT_PARENT_DIR]}/$projectName" : projectName
+            String projectPath = projectPath( projectName )
 
             createBase projectPath, projectName
 
             ProjectTemplate.fromRoot(projectPath) {
-                'build.gradle' template:'/templates/webapp/build.gradle.tmpl', useJetty:useJetty, projectGroup:projectGroup
-                'gradle.properties' content:"version=${projectVersion}", append:true
+                'build.gradle' template:'/templates/webapp/build.gradle.tmpl', useJetty:useJetty(), projectGroup:projectGroup(projectName)
+                'gradle.properties' content:"version=${projectVersion()}", append:true
             }
 
         } else {

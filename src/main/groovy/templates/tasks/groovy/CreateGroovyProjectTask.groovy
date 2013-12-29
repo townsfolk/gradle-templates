@@ -16,10 +16,8 @@
  */
 
 package templates.tasks.groovy
-
 import org.gradle.api.tasks.TaskAction
 import templates.ProjectTemplate
-import templates.TemplatesPlugin
 
 /**
  * Task to create a Groovy Gradle project in a new directory.
@@ -33,23 +31,16 @@ class CreateGroovyProjectTask extends AbstractGroovyProjectTask {
         )
     }
 
-    // FIXME: these create() methods are all very similar, refactor into something common
     @TaskAction def create(){
-        def props = project.properties
-
-        String projectName = props[NEW_PROJECT_NAME] ?: TemplatesPlugin.prompt('Project Name:')
-
+        String projectName = projectName()
         if (projectName) {
-            String projectGroup = props[PROJECT_GROUP] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
-            String projectVersion = props[PROJECT_VERSION] ?: TemplatesPlugin.prompt('Version:', '1.0')
-
-            String projectPath = props[PROJECT_PARENT_DIR] ? "${props[PROJECT_PARENT_DIR]}/$projectName" : projectName
+            String projectPath = projectPath( projectName )
 
             createBase projectPath
 
             ProjectTemplate.fromRoot(projectPath) {
-                'build.gradle' template: '/templates/groovy/build.gradle.tmpl', projectGroup: projectGroup
-                'gradle.properties' content: "version=$projectVersion", append: true
+                'build.gradle' template:'/templates/groovy/build.gradle.tmpl', projectGroup:projectGroup(projectName)
+                'gradle.properties' content:"version=${projectVersion()}", append:true
             }
 
         } else {

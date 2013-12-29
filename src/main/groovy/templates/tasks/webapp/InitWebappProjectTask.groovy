@@ -33,20 +33,10 @@ class InitWebappProjectTask extends AbstractWebappProjectTask {
     }
 
     @TaskAction def init(){
-        def props = project.properties
+        createBase project.name
 
-        createBase(project.name)
+        File buildFile = ensureFileExists( 'build.gradle' )
 
-        boolean useJetty = false
-        if( props[USE_JETTY_PLUGIN] ){
-            useJetty = props[USE_JETTY_PLUGIN]?.toLowerCase() == 'y'
-        } else {
-            useJetty = TemplatesPlugin.promptYesOrNo('Use Jetty Plugin?')
-        }
-
-        File buildFile = new File(defaultDir(), 'build.gradle')
-        buildFile.exists() ?: buildFile.createNewFile()
-
-        TemplatesPlugin.prependPlugin useJetty ? 'jetty' : 'war', buildFile
+        TemplatesPlugin.prependPlugin useJetty() ? 'jetty' : 'war', buildFile
     }
 }
