@@ -17,26 +17,21 @@
 
 package templates.tasks.groovy
 
-import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
+import templates.tasks.AbstractTemplateExportTask
 
 /**
  * Task to export the default groovy templates.
  */
-class ExportGroovyTemplatesTask extends AbstractGroovyProjectTask {
+class ExportGroovyTemplatesTask extends AbstractTemplateExportTask {
 
     ExportGroovyTemplatesTask(){
         super(
             'exportGroovyTemplates',
-            'Exports the default groovy template files into the current directory.'
+            'Exports the default groovy template files into the current directory.',
+            [
+                '/templates/groovy/build.gradle.tmpl',
+                '/templates/groovy/groovy-class.tmpl'
+            ]
         )
-    }
-
-    // FIXME: these export() methods are all very similar, refactor into something common
-    @TaskAction def export(){
-        TemplatesPlugin.exportTemplates([
-            '/templates/groovy/build.gradle.tmpl',
-            '/templates/groovy/groovy-class.tmpl'
-        ])
     }
 }

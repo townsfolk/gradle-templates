@@ -17,25 +17,21 @@
 
 package templates.tasks.webapp
 
-import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
+import templates.tasks.AbstractTemplateExportTask
 
 /**
  * Task to export the default webapp templates.
  */
-class ExportWebappTemplatesTask extends AbstractWebappProjectTask {
+class ExportWebappTemplatesTask extends AbstractTemplateExportTask {
 
     ExportWebappTemplatesTask(){
         super(
             'exportWebappTemplates',
-            'Exports the default webapp template files into the current directory.'
+            'Exports the default webapp template files into the current directory.',
+            [
+                '/templates/webapp/build.gradle.tmpl',
+                '/templates/webapp/web-xml.tmpl'
+            ]
         )
-    }
-
-    @TaskAction def export(){
-        TemplatesPlugin.exportTemplates([
-            '/templates/webapp/build.gradle.tmpl',
-            '/templates/webapp/web-xml.tmpl'
-        ])
     }
 }

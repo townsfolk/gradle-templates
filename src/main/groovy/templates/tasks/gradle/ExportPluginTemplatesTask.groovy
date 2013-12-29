@@ -17,26 +17,22 @@
 
 package templates.tasks.gradle
 
-import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
+import templates.tasks.AbstractTemplateExportTask
 
 /**
  * Task to export the default gradle project templates.
  */
-class ExportPluginTemplatesTask extends AbstractGradleProjectTask {
+class ExportPluginTemplatesTask extends AbstractTemplateExportTask {
 
     ExportPluginTemplatesTask(){
         super(
             'exportPluginTemplates',
-            'Exports the default plugin template files into the current directory.'
+            'Exports the default plugin template files into the current directory.',
+            [
+                '/templates/plugin/build.gradle.tmpl',
+                '/templates/plugin/convention-class.tmpl',
+                '/templates/plugin/plugin-class.tmpl'
+            ]
         )
-    }
-
-    @TaskAction def export(){
-        TemplatesPlugin.exportTemplates([
-            '/templates/plugin/build.gradle.tmpl',
-            '/templates/plugin/convention-class.tmpl',
-            '/templates/plugin/plugin-class.tmpl'
-        ])
     }
 }

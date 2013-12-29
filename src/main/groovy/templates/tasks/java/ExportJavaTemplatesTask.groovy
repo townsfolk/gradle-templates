@@ -17,25 +17,21 @@
 
 package templates.tasks.java
 
-import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
+import templates.tasks.AbstractTemplateExportTask
 
 /**
  *  Task to export the default java templates into the current directory.
  */
-class ExportJavaTemplatesTask extends AbstractJavaProjectTask {
+class ExportJavaTemplatesTask extends AbstractTemplateExportTask {
 
     ExportJavaTemplatesTask(){
         super(
             'exportJavaTemplates',
-            'Exports the default java template files into the current directory.'
+            'Exports the default java template files into the current directory.',
+            [
+                '/templates/java/build.gradle.tmpl',
+                '/templates/java/java-class.tmpl'
+            ]
         )
-    }
-
-    @TaskAction def export(){
-        TemplatesPlugin.exportTemplates([
-            '/templates/java/build.gradle.tmpl',
-            '/templates/java/java-class.tmpl'
-        ])
     }
 }

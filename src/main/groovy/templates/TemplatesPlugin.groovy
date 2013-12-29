@@ -29,15 +29,6 @@ class TemplatesPlugin implements Plugin<Project> {
 	static final String lineSep = System.getProperty( 'line.separator' )
 	static final String inputPrompt = "${lineSep}templates>"
 
-	static void exportTemplates(def templates = []) {
-		ProjectTemplate.fromUserDir {
-			templates.each { template ->
-				def tStream = getClass().getResourceAsStream(template)
-				"$template" tStream.text
-			}
-		}
-	}
-
 	static void prependPlugin(String plugin, File gradleFile) {
 		def oldText = gradleFile.text
 		gradleFile.text = ''

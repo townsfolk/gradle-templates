@@ -17,26 +17,21 @@
 
 package templates.tasks.scala
 
-import org.gradle.api.tasks.TaskAction
-import templates.TemplatesPlugin
+import templates.tasks.AbstractTemplateExportTask
 
 /**
  * Task to export the scala templates.
  */
-class ExportScalaTemplatesTask extends AbstractScalaProjectTask {
+class ExportScalaTemplatesTask extends AbstractTemplateExportTask {
 
     ExportScalaTemplatesTask(){
         super(
             'exportScalaTemplates',
-            'Exports the default scala template files into the current directory.'
+            'Exports the default scala template files into the current directory.',
+            [
+                '/templates/scala/build.gradle.tmpl',
+                '/templates/scala/scala-class.tmpl'
+            ]
         )
-    }
-
-    @TaskAction
-    void export(){
-        TemplatesPlugin.exportTemplates([
-            '/templates/scala/build.gradle.tmpl',
-            '/templates/scala/scala-class.tmpl'
-        ])
     }
 }
