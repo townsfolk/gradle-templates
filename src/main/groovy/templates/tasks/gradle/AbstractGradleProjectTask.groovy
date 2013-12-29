@@ -31,9 +31,7 @@ abstract class AbstractGradleProjectTask extends AbstractProjectTask {
     static final String PLUGIN_CLASS_NAME = 'pluginClassName'
 
     AbstractGradleProjectTask( final String name, final String description ){
-        this.name = name
-        this.group = TemplatesPlugin.group
-        this.description = description
+        super( name, description )
     }
 
     /**

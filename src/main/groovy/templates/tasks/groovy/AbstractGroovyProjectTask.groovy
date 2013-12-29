@@ -16,20 +16,15 @@
  */
 
 package templates.tasks.groovy
-
 import templates.ProjectTemplate
-import templates.TemplatesPlugin
 import templates.tasks.AbstractProjectTask
-
 /**
  *
  */
 abstract class AbstractGroovyProjectTask extends AbstractProjectTask {
 
     AbstractGroovyProjectTask( final String name, final String description ){
-        this.name = name
-        this.group = TemplatesPlugin.group
-        this.description = description
+        super( name, description )
     }
 
     /**

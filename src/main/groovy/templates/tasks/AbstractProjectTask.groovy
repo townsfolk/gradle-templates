@@ -30,6 +30,12 @@ abstract class AbstractProjectTask extends DefaultTask {
     static final String PROJECT_VERSION = 'projectVersion'
     static final String PROJECT_PARENT_DIR = 'projectParentDir'
 
+    AbstractProjectTask( final String name, final String description ){
+        this.name = name
+        this.group = TemplatesPlugin.group
+        this.description = description
+    }
+
     /**
      * A solution to allow external generation directory config which also allows unit testing for init.
      * It will try a system property named 'init.dir' and then fallback to the 'user.dir' property value.

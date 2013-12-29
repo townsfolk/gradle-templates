@@ -31,9 +31,7 @@ abstract class AbstractScalaProjectTask extends AbstractProjectTask {
     static final String USE_FAST_SCALA_COMPILER = 'useFastScalaCompiler'
 
     AbstractScalaProjectTask( final String name, final String description ){
-        this.name = name
-        this.group = TemplatesPlugin.group
-        this.description = description
+        super( name, description )
     }
 
     /**

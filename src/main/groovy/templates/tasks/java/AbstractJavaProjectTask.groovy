@@ -16,20 +16,15 @@
  */
 
 package templates.tasks.java
-
 import templates.ProjectTemplate
-import templates.TemplatesPlugin
 import templates.tasks.AbstractProjectTask
-
 /**
  * Base class for Java project tasks.
  */
 abstract class AbstractJavaProjectTask extends AbstractProjectTask {
 
     AbstractJavaProjectTask( final String name, final String description ){
-        this.name = name
-        this.group = TemplatesPlugin.group
-        this.description = description
+        super( name, description )
     }
 
     /**
