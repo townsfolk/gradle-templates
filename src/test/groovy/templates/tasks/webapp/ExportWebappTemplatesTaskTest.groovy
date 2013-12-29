@@ -15,27 +15,22 @@
  * limitations under the License.
  */
 
-package templates.tasks.java
+package templates.tasks.webapp
+
 import org.junit.Test
 import templates.AbstractTaskTester
 
-class InitJavaProjectTaskTest extends AbstractTaskTester {
 
-    InitJavaProjectTaskTest(){
-        super( InitJavaProjectTask )
+class ExportWebappTemplatesTaskTest extends AbstractTaskTester {
+
+    ExportWebappTemplatesTaskTest(){
+        super( ExportWebappTemplatesTask )
     }
 
-    @Test void init(){
-        project.setProperty( CreateJavaProjectTask.PROJECT_GROUP, 'test-group' )
+    @Test void export(){
+        task.export()
 
-        task.init()
-
-        assertFileExists folder.root, 'src/main/java'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/java'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
-
-        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'java\''
+        assertFileExists folder.root, 'templates/webapp/build.gradle.tmpl'
+        assertFileExists folder.root, 'templates/webapp/web-xml.tmpl'
     }
 }

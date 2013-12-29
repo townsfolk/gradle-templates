@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 
-package templates.tasks.java
+package templates.tasks.webapp
 import org.junit.Test
 import templates.AbstractTaskTester
 
-class InitJavaProjectTaskTest extends AbstractTaskTester {
+class InitWebappProjectTaskTest extends AbstractTaskTester {
 
-    InitJavaProjectTaskTest(){
-        super( InitJavaProjectTask )
+    InitWebappProjectTaskTest(){
+        super( InitWebappProjectTask )
     }
 
-    @Test void init(){
-        project.setProperty( CreateJavaProjectTask.PROJECT_GROUP, 'test-group' )
+    @Test void 'init: jetty'(){
+        project.setProperty( CreateWebappProjectTask.PROJECT_GROUP, 'test-group' )
+        project.setProperty( CreateWebappProjectTask.USE_JETTY_PLUGIN, 'y' )
 
         task.init()
 
@@ -36,6 +37,21 @@ class InitJavaProjectTaskTest extends AbstractTaskTester {
         assertFileExists folder.root, 'src/test/resources'
         assertFileExists folder.root, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'java\''
+        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'jetty\''
+    }
+
+    @Test void 'init: war'(){
+        project.setProperty( CreateWebappProjectTask.PROJECT_GROUP, 'test-group' )
+        project.setProperty( CreateWebappProjectTask.USE_JETTY_PLUGIN, 'n' )
+
+        task.init()
+
+        assertFileExists folder.root, 'src/main/java'
+        assertFileExists folder.root, 'src/main/resources'
+        assertFileExists folder.root, 'src/test/java'
+        assertFileExists folder.root, 'src/test/resources'
+        assertFileExists folder.root, 'LICENSE.txt'
+
+        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'war\''
     }
 }

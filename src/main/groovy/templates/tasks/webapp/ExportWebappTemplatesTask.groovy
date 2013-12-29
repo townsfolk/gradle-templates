@@ -15,27 +15,26 @@
  * limitations under the License.
  */
 
-package templates.tasks.java
-import org.junit.Test
-import templates.AbstractTaskTester
+package templates.tasks.webapp
 
-class InitJavaProjectTaskTest extends AbstractTaskTester {
+import org.gradle.api.tasks.TaskAction
+import templates.TemplatesPlugin
 
-    InitJavaProjectTaskTest(){
-        super( InitJavaProjectTask )
+/**
+ * Task to export the default webapp templates.
+ */
+class ExportWebappTemplatesTask extends AbstractWebappProjectTask {
+
+    ExportWebappTemplatesTask(){
+        name = 'exportWebappTemplates'
+        group = TemplatesPlugin.group
+        description = 'Exports the default webapp template files into the current directory.'
     }
 
-    @Test void init(){
-        project.setProperty( CreateJavaProjectTask.PROJECT_GROUP, 'test-group' )
-
-        task.init()
-
-        assertFileExists folder.root, 'src/main/java'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/java'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
-
-        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'java\''
+    @TaskAction def export(){
+        TemplatesPlugin.exportTemplates([
+            '/templates/webapp/build.gradle.tmpl',
+            '/templates/webapp/web-xml.tmpl'
+        ])
     }
 }

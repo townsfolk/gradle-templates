@@ -52,4 +52,5 @@ class TemplatesPluginTest {
         assert project.tasks.exportWebappTemplates
         assert project.tasks.initWebappProject
     }
+
 }

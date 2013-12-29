@@ -83,7 +83,7 @@ class TemplatesPlugin implements Plugin<Project> {
 		}
 	}
 
-	static boolean promptYesOrNo(String message, boolean defaultValue = false) {
+	static boolean promptYesOrNo( final String message, final boolean defaultValue = false) {
 		String consoleVal = readLine("$message (Y|n)", defaultValue ? 'Y' : 'n')
         return consoleVal?.toLowerCase()?.startsWith('y') ?: defaultValue
 	}
