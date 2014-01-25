@@ -6,7 +6,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'gradle-templates:gradle-templates:1.4.2'
+        classpath 'gradle-templates:gradle-templates:1.5'
     }
 }
 
