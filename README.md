@@ -1,7 +1,5 @@
 # Gradle Templates Plugin
 
-> Note: this project is in the process of being transitioned to a new caretaker.
-
 ## Introduction
 
 The Gradle Templates plugin helps you get started using Gradle by providing convenient tasks for creating new projects that work with the Gradle build system.
@@ -35,7 +33,7 @@ buildscript {
 apply plugin:'templates'
 ```
 
-Other methods of installation are documented on the project [installation](https://github.com/cjstehno/gradle-templates/wiki/Installation) page.
+Other methods of installation are documented on the project [installation](https://github.com/townsfolk/gradle-templates/wiki/Installation) page.
 
 ## Usage
 
@@ -48,16 +46,16 @@ for your new project, and the init tasks will create the default directory struc
 
 The `export*` tasks cause the templates to be exported to the local project.
 
-Other usage documentation can be found on the project [Usage](https://github.com/cjstehno/gradle-templates/wiki/Usage) page.
+Other usage documentation can be found on the project [Usage](https://github.com/townsfolk/gradle-templates/wiki/Usage) page.
 
 ## Details
 
 * Version: 1.4.2
 * Project Site: [http://cjstehno.github.io/gradle-templates](http://cjstehno.github.io/gradle-templates)
-* Project Repo: [https://github.com/cjstehno/gradle-templates](https://github.com/cjstehno/gradle-templates)
-* Wiki/Documentation: [https://github.com/cjstehno/gradle-templates/wiki](https://github.com/cjstehno/gradle-templates/wiki)
+* Project Repo: [https://github.com/townsfolk/gradle-templates](https://github.com/townsfolk/gradle-templates)
+* Wiki/Documentation: [https://github.com/townsfolk/gradle-templates/wiki](https://github.com/townsfolk/gradle-templates/wiki)
 * License: [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html)
-* Questions, bugs, issues: [https://github.com/cjstehno/gradle-templates/issues](https://github.com/cjstehno/gradle-templates/issues)
+* Questions, bugs, issues: [https://github.com/townsfolk/gradle-templates/issues](https://github.com/townsfolk/gradle-templates/issues)
 
 [![Build Status](https://drone.io/github.com/cjstehno/gradle-templates/status.png)](https://drone.io/github.com/cjstehno/gradle-templates/latest)
 
