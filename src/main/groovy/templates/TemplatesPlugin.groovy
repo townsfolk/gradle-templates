@@ -47,7 +47,7 @@ class TemplatesPlugin implements Plugin<Project> {
 	}
 
 	static int promptOptions(String message, int defaultValue, List options = []) {
-		String consoleMessage = "${inputPrompt} ${message}"
+		String consoleMessage = "${message}"
 		consoleMessage += "${lineSep}    Pick an option ${1..options.size()}"
 		options.eachWithIndex { option, index ->
 			consoleMessage += "${lineSep}     (${index + 1}): ${option}"
