@@ -74,13 +74,13 @@ class TemplatesPlugin implements Plugin<Project> {
         return consoleVal?.toLowerCase()?.startsWith('y') ?: defaultValue
 	}
 
-	private static readLine(String message, def defaultValue = null) {
+	private static String readLine(String message, def defaultValue = null) {
 		String _message = "$inputPrompt $message " + (defaultValue ? "$lineSep [$defaultValue] " : "")
 		if (System.console()) {
-			return System.console().readLine(_message) ?: defaultValue
+			return System.console().readLine(_message) ?: String.valueOf(defaultValue)
 		}
 		println "$_message (WAITING FOR INPUT BELOW)"
-		return System.in.newReader().readLine() ?: defaultValue
+		return System.in.newReader().readLine() ?: String.valueOf(defaultValue)
 	}
 
 	def void apply(Project project) {
