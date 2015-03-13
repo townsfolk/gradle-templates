@@ -52,11 +52,6 @@ class TemplatesPlugin implements Plugin<Project> {
 		options.eachWithIndex { option, index ->
 			consoleMessage += "${lineSep}     (${index + 1}): ${option}"
 		}
-		if (defaultValue) {
-			consoleMessage += "${inputPrompt} [${defaultValue}] "
-		} else {
-			consoleMessage += "${inputPrompt} "
-		}
 		try {
 			def range = 0..options.size() - 1
 			int choice = Integer.parseInt(readLine(consoleMessage, defaultValue))
@@ -80,7 +75,7 @@ class TemplatesPlugin implements Plugin<Project> {
 	}
 
 	private static readLine(String message, def defaultValue = null) {
-		String _message = "$inputPrompt $message " + (defaultValue ? "[$defaultValue] " : "")
+		String _message = "$inputPrompt $message " + (defaultValue ? "$lineSep [$defaultValue] " : "")
 		if (System.console()) {
 			return System.console().readLine(_message) ?: defaultValue
 		}
