@@ -47,15 +47,10 @@ class TemplatesPlugin implements Plugin<Project> {
 	}
 
 	static int promptOptions(String message, int defaultValue, List options = []) {
-		String consoleMessage = "${inputPrompt} ${message}"
+		String consoleMessage = "${message}"
 		consoleMessage += "${lineSep}    Pick an option ${1..options.size()}"
 		options.eachWithIndex { option, index ->
 			consoleMessage += "${lineSep}     (${index + 1}): ${option}"
-		}
-		if (defaultValue) {
-			consoleMessage += "${inputPrompt} [${defaultValue}] "
-		} else {
-			consoleMessage += "${inputPrompt} "
 		}
 		try {
 			def range = 0..options.size() - 1
@@ -79,13 +74,13 @@ class TemplatesPlugin implements Plugin<Project> {
         return consoleVal?.toLowerCase()?.startsWith('y') ?: defaultValue
 	}
 
-	private static readLine(String message, def defaultValue = null) {
-		String _message = "$inputPrompt $message " + (defaultValue ? "[$defaultValue] " : "")
+	private static String readLine(String message, def defaultValue = null) {
+		String _message = "$inputPrompt $message " + (defaultValue ? "$lineSep [$defaultValue] " : "")
 		if (System.console()) {
-			return System.console().readLine(_message) ?: defaultValue
+			return System.console().readLine(_message) ?: String.valueOf(defaultValue)
 		}
 		println "$_message (WAITING FOR INPUT BELOW)"
-		return System.in.newReader().readLine() ?: defaultValue
+		return System.in.newReader().readLine() ?: String.valueOf(defaultValue)
 	}
 
 	def void apply(Project project) {
