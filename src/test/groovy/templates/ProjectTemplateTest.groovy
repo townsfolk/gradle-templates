@@ -40,6 +40,9 @@ class ProjectTemplateTest {
         File templateFile = rootFolder.newFile( 'template.tmpl' )
         templateFile.text = 'The answer is ${bar}'
 
+        File binaryFile = rootFolder.newFile( 'binaryFile.bin' )
+        binaryFile.bytes = [0, 3, 0, 4, 1, 9, 9, 8] as byte[]
+
         ProjectTemplate.fromRoot( "${rootFolder.root}/$PROJECT_NAME" ){
             'stuff' {
                 'README.txt' '''
@@ -47,6 +50,7 @@ class ProjectTemplateTest {
                 '''
                 'deeper' {}
                 'foo' template:templateFile.toString(), bar:42
+                'someBinaryFile.bin' file:binaryFile.getAbsolutePath()
             }
         }
 
@@ -56,6 +60,13 @@ class ProjectTemplateTest {
 
         assertFileText rootFolder.root, "$PROJECT_NAME/stuff/README.txt", 'This is a generated README file.'
         assertFileText rootFolder.root, "$PROJECT_NAME/stuff/foo", 'The answer is 42'
+        assertFileBytes rootFolder.root, "$PROJECT_NAME/stuff/someBinaryFile.bin", [0, 3, 0, 4, 1, 9, 9, 8] as byte[]
+    }
+
+    private void assertFileBytes( File dir, String path, byte[] bytes ) {
+        def targetFile = new File( dir, path )
+        assert targetFile.exists()
+        assert targetFile.bytes == bytes
     }
 
     private void assertFileText( File dir, String path, String expectedText ){

@@ -123,8 +123,9 @@ class ProjectTemplate {
 
 	/**
 	 * Creates a new file with the given name. If a 'content' argument is provided it will be appended, or replace the
-	 * content of the current file (if it exists) based on the value of the 'append' argument.
-	 * @param args Arguments to be used when creating the new file: [content: String, append: boolean]
+	 * content of the current file (if it exists) based on the value of the 'append' argument. If a 'file' argument is
+   * provided it will copy the bytes of the file.
+	 * @param args Arguments to be used when creating the new file: [content: String, append: boolean, file: boolean]
 	 * @param name Name of the new file to be created.
 	 */
 	void file(Map args = [:], String name) {
@@ -136,10 +137,16 @@ class ProjectTemplate {
 		}
 		file.exists() ?: file.parentFile.mkdirs() && file.createNewFile()
 		def content
+    def filePath
 		if (args.content) {
 			content = args.content.stripIndent()
 		} else if (args.template) {
 			content = renderTemplate(args, args.template)
+		} else if (args.file) {
+      filePath = getClass().getResource(args.file)
+      if (filePath == null) {
+        filePath = new File(args.file)
+      }
 		}
 		if (content) {
 			if (args.append) {
@@ -147,7 +154,9 @@ class ProjectTemplate {
 			} else {
 				file.text = content
 			}
-		}
+		} else if (filePath) {
+      file.bytes = filePath.bytes
+    }
 	}
 
     /**
