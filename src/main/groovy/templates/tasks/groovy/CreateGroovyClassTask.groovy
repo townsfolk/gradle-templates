@@ -19,6 +19,7 @@ package templates.tasks.groovy
 
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
+import templates.Input
 import templates.JavaTemplatesPlugin
 import templates.ProjectTemplate
 import templates.TemplatesPlugin
@@ -46,7 +47,7 @@ class CreateGroovyClassTask extends AbstractGroovyProjectTask {
             throw new IllegalStateException('It seems that the Groovy plugin is not installed, I cannot determine the main groovy source directory.', e)
         }
 
-        def fullClassName = project.properties[NEW_CLASS_NAME] ?: TemplatesPlugin.prompt('Class name (com.example.MyClass)')
+        def fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
 
         if (fullClassName) {
             def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)

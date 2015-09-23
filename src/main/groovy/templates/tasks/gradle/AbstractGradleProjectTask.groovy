@@ -17,6 +17,7 @@
 
 package templates.tasks.gradle
 
+import templates.Input
 import templates.JavaTemplatesPlugin
 import templates.ProjectTemplate
 import templates.TemplatesPlugin
@@ -44,10 +45,10 @@ abstract class AbstractGradleProjectTask extends AbstractProjectTask {
         def props = project.properties
         String lProjectName = project.name.toLowerCase()
         String cProjectName = project.name.capitalize()
-        String projectGroup = props[ PROJECT_GROUP ] ?: TemplatesPlugin.prompt('Group:', lProjectName)
-        String projectVersion = props[ PROJECT_VERSION ] ?: TemplatesPlugin.prompt('Version:', '1.0')
-        String pluginApplyLabel = props[ PLUGIN_APPLY_LABEL ] ?: TemplatesPlugin.prompt('Plugin \'apply\' label:', lProjectName)
-        String pluginClassName = props[ PLUGIN_CLASS_NAME ] ?: TemplatesPlugin.prompt('Plugin class name:', "${projectGroup}.${cProjectName}Plugin")
+        String projectGroup = props[ PROJECT_GROUP ] ?: Input.prompt('Group:', lProjectName)
+        String projectVersion = props[ PROJECT_VERSION ] ?: Input.prompt('Version:', '1.0')
+        String pluginApplyLabel = props[ PLUGIN_APPLY_LABEL ] ?: Input.prompt('Plugin \'apply\' label:', lProjectName)
+        String pluginClassName = props[ PLUGIN_CLASS_NAME ] ?: Input.prompt('Plugin class name:', "${projectGroup}.${cProjectName}Plugin")
 
         createGroovyBase( path )
 

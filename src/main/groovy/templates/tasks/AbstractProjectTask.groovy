@@ -18,6 +18,7 @@
 package templates.tasks
 
 import org.gradle.api.DefaultTask
+import templates.Input
 import templates.TemplatesPlugin
 
 /**
@@ -57,7 +58,7 @@ abstract class AbstractProjectTask extends DefaultTask {
         if( parentDir ){
             return "$parentDir/$projectName"
         } else {
-            String dir = TemplatesPlugin.prompt( 'Project Parent Directory:', defaultDir() )
+            String dir = Input.prompt( 'Project Parent Directory:', defaultDir() )
             return "$dir/$projectName"
         }
     }
@@ -69,7 +70,7 @@ abstract class AbstractProjectTask extends DefaultTask {
      * @return the project name to be used
      */
     protected String projectName(){
-        project.properties[NEW_PROJECT_NAME] ?: TemplatesPlugin.prompt('Project Name:')
+        project.properties[NEW_PROJECT_NAME] ?: Input.prompt('Project Name:')
     }
 
     /**
@@ -80,7 +81,7 @@ abstract class AbstractProjectTask extends DefaultTask {
      * @return the project group
      */
     protected String projectGroup( final String projectName ){
-        project.properties[PROJECT_GROUP] ?: TemplatesPlugin.prompt('Group:', projectName.toLowerCase())
+        project.properties[PROJECT_GROUP] ?: Input.prompt('Group:', projectName.toLowerCase())
     }
 
     /**
@@ -90,7 +91,7 @@ abstract class AbstractProjectTask extends DefaultTask {
      * @return the project version
      */
     protected String projectVersion(){
-        project.properties[PROJECT_VERSION] ?: TemplatesPlugin.prompt('Version:', '0.1')
+        project.properties[PROJECT_VERSION] ?: Input.prompt('Version:', '0.1')
     }
 
     /**
