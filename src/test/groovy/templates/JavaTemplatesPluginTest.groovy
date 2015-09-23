@@ -28,7 +28,6 @@ class JavaTemplatesPluginTest {
 
         assert project.tasks.createJavaClass
         assert project.tasks.createJavaProject
-        assert project.tasks.exportJavaTemplates
         assert project.tasks.initJavaProject
     }
 }

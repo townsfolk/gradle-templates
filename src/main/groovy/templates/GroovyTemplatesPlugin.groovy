@@ -21,7 +21,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import templates.tasks.groovy.CreateGroovyClassTask
 import templates.tasks.groovy.CreateGroovyProjectTask
-import templates.tasks.groovy.ExportGroovyTemplatesTask
 import templates.tasks.groovy.InitGroovyProjectTask
 
 /**
@@ -33,9 +32,6 @@ class GroovyTemplatesPlugin implements Plugin<Project> {
 	void apply(Project project) {
 		project.task 'createGroovyClass',   type:CreateGroovyClassTask
         project.task 'createGroovyProject', type:CreateGroovyProjectTask
-
-		project.task 'exportGroovyTemplates', type:ExportGroovyTemplatesTask
-
 		project.task 'initGroovyProject', type:InitGroovyProjectTask
 	}
 }

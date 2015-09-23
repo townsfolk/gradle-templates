@@ -28,7 +28,6 @@ class GroovyTemplatesPluginTest {
 
         assert project.tasks.createGroovyClass
         assert project.tasks.createGroovyProject
-        assert project.tasks.exportGroovyTemplates
         assert project.tasks.initGroovyProject
     }
 }

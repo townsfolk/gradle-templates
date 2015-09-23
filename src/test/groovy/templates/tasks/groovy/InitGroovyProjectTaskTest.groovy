@@ -19,7 +19,7 @@ package templates.tasks.groovy
 import org.junit.Test
 import templates.AbstractTaskTester
 
-import static templates.tasks.scala.AbstractScalaProjectTask.PROJECT_GROUP
+import static templates.tasks.gradle.AbstractGradleProjectTask.PROJECT_GROUP
 
 class InitGroovyProjectTaskTest extends AbstractTaskTester {
 

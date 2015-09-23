@@ -21,7 +21,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import templates.tasks.java.CreateJavaClassTask
 import templates.tasks.java.CreateJavaProjectTask
-import templates.tasks.java.ExportJavaTemplatesTask
 import templates.tasks.java.InitJavaProjectTask
 
 /**
@@ -48,9 +47,6 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 	void apply(Project project) {
 		project.task 'createJavaClass',   type:CreateJavaClassTask
 		project.task 'createJavaProject', type:CreateJavaProjectTask
-
-        project.task 'exportJavaTemplates', type:ExportJavaTemplatesTask
-
         project.task 'initJavaProject', type:InitJavaProjectTask
 	}
 }

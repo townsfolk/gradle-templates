@@ -32,7 +32,6 @@ class GradlePluginTemplatesPluginTest {
         project.apply plugin: 'templates'
 
         assert project.tasks.createGradlePlugin
-        assert project.tasks.exportPluginTemplates
         assert project.tasks.initGradlePlugin
     }
 }

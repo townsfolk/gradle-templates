@@ -90,16 +90,5 @@ class TemplatesPlugin implements Plugin<Project> {
 		project.apply(plugin: GroovyTemplatesPlugin)
 		project.apply(plugin: GradlePluginTemplatesPlugin)
 		project.apply(plugin: JavaTemplatesPlugin)
-		project.apply(plugin: ScalaTemplatesPlugin)
-		project.apply(plugin: WebappTemplatesPlugin)
-
-		project.task(
-            'exportAllTemplates',
-            dependsOn: [
-				'exportJavaTemplates', 'exportGroovyTemplates', 'exportScalaTemplates', 'exportWebappTemplates', 'exportPluginTemplates'
-            ],
-            group: TemplatesPlugin.group,
-            description: 'Exports all the default template files into the current directory.'
-        ) {}
 	}
 }

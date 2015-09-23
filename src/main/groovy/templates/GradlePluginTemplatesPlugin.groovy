@@ -19,7 +19,6 @@ package templates
 
 import org.gradle.api.Project
 import templates.tasks.gradle.CreateGradlePluginTask
-import templates.tasks.gradle.ExportPluginTemplatesTask
 import templates.tasks.gradle.InitGradlePluginTask
 
 /**
@@ -35,8 +34,6 @@ class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 		}
 
 		project.task 'createGradlePlugin', type:CreateGradlePluginTask
-
-		project.task 'exportPluginTemplates', type:ExportPluginTemplatesTask
 
 		project.task 'initGradlePlugin', type:InitGradlePluginTask
 	}
