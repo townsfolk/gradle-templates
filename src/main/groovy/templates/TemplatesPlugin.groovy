@@ -18,6 +18,14 @@ package templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import templates.tasks.gradle.CreateGradlePluginTask
+import templates.tasks.gradle.InitGradlePluginTask
+import templates.tasks.groovy.CreateGroovyClassTask
+import templates.tasks.groovy.CreateGroovyProjectTask
+import templates.tasks.groovy.InitGroovyProjectTask
+import templates.tasks.java.CreateJavaClassTask
+import templates.tasks.java.CreateJavaProjectTask
+import templates.tasks.java.InitJavaProjectTask
 
 /**
  * The core of the templates plugin.
@@ -38,9 +46,15 @@ class TemplatesPlugin implements Plugin<Project> {
 	def void apply(Project project) {
 		project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
 
-		// FIXME: would be better to allow user to configure the desired template set rather than get them all
-		project.apply(plugin: GroovyTemplatesPlugin)
-		project.apply(plugin: GradlePluginTemplatesPlugin)
-		project.apply(plugin: JavaTemplatesPlugin)
+		project.task 'createGroovyClass', type: CreateGroovyClassTask
+		project.task 'createGroovyProject', type: CreateGroovyProjectTask
+		project.task 'initGroovyProject', type: InitGroovyProjectTask
+
+		project.task 'createJavaClass', type: CreateJavaClassTask
+		project.task 'createJavaProject', type: CreateJavaProjectTask
+		project.task 'initJavaProject', type: InitJavaProjectTask
+
+		project.task 'createGradlePlugin', type: CreateGradlePluginTask
+		project.task 'initGradlePlugin', type: InitGradlePluginTask
 	}
 }

@@ -17,10 +17,9 @@
 
 package templates.tasks.gradle
 
+import templates.ClassParser
 import templates.Input
-import templates.JavaTemplatesPlugin
 import templates.ProjectTemplate
-import templates.TemplatesPlugin
 import templates.tasks.AbstractProjectTask
 
 /**
@@ -59,7 +58,7 @@ abstract class AbstractGradleProjectTask extends AbstractProjectTask {
 				}
 				'groovy' {
 					if (pluginClassName) {
-						def classParts = JavaTemplatesPlugin.getClassParts(pluginClassName)
+						def classParts = ClassParser.getClassParts(pluginClassName)
 						"${classParts.classPackagePath}" {
 							"${classParts.className}.groovy" template: '/templates/plugin/plugin-class.tmpl',
 									className: classParts.className,
@@ -92,4 +91,5 @@ abstract class AbstractGradleProjectTask extends AbstractProjectTask {
 			'LICENSE.txt' '// Your License Goes here'
 		}
 	}
+
 }

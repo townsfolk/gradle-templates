@@ -19,10 +19,9 @@ package templates.tasks.groovy
 
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
+import templates.ClassParser
 import templates.Input
-import templates.JavaTemplatesPlugin
 import templates.ProjectTemplate
-import templates.TemplatesPlugin
 
 /**
  * Task to create a new Groovy class in the current project.
@@ -48,10 +47,10 @@ class CreateGroovyClassTask extends AbstractGroovyProjectTask {
 			throw new IllegalStateException('It seems that the Groovy plugin is not installed, I cannot determine the main groovy source directory.', e)
 		}
 
-		def fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
+		String fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
 
 		if (fullClassName) {
-			def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)
+			def classParts = ClassParser.getClassParts(fullClassName)
 			ProjectTemplate.fromUserDir {
 				"${mainSrcDir}" {
 					"${classParts.classPackagePath}" {
@@ -78,4 +77,5 @@ class CreateGroovyClassTask extends AbstractGroovyProjectTask {
 		mainSrcDir = mainSrcDir?.minus(project.projectDir.path)
 		return mainSrcDir
 	}
+
 }

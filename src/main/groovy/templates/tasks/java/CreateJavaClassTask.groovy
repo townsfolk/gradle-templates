@@ -19,10 +19,9 @@ package templates.tasks.java
 
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
+import templates.ClassParser
 import templates.Input
-import templates.JavaTemplatesPlugin
 import templates.ProjectTemplate
-import templates.TemplatesPlugin
 
 /**
  * Task to create a new Java class in the current project.
@@ -49,9 +48,9 @@ class CreateJavaClassTask extends AbstractJavaProjectTask {
 			throw new IllegalStateException('It seems that the Java plugin is not installed, I cannot determine the main java source directory.', e)
 		}
 
-		def fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
+		String fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
 		if (fullClassName) {
-			def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)
+			def classParts = ClassParser.getClassParts(fullClassName)
 			ProjectTemplate.fromUserDir {
 				"${mainSrcDir}" {
 					"${classParts.classPackagePath}" {
@@ -79,4 +78,5 @@ class CreateJavaClassTask extends AbstractJavaProjectTask {
 		mainSrcDir = mainSrcDir?.minus(project.projectDir.path)
 		return mainSrcDir
 	}
+
 }
