@@ -30,55 +30,56 @@ import org.junit.rules.TemporaryFolder
  */
 abstract class AbstractTaskTester {
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder()
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder()
 
-    protected Project project
-    protected Task task
+	protected Project project
+	protected Task task
 
-    private final Class taskClass
+	private final Class taskClass
 
-    AbstractTaskTester( final Class taskClass ){
-        this.taskClass = taskClass
-    }
+	AbstractTaskTester(final Class taskClass) {
+		this.taskClass = taskClass
+	}
 
-    @Before
-    void before(){
-        System.setProperty( 'init.dir', folder.root as String )
+	@Before
+	void before() {
+		System.setProperty('init.dir', folder.root as String)
 
-        project = ProjectBuilder.builder().build()
-        task = project.task( 'targetTask', type:taskClass )
-    }
+		project = ProjectBuilder.builder().build()
+		task = project.task('targetTask', type: taskClass)
+	}
 
-    @After void after(){
-        System.setProperty( 'init.dir', '' )
-    }
+	@After
+	void after() {
+		System.setProperty('init.dir', '')
+	}
 
-    /**
-     * Asserts that the specified file exists.
-     *
-     * @param root the root directory
-     * @param path the path to the file
-     */
-    protected void assertFileExists( File root, String path ){
-        assert new File( root, path ).exists()
-    }
+	/**
+	 * Asserts that the specified file exists.
+	 *
+	 * @param root the root directory
+	 * @param path the path to the file
+	 */
+	protected void assertFileExists(File root, String path) {
+		assert new File(root, path).exists()
+	}
 
-    /**
-     * Asserts that the file at the given path (root+path) exists and that it contains the specified
-     * content strings.
-     *
-     * @param root the root directory
-     * @param path the path to the file
-     * @param contents the content string to be tested
-     */
-    protected void assertFileContains( File root, String path, String... contents ){
-        assertFileExists root, path
+	/**
+	 * Asserts that the file at the given path (root+path) exists and that it contains the specified
+	 * content strings.
+	 *
+	 * @param root the root directory
+	 * @param path the path to the file
+	 * @param contents the content string to be tested
+	 */
+	protected void assertFileContains(File root, String path, String... contents) {
+		assertFileExists root, path
 
-        String text = new File( root, path ).text
+		String text = new File(root, path).text
 
-        contents.each { String str ->
-            assert text.contains( str )
-        }
-    }
+		contents.each { String str ->
+			assert text.contains(str)
+		}
+	}
 }

@@ -28,68 +28,68 @@ import templates.tasks.AbstractProjectTask
  */
 abstract class AbstractGradleProjectTask extends AbstractProjectTask {
 
-    static final String PLUGIN_APPLY_LABEL = 'pluginApplyLabel'
-    static final String PLUGIN_CLASS_NAME = 'pluginClassName'
+	static final String PLUGIN_APPLY_LABEL = 'pluginApplyLabel'
+	static final String PLUGIN_CLASS_NAME = 'pluginClassName'
 
-    AbstractGradleProjectTask( final String name, final String description ){
-        super( name, description )
-    }
+	AbstractGradleProjectTask(final String name, final String description) {
+		super(name, description)
+	}
 
-    /**
-     * Creates the default project structure for a new gradle plugin.
-     * @param path The root path of the project. optional, defaults to user.dir.
-     * @param project A project object.
-     */
-    protected void createBase(String path = defaultDir(), def project) {
+	/**
+	 * Creates the default project structure for a new gradle plugin.
+	 * @param path The root path of the project. optional, defaults to user.dir.
+	 * @param project A project object.
+	 */
+	protected void createBase(String path = defaultDir(), def project) {
 
-        def props = project.properties
-        String lProjectName = project.name.toLowerCase()
-        String cProjectName = project.name.capitalize()
-        String projectGroup = props[ PROJECT_GROUP ] ?: Input.prompt('Group:', lProjectName)
-        String projectVersion = props[ PROJECT_VERSION ] ?: Input.prompt('Version:', '1.0')
-        String pluginApplyLabel = props[ PLUGIN_APPLY_LABEL ] ?: Input.prompt('Plugin \'apply\' label:', lProjectName)
-        String pluginClassName = props[ PLUGIN_CLASS_NAME ] ?: Input.prompt('Plugin class name:', "${projectGroup}.${cProjectName}Plugin")
+		def props = project.properties
+		String lProjectName = project.name.toLowerCase()
+		String cProjectName = project.name.capitalize()
+		String projectGroup = props[PROJECT_GROUP] ?: Input.prompt('Group:', lProjectName)
+		String projectVersion = props[PROJECT_VERSION] ?: Input.prompt('Version:', '1.0')
+		String pluginApplyLabel = props[PLUGIN_APPLY_LABEL] ?: Input.prompt('Plugin \'apply\' label:', lProjectName)
+		String pluginClassName = props[PLUGIN_CLASS_NAME] ?: Input.prompt('Plugin class name:', "${projectGroup}.${cProjectName}Plugin")
 
-        createGroovyBase( path )
+		createGroovyBase(path)
 
-        ProjectTemplate.fromRoot(path){
-            'src/main/' {
-                'resources/META-INF/gradle-plugins' {
-                    "${pluginApplyLabel}.properties" "implementation-class=${pluginClassName}"
-                }
-                'groovy' {
-                    if (pluginClassName) {
-                        def classParts = JavaTemplatesPlugin.getClassParts(pluginClassName)
-                        "${classParts.classPackagePath}" {
-                            "${classParts.className}.groovy" template: '/templates/plugin/plugin-class.tmpl',
-                                className: classParts.className,
-                                classPackage: classParts.classPackage
-                            "${classParts.className}Convention.groovy" template: '/templates/plugin/convention-class.tmpl',
-                                className: classParts.className,
-                                classPackage: classParts.classPackage
-                        }
-                    }
-                }
-            }
-            'build.gradle' template: '/templates/plugin/build.gradle.tmpl', projectGroup: projectGroup
-            'gradle.properties' content: "version=${projectVersion}", append: true
-        }
-    }
+		ProjectTemplate.fromRoot(path) {
+			'src/main/' {
+				'resources/META-INF/gradle-plugins' {
+					"${pluginApplyLabel}.properties" "implementation-class=${pluginClassName}"
+				}
+				'groovy' {
+					if (pluginClassName) {
+						def classParts = JavaTemplatesPlugin.getClassParts(pluginClassName)
+						"${classParts.classPackagePath}" {
+							"${classParts.className}.groovy" template: '/templates/plugin/plugin-class.tmpl',
+									className: classParts.className,
+									classPackage: classParts.classPackage
+							"${classParts.className}Convention.groovy" template: '/templates/plugin/convention-class.tmpl',
+									className: classParts.className,
+									classPackage: classParts.classPackage
+						}
+					}
+				}
+			}
+			'build.gradle' template: '/templates/plugin/build.gradle.tmpl', projectGroup: projectGroup
+			'gradle.properties' content: "version=${projectVersion}", append: true
+		}
+	}
 
-    // FIXME: a bit of duplicated code to start with, need to refactor away
-    private void createGroovyBase( path ){
-        ProjectTemplate.fromRoot(path) {
-            'src' {
-                'main' {
-                    'groovy' {}
-                    'resources' {}
-                }
-                'test' {
-                    "groovy" {}
-                    "resources" {}
-                }
-            }
-            'LICENSE.txt' '// Your License Goes here'
-        }
-    }
+	// FIXME: a bit of duplicated code to start with, need to refactor away
+	private void createGroovyBase(path) {
+		ProjectTemplate.fromRoot(path) {
+			'src' {
+				'main' {
+					'groovy' {}
+					'resources' {}
+				}
+				'test' {
+					"groovy" {}
+					"resources" {}
+				}
+			}
+			'LICENSE.txt' '// Your License Goes here'
+		}
+	}
 }

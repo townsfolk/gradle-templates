@@ -16,6 +16,7 @@
  */
 
 package templates.tasks.groovy
+
 import org.junit.Test
 import templates.AbstractTaskTester
 
@@ -23,21 +24,22 @@ import static templates.tasks.gradle.AbstractGradleProjectTask.PROJECT_GROUP
 
 class InitGroovyProjectTaskTest extends AbstractTaskTester {
 
-    InitGroovyProjectTaskTest(){
-        super( InitGroovyProjectTask )
-    }
+	InitGroovyProjectTaskTest() {
+		super(InitGroovyProjectTask)
+	}
 
-    @Test void init(){
-        project.ext[PROJECT_GROUP] = 'test-group'
+	@Test
+	void init() {
+		project.ext[PROJECT_GROUP] = 'test-group'
 
-        task.init()
+		task.init()
 
-        assertFileExists folder.root, 'src/main/groovy'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/groovy'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
+		assertFileExists folder.root, 'src/main/groovy'
+		assertFileExists folder.root, 'src/main/resources'
+		assertFileExists folder.root, 'src/test/groovy'
+		assertFileExists folder.root, 'src/test/resources'
+		assertFileExists folder.root, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'groovy\''
-    }
+		assertFileContains folder.root, 'build.gradle', 'apply plugin: \'groovy\''
+	}
 }

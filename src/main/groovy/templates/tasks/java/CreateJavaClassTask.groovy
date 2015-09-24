@@ -29,53 +29,54 @@ import templates.TemplatesPlugin
  */
 class CreateJavaClassTask extends AbstractJavaProjectTask {
 
-    // TODO: the property names should be standardized and in a shared location
-    public static final String NEW_CLASS_NAME = 'newClassName'
+	// TODO: the property names should be standardized and in a shared location
+	public static final String NEW_CLASS_NAME = 'newClassName'
 
-    CreateJavaClassTask(){
-        super(
-            'createJavaClass',
-            'Creates a new Java class in the current project.'
-        )
-    }
+	CreateJavaClassTask() {
+		super(
+				'createJavaClass',
+				'Creates a new Java class in the current project.'
+		)
+	}
 
-    @TaskAction def create(){
-        def mainSrcDir = null
-        try {
-            // get main java dir, and check to see if Java plugin is installed.
-            mainSrcDir = findMainJavaDir(project)
-        } catch (Exception e) {
-            throw new IllegalStateException('It seems that the Java plugin is not installed, I cannot determine the main java source directory.', e)
-        }
+	@TaskAction
+	def create() {
+		def mainSrcDir = null
+		try {
+			// get main java dir, and check to see if Java plugin is installed.
+			mainSrcDir = findMainJavaDir(project)
+		} catch (Exception e) {
+			throw new IllegalStateException('It seems that the Java plugin is not installed, I cannot determine the main java source directory.', e)
+		}
 
-        def fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
-        if (fullClassName) {
-            def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)
-            ProjectTemplate.fromUserDir {
-                "${mainSrcDir}" {
-                    "${classParts.classPackagePath}" {
-                        "${classParts.className}.java" template: '/templates/java/java-class.tmpl',
-                            classPackage: classParts.classPackage,
-                            className: classParts.className
-                    }
-                }
-            }
-        } else {
-            // TODO: should be an error
-            println 'No class name provided.'
-        }
-    }
+		def fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
+		if (fullClassName) {
+			def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)
+			ProjectTemplate.fromUserDir {
+				"${mainSrcDir}" {
+					"${classParts.classPackagePath}" {
+						"${classParts.className}.java" template: '/templates/java/java-class.tmpl',
+								classPackage: classParts.classPackage,
+								className: classParts.className
+					}
+				}
+			}
+		} else {
+			// TODO: should be an error
+			println 'No class name provided.'
+		}
+	}
 
-    /**
-     * Finds the path to the main java source directory.
-     *
-     * @param project The project.
-     * @return The path to the main java source directory.
-     */
-    private static String findMainJavaDir( final Project project ){
-        def mainSrcDir = project.sourceSets?.main?.java?.srcDirs*.path
-        mainSrcDir = mainSrcDir?.first()
-        mainSrcDir = mainSrcDir?.minus(project.projectDir.path)
-        return mainSrcDir
-    }
+	/**
+	 * Finds the path to the main java source directory.
+	 *
+	 * @param project The project.
+	 * @return The path to the main java source directory.
+	 */
+	private static String findMainJavaDir(final Project project) {
+		def mainSrcDir = project.sourceSets?.main?.java?.srcDirs*.path
+		mainSrcDir = mainSrcDir?.first()
+		mainSrcDir = mainSrcDir?.minus(project.projectDir.path)
+		return mainSrcDir
+	}
 }

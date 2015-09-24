@@ -25,30 +25,19 @@ import groovy.text.GStringTemplateEngine
  *
  * Eg.
  * <pre>
- * ProjectTemplate.fromUserDir {
- *    directory('src') { // creates new directory named 'src'
+ * ProjectTemplate.fromUserDir {*    directory('src') { // creates new directory named 'src'
  *       dir('main') { // creates a new directory named 'main'
  *          d('java') { // creates a new directory named 'java'
  *             file('Class1.java') // creates a new file named 'Class1.java'
  *             f('Class2.java') // creates a new file named 'Class2.java'
- *          }
- *       }
- *    }
- * }
- * </pre>
+ *}*}*}*}* </pre>
  *
  * Can also be used without method calls for directory and file.
  * Eg.
  * <pre>
- * ProjectTemplate.fromUserDir {
- *    'src/main' { // creates the directories 'src', and 'main'.
- *       'java' {
- *          'Class1.java' 'public class Class1 {}' // creates the file 'Class1.java' with some initial content.
- *       }
- *       'resources' {}
- *    }
- * }
- * </pre>
+ * ProjectTemplate.fromUserDir {*    'src/main' { // creates the directories 'src', and 'main'.
+ *       'java' {*          'Class1.java' 'public class Class1 {}' // creates the file 'Class1.java' with some initial content.
+ *}*       'resources' {}*}*}* </pre>
  *
  * @author: elberry
  * Date: 4/9/11 6:04 PM
@@ -150,14 +139,14 @@ class ProjectTemplate {
 		}
 	}
 
-    /**
-     * Render the template at the given path with the provided parameters. An attempt will be made to load the template path
-     * as an absolute path, then as a relative path, then lastly from the classpath.
-     *
-     * @param params
-     * @param template the template path
-     * @return the rendered template
-     */
+	/**
+	 * Render the template at the given path with the provided parameters. An attempt will be made to load the template path
+	 * as an absolute path, then as a relative path, then lastly from the classpath.
+	 *
+	 * @param params
+	 * @param template the template path
+	 * @return the rendered template
+	 */
 	String renderTemplate(Map params = [:], String template) {
 		def tLoc = new File(template)
 		if (!tLoc.exists()) { // check given path
@@ -193,7 +182,7 @@ class ProjectTemplate {
 	 * @param closure
 	 */
 	static void fromUserDir(Closure closure = {}) {
-		new ProjectTemplate().directory(System.getProperty( 'init.dir', System.getProperty('user.dir') ), closure)
+		new ProjectTemplate().directory(System.getProperty('init.dir', System.getProperty('user.dir')), closure)
 	}
 
 	/**

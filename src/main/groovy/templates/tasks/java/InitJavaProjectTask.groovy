@@ -25,18 +25,19 @@ import templates.TemplatesPlugin
  */
 class InitJavaProjectTask extends AbstractJavaProjectTask {
 
-    InitJavaProjectTask(){
-        super(
-            'initJavaProject',
-            'Initializes a new Gradle Java project in the current directory.'
-        )
-    }
+	InitJavaProjectTask() {
+		super(
+				'initJavaProject',
+				'Initializes a new Gradle Java project in the current directory.'
+		)
+	}
 
-    @TaskAction def init(){
-        createBase()
+	@TaskAction
+	def init() {
+		createBase()
 
-        File buildFile = ensureFileExists( 'build.gradle')
+		File buildFile = ensureFileExists('build.gradle')
 
-        TemplatesPlugin.prependPlugin 'java', buildFile
-    }
+		TemplatesPlugin.prependPlugin 'java', buildFile
+	}
 }

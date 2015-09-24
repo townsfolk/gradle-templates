@@ -16,6 +16,7 @@
  */
 
 package templates.tasks.groovy
+
 import org.gradle.api.tasks.TaskAction
 import templates.ProjectTemplate
 
@@ -24,28 +25,29 @@ import templates.ProjectTemplate
  */
 class CreateGroovyProjectTask extends AbstractGroovyProjectTask {
 
-    CreateGroovyProjectTask(){
-        super(
-            'createGroovyProject',
-            'Creates a new Gradle Groovy project in a new directory named after your project.'
-        )
-    }
+	CreateGroovyProjectTask() {
+		super(
+				'createGroovyProject',
+				'Creates a new Gradle Groovy project in a new directory named after your project.'
+		)
+	}
 
-    @TaskAction def create(){
-        String projectName = projectName()
-        if (projectName) {
-            String projectPath = projectPath( projectName )
+	@TaskAction
+	def create() {
+		String projectName = projectName()
+		if (projectName) {
+			String projectPath = projectPath(projectName)
 
-            createBase projectPath
+			createBase projectPath
 
-            ProjectTemplate.fromRoot(projectPath) {
-                'build.gradle' template:'/templates/groovy/build.gradle.tmpl', projectGroup:projectGroup(projectName)
-                'gradle.properties' content:"version=${projectVersion()}", append:true
-            }
+			ProjectTemplate.fromRoot(projectPath) {
+				'build.gradle' template: '/templates/groovy/build.gradle.tmpl', projectGroup: projectGroup(projectName)
+				'gradle.properties' content: "version=${projectVersion()}", append: true
+			}
 
-        } else {
-            // FIXME: should be an error
-            println 'No project name provided.'
-        }
-    }
+		} else {
+			// FIXME: should be an error
+			println 'No project name provided.'
+		}
+	}
 }

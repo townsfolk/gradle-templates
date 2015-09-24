@@ -25,13 +25,15 @@ import org.junit.rules.TemporaryFolder
 
 class GradlePluginTemplatesPluginTest {
 
-    @Rule public TemporaryFolder rootFolder = new TemporaryFolder()
+	@Rule
+	public TemporaryFolder rootFolder = new TemporaryFolder()
 
-    @Test void 'apply'(){
-        Project project = ProjectBuilder.builder().build()
-        project.apply plugin: 'templates'
+	@Test
+	void 'apply'() {
+		Project project = ProjectBuilder.builder().build()
+		project.apply plugin: 'templates'
 
-        assert project.tasks.createGradlePlugin
-        assert project.tasks.initGradlePlugin
-    }
+		assert project.tasks.createGradlePlugin
+		assert project.tasks.initGradlePlugin
+	}
 }

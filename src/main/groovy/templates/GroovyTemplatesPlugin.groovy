@@ -30,8 +30,8 @@ import templates.tasks.groovy.InitGroovyProjectTask
 class GroovyTemplatesPlugin implements Plugin<Project> {
 
 	void apply(Project project) {
-		project.task 'createGroovyClass',   type:CreateGroovyClassTask
-        project.task 'createGroovyProject', type:CreateGroovyProjectTask
-		project.task 'initGroovyProject', type:InitGroovyProjectTask
+		project.task 'createGroovyClass', type: CreateGroovyClassTask
+		project.task 'createGroovyProject', type: CreateGroovyProjectTask
+		project.task 'initGroovyProject', type: InitGroovyProjectTask
 	}
 }

@@ -16,18 +16,20 @@
  */
 
 package templates
+
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Test
 
 class GroovyTemplatesPluginTest {
 
-    @Test void 'apply'(){
-        Project project = ProjectBuilder.builder().build()
-        project.apply plugin: 'templates'
+	@Test
+	void 'apply'() {
+		Project project = ProjectBuilder.builder().build()
+		project.apply plugin: 'templates'
 
-        assert project.tasks.createGroovyClass
-        assert project.tasks.createGroovyProject
-        assert project.tasks.initGroovyProject
-    }
+		assert project.tasks.createGroovyClass
+		assert project.tasks.createGroovyProject
+		assert project.tasks.initGroovyProject
+	}
 }

@@ -16,30 +16,32 @@
  */
 
 package templates.tasks.java
+
 import org.junit.Test
 import templates.AbstractTaskTester
 
 class CreateJavaProjectTaskTest extends AbstractTaskTester {
 
-    CreateJavaProjectTaskTest(){
-        super( CreateJavaProjectTask )
-    }
+	CreateJavaProjectTaskTest() {
+		super(CreateJavaProjectTask)
+	}
 
-    @Test void create(){
-        project.ext[CreateJavaProjectTask.PROJECT_PARENT_DIR] = folder.getRoot() as String
-        project.ext[CreateJavaProjectTask.NEW_PROJECT_NAME] = 'tester'
-        project.ext[CreateJavaProjectTask.PROJECT_GROUP] = 'test-group'
-        project.ext[CreateJavaProjectTask.PROJECT_VERSION] = '1.1.1'
+	@Test
+	void create() {
+		project.ext[CreateJavaProjectTask.PROJECT_PARENT_DIR] = folder.getRoot() as String
+		project.ext[CreateJavaProjectTask.NEW_PROJECT_NAME] = 'tester'
+		project.ext[CreateJavaProjectTask.PROJECT_GROUP] = 'test-group'
+		project.ext[CreateJavaProjectTask.PROJECT_VERSION] = '1.1.1'
 
-        task.create()
+		task.create()
 
-        assertFileExists folder.root, 'tester/src/main/java'
-        assertFileExists folder.root, 'tester/src/main/resources'
-        assertFileExists folder.root, 'tester/src/test/java'
-        assertFileExists folder.root, 'tester/src/test/resources'
-        assertFileExists folder.root, 'tester/LICENSE.txt'
+		assertFileExists folder.root, 'tester/src/main/java'
+		assertFileExists folder.root, 'tester/src/main/resources'
+		assertFileExists folder.root, 'tester/src/test/java'
+		assertFileExists folder.root, 'tester/src/test/resources'
+		assertFileExists folder.root, 'tester/LICENSE.txt'
 
-        assertFileContains folder.root, 'tester/build.gradle', 'group = \'test-group\''
-        assertFileContains folder.root, 'tester/gradle.properties', 'version=1.1.1'
-    }
+		assertFileContains folder.root, 'tester/build.gradle', 'group = \'test-group\''
+		assertFileContains folder.root, 'tester/gradle.properties', 'version=1.1.1'
+	}
 }

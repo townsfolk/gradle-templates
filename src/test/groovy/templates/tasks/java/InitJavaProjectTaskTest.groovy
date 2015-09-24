@@ -16,6 +16,7 @@
  */
 
 package templates.tasks.java
+
 import org.junit.Test
 import templates.AbstractTaskTester
 
@@ -23,21 +24,22 @@ import static templates.tasks.java.AbstractJavaProjectTask.PROJECT_GROUP
 
 class InitJavaProjectTaskTest extends AbstractTaskTester {
 
-    InitJavaProjectTaskTest(){
-        super( InitJavaProjectTask )
-    }
+	InitJavaProjectTaskTest() {
+		super(InitJavaProjectTask)
+	}
 
-    @Test void init(){
-        project.ext[PROJECT_GROUP] = 'test-group'
+	@Test
+	void init() {
+		project.ext[PROJECT_GROUP] = 'test-group'
 
-        task.init()
+		task.init()
 
-        assertFileExists folder.root, 'src/main/java'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/java'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
+		assertFileExists folder.root, 'src/main/java'
+		assertFileExists folder.root, 'src/main/resources'
+		assertFileExists folder.root, 'src/test/java'
+		assertFileExists folder.root, 'src/test/resources'
+		assertFileExists folder.root, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'java\''
-    }
+		assertFileContains folder.root, 'build.gradle', 'apply plugin: \'java\''
+	}
 }

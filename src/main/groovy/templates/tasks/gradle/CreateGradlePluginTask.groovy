@@ -16,6 +16,7 @@
  */
 
 package templates.tasks.gradle
+
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -23,27 +24,28 @@ import org.gradle.api.tasks.TaskAction
  */
 class CreateGradlePluginTask extends AbstractGradleProjectTask {
 
-    CreateGradlePluginTask(){
-        super(
-            'createGradlePlugin',
-            'Creates a new Gradle Plugin project in a new directory named after your project.'
-        )
-    }
+	CreateGradlePluginTask() {
+		super(
+				'createGradlePlugin',
+				'Creates a new Gradle Plugin project in a new directory named after your project.'
+		)
+	}
 
-    @TaskAction void create(){
-        def projectName = projectName()
-        if (projectName) {
-            createBase(
-                projectPath( projectName ),
-                [
-                    name:projectName,
-                    properties:project.properties
-                ]
-            )
+	@TaskAction
+	void create() {
+		def projectName = projectName()
+		if (projectName) {
+			createBase(
+					projectPath(projectName),
+					[
+							name      : projectName,
+							properties: project.properties
+					]
+			)
 
-        } else {
-            // FIXME: error
-            println 'No project name provided.'
-        }
-    }
+		} else {
+			// FIXME: error
+			println 'No project name provided.'
+		}
+	}
 }

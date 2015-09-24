@@ -16,6 +16,7 @@
  */
 
 package templates.tasks.groovy
+
 import org.junit.Test
 import templates.AbstractTaskTester
 
@@ -26,17 +27,18 @@ import static templates.tasks.groovy.CreateGroovyClassTask.NEW_CLASS_NAME
  */
 class CreateGroovyClassTaskTest extends AbstractTaskTester {
 
-    CreateGroovyClassTaskTest(){
-        super( CreateGroovyClassTask )
-    }
+	CreateGroovyClassTaskTest() {
+		super(CreateGroovyClassTask)
+	}
 
-    @Test void create(){
-        project.apply plugin:'groovy'
+	@Test
+	void create() {
+		project.apply plugin: 'groovy'
 
-        project.ext[NEW_CLASS_NAME] = 'foo.Something'
+		project.ext[NEW_CLASS_NAME] = 'foo.Something'
 
-        task.create()
+		task.create()
 
-        assertFileContains folder.root, 'src/main/groovy/foo/Something.groovy', 'class Something'
-    }
+		assertFileContains folder.root, 'src/main/groovy/foo/Something.groovy', 'class Something'
+	}
 }

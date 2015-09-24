@@ -16,34 +16,36 @@
  */
 
 package templates.tasks.groovy
+
 import templates.ProjectTemplate
 import templates.tasks.AbstractProjectTask
+
 /**
  *
  */
 abstract class AbstractGroovyProjectTask extends AbstractProjectTask {
 
-    AbstractGroovyProjectTask( final String name, final String description ){
-        super( name, description )
-    }
+	AbstractGroovyProjectTask(final String name, final String description) {
+		super(name, description)
+	}
 
-    /**
-     * Creates the basic Groovy project directory structure.
-     * @param path the root of the project. Optional,defaults to user.dir.
-     */
-    protected void createBase(String path = defaultDir() ) {
-        ProjectTemplate.fromRoot(path) {
-            'src' {
-                'main' {
-                    'groovy' {}
-                    'resources' {}
-                }
-                'test' {
-                    "groovy" {}
-                    "resources" {}
-                }
-            }
-            'LICENSE.txt' '// Your License Goes here'
-        }
-    }
+	/**
+	 * Creates the basic Groovy project directory structure.
+	 * @param path the root of the project. Optional,defaults to user.dir.
+	 */
+	protected void createBase(String path = defaultDir()) {
+		ProjectTemplate.fromRoot(path) {
+			'src' {
+				'main' {
+					'groovy' {}
+					'resources' {}
+				}
+				'test' {
+					"groovy" {}
+					"resources" {}
+				}
+			}
+			'LICENSE.txt' '// Your License Goes here'
+		}
+	}
 }

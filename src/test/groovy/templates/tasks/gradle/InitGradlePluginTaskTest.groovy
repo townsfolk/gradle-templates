@@ -16,33 +16,35 @@
  */
 
 package templates.tasks.gradle
+
 import org.junit.Test
 import templates.AbstractTaskTester
 
 import static templates.tasks.gradle.AbstractGradleProjectTask.*
 
-class InitGradlePluginTaskTest extends AbstractTaskTester{
+class InitGradlePluginTaskTest extends AbstractTaskTester {
 
-    InitGradlePluginTaskTest(){
-        super( InitGradlePluginTask )
-    }
+	InitGradlePluginTaskTest() {
+		super(InitGradlePluginTask)
+	}
 
-    @Test void init(){
-        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
-        project.ext[PROJECT_GROUP] = 'test-group'
-        project.ext[PROJECT_VERSION] = '1.1.1'
-        project.ext[PLUGIN_APPLY_LABEL] = 'test-foo'
-        project.ext[PLUGIN_CLASS_NAME] = 'com.test'
+	@Test
+	void init() {
+		project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+		project.ext[PROJECT_GROUP] = 'test-group'
+		project.ext[PROJECT_VERSION] = '1.1.1'
+		project.ext[PLUGIN_APPLY_LABEL] = 'test-foo'
+		project.ext[PLUGIN_CLASS_NAME] = 'com.test'
 
-        task.init()
+		task.init()
 
-        assertFileExists folder.root, 'src/main/groovy'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/groovy'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
+		assertFileExists folder.root, 'src/main/groovy'
+		assertFileExists folder.root, 'src/main/resources'
+		assertFileExists folder.root, 'src/test/groovy'
+		assertFileExists folder.root, 'src/test/resources'
+		assertFileExists folder.root, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'group = \'test-group\''
-        assertFileContains folder.root, 'gradle.properties', 'version=1.1.1'
-    }
+		assertFileContains folder.root, 'build.gradle', 'group = \'test-group\''
+		assertFileContains folder.root, 'gradle.properties', 'version=1.1.1'
+	}
 }

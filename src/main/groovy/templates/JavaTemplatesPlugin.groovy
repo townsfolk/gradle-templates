@@ -31,22 +31,22 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 
 	/**
 	 * Pulls a fully qualified class name into it's parts - package, and name.
-     *
+	 *
 	 * @param fullClassName
 	 * @return Map containing the class name, package, and package as a path.
 	 */
-	static getClassParts( final String fullClassName ){
+	static getClassParts(final String fullClassName) {
 		def classParts = fullClassName.split(/\./) as List
 		[
-				className: classParts.pop(),
+				className       : classParts.pop(),
 				classPackagePath: classParts.join(File.separator),
-				classPackage: classParts.join('.')
+				classPackage    : classParts.join('.')
 		]
 	}
 
 	void apply(Project project) {
-		project.task 'createJavaClass',   type:CreateJavaClassTask
-		project.task 'createJavaProject', type:CreateJavaProjectTask
-        project.task 'initJavaProject', type:InitJavaProjectTask
+		project.task 'createJavaClass', type: CreateJavaClassTask
+		project.task 'createJavaProject', type: CreateJavaProjectTask
+		project.task 'initJavaProject', type: InitJavaProjectTask
 	}
 }

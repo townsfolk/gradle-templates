@@ -29,52 +29,53 @@ import templates.TemplatesPlugin
  */
 class CreateGroovyClassTask extends AbstractGroovyProjectTask {
 
-    public static final String NEW_CLASS_NAME = 'newClassName'
+	public static final String NEW_CLASS_NAME = 'newClassName'
 
-    CreateGroovyClassTask(){
-        super(
-            'createGroovyClass',
-            'Creates a new Groovy class in the current project.'
-        )
-    }
+	CreateGroovyClassTask() {
+		super(
+				'createGroovyClass',
+				'Creates a new Groovy class in the current project.'
+		)
+	}
 
-    @TaskAction def create(){
-        def mainSrcDir = null
-        try {
-            // get main groovy dir, and check to see if Groovy plugin is installed.
-            mainSrcDir = findMainGroovyDir(project)
-        } catch (Exception e) {
-            throw new IllegalStateException('It seems that the Groovy plugin is not installed, I cannot determine the main groovy source directory.', e)
-        }
+	@TaskAction
+	def create() {
+		def mainSrcDir = null
+		try {
+			// get main groovy dir, and check to see if Groovy plugin is installed.
+			mainSrcDir = findMainGroovyDir(project)
+		} catch (Exception e) {
+			throw new IllegalStateException('It seems that the Groovy plugin is not installed, I cannot determine the main groovy source directory.', e)
+		}
 
-        def fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
+		def fullClassName = project.properties[NEW_CLASS_NAME] ?: Input.prompt('Class name (com.example.MyClass)')
 
-        if (fullClassName) {
-            def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)
-            ProjectTemplate.fromUserDir {
-                "${mainSrcDir}" {
-                    "${classParts.classPackagePath}" {
-                        "${classParts.className}.groovy" template: '/templates/groovy/groovy-class.tmpl',
-                            className: classParts.className,
-                            classPackage: classParts.classPackage
-                    }
-                }
-            }
-        } else {
-            println 'No class name provided.'
-        }
-    }
+		if (fullClassName) {
+			def classParts = JavaTemplatesPlugin.getClassParts(fullClassName)
+			ProjectTemplate.fromUserDir {
+				"${mainSrcDir}" {
+					"${classParts.classPackagePath}" {
+						"${classParts.className}.groovy" template: '/templates/groovy/groovy-class.tmpl',
+								className: classParts.className,
+								classPackage: classParts.classPackage
+					}
+				}
+			}
+		} else {
+			println 'No class name provided.'
+		}
+	}
 
-    // FIXME: these finders are all very similar, refactor
-    /**
-     * Finds the path to the main java source directory.
-     * @param project The project.
-     * @return The path to the main groovy source directory.
-     */
-    private static String findMainGroovyDir(Project project) {
-        def mainSrcDir = project.sourceSets?.main?.groovy?.srcDirs*.path
-        mainSrcDir = mainSrcDir?.first()
-        mainSrcDir = mainSrcDir?.minus(project.projectDir.path)
-        return mainSrcDir
-    }
+	// FIXME: these finders are all very similar, refactor
+	/**
+	 * Finds the path to the main java source directory.
+	 * @param project The project.
+	 * @return The path to the main groovy source directory.
+	 */
+	private static String findMainGroovyDir(Project project) {
+		def mainSrcDir = project.sourceSets?.main?.groovy?.srcDirs*.path
+		mainSrcDir = mainSrcDir?.first()
+		mainSrcDir = mainSrcDir?.minus(project.projectDir.path)
+		return mainSrcDir
+	}
 }

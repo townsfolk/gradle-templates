@@ -16,6 +16,7 @@
  */
 
 package templates.tasks.java
+
 import org.gradle.api.tasks.TaskAction
 import templates.ProjectTemplate
 
@@ -24,28 +25,29 @@ import templates.ProjectTemplate
  */
 class CreateJavaProjectTask extends AbstractJavaProjectTask {
 
-    CreateJavaProjectTask(){
-        super(
-            'createJavaProject',
-            'Creates a new Gradle Java project in a new directory named after your project.'
-        )
-    }
+	CreateJavaProjectTask() {
+		super(
+				'createJavaProject',
+				'Creates a new Gradle Java project in a new directory named after your project.'
+		)
+	}
 
-    @TaskAction void create(){
-        String projectName = projectName()
-        if (projectName) {
-            String projectPath = projectPath( projectName )
+	@TaskAction
+	void create() {
+		String projectName = projectName()
+		if (projectName) {
+			String projectPath = projectPath(projectName)
 
-            createBase projectPath
+			createBase projectPath
 
-            ProjectTemplate.fromRoot(projectPath) {
-                'build.gradle' template:'/templates/java/build.gradle.tmpl', projectGroup:projectGroup(projectName)
-                'gradle.properties' content:"version=${projectVersion()}", append:true
-            }
+			ProjectTemplate.fromRoot(projectPath) {
+				'build.gradle' template: '/templates/java/build.gradle.tmpl', projectGroup: projectGroup(projectName)
+				'gradle.properties' content: "version=${projectVersion()}", append: true
+			}
 
-        } else {
-            // FIXME: should be an error
-            println 'No project name provided.'
-        }
-    }
+		} else {
+			// FIXME: should be an error
+			println 'No project name provided.'
+		}
+	}
 }

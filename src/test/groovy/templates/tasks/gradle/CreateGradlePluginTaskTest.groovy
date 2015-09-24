@@ -16,6 +16,7 @@
  */
 
 package templates.tasks.gradle
+
 import org.junit.Test
 import templates.AbstractTaskTester
 
@@ -28,27 +29,28 @@ import static AbstractGradleProjectTask.PLUGIN_APPLY_LABEL
 
 class CreateGradlePluginTaskTest extends AbstractTaskTester {
 
-    CreateGradlePluginTaskTest(){
-        super( CreateGradlePluginTask )
-    }
+	CreateGradlePluginTaskTest() {
+		super(CreateGradlePluginTask)
+	}
 
-    @Test void create(){
-        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
-        project.ext[NEW_PROJECT_NAME] = 'tester'
-        project.ext[PROJECT_GROUP] = 'test-group'
-        project.ext[PROJECT_VERSION] = '1.1.1'
-        project.ext[PLUGIN_APPLY_LABEL] = 'test-foo'
-        project.ext[PLUGIN_CLASS_NAME] = 'com.test'
+	@Test
+	void create() {
+		project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+		project.ext[NEW_PROJECT_NAME] = 'tester'
+		project.ext[PROJECT_GROUP] = 'test-group'
+		project.ext[PROJECT_VERSION] = '1.1.1'
+		project.ext[PLUGIN_APPLY_LABEL] = 'test-foo'
+		project.ext[PLUGIN_CLASS_NAME] = 'com.test'
 
-        task.create()
+		task.create()
 
-        assertFileExists folder.root, 'tester/src/main/groovy'
-        assertFileExists folder.root, 'tester/src/main/resources'
-        assertFileExists folder.root, 'tester/src/test/groovy'
-        assertFileExists folder.root, 'tester/src/test/resources'
-        assertFileExists folder.root, 'tester/LICENSE.txt'
+		assertFileExists folder.root, 'tester/src/main/groovy'
+		assertFileExists folder.root, 'tester/src/main/resources'
+		assertFileExists folder.root, 'tester/src/test/groovy'
+		assertFileExists folder.root, 'tester/src/test/resources'
+		assertFileExists folder.root, 'tester/LICENSE.txt'
 
-        assertFileContains folder.root, 'tester/build.gradle', 'group = \'test-group\''
-        assertFileContains folder.root, 'tester/gradle.properties', 'version=1.1.1'
-    }
+		assertFileContains folder.root, 'tester/build.gradle', 'group = \'test-group\''
+		assertFileContains folder.root, 'tester/gradle.properties', 'version=1.1.1'
+	}
 }

@@ -16,35 +16,37 @@
  */
 
 package templates.tasks.java
+
 import templates.ProjectTemplate
 import templates.tasks.AbstractProjectTask
+
 /**
  * Base class for Java project tasks.
  */
 abstract class AbstractJavaProjectTask extends AbstractProjectTask {
 
-    AbstractJavaProjectTask( final String name, final String description ){
-        super( name, description )
-    }
+	AbstractJavaProjectTask(final String name, final String description) {
+		super(name, description)
+	}
 
-    /**
-     * Creates the basic Java project directory structure.
-     *
-     * @param path the root of the project. Optional,defaults to user.dir.
-     */
-    protected void createBase(String path = defaultDir() ){
-        ProjectTemplate.fromRoot(path) {
-            'src' {
-                'main' {
-                    'java' {}
-                    'resources' {}
-                }
-                'test' {
-                    'java' {}
-                    'resources' {}
-                }
-            }
-            'LICENSE.txt' '// Your License Goes here'
-        }
-    }
+	/**
+	 * Creates the basic Java project directory structure.
+	 *
+	 * @param path the root of the project. Optional,defaults to user.dir.
+	 */
+	protected void createBase(String path = defaultDir()) {
+		ProjectTemplate.fromRoot(path) {
+			'src' {
+				'main' {
+					'java' {}
+					'resources' {}
+				}
+				'test' {
+					'java' {}
+					'resources' {}
+				}
+			}
+			'LICENSE.txt' '// Your License Goes here'
+		}
+	}
 }

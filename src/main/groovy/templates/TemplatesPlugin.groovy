@@ -38,7 +38,7 @@ class TemplatesPlugin implements Plugin<Project> {
 	def void apply(Project project) {
 		project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
 
-        // FIXME: would be better to allow user to configure the desired template set rather than get them all
+		// FIXME: would be better to allow user to configure the desired template set rather than get them all
 		project.apply(plugin: GroovyTemplatesPlugin)
 		project.apply(plugin: GradlePluginTemplatesPlugin)
 		project.apply(plugin: JavaTemplatesPlugin)

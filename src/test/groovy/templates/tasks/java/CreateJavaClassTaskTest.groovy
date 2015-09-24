@@ -16,6 +16,7 @@
  */
 
 package templates.tasks.java
+
 import org.junit.Test
 import templates.AbstractTaskTester
 
@@ -23,17 +24,18 @@ import static templates.tasks.java.CreateJavaClassTask.NEW_CLASS_NAME
 
 class CreateJavaClassTaskTest extends AbstractTaskTester {
 
-    CreateJavaClassTaskTest(){
-        super( CreateJavaClassTask )
-    }
+	CreateJavaClassTaskTest() {
+		super(CreateJavaClassTask)
+	}
 
-    @Test void create(){
-        project.apply plugin:'java'
+	@Test
+	void create() {
+		project.apply plugin: 'java'
 
-        project.ext[NEW_CLASS_NAME] = 'foo.Something'
+		project.ext[NEW_CLASS_NAME] = 'foo.Something'
 
-        task.create()
+		task.create()
 
-        assertFileContains folder.root, 'src/main/java/foo/Something.java', 'class Something'
-    }
+		assertFileContains folder.root, 'src/main/java/foo/Something.java', 'class Something'
+	}
 }

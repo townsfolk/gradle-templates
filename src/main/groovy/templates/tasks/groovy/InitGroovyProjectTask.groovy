@@ -25,18 +25,19 @@ import templates.TemplatesPlugin
  */
 class InitGroovyProjectTask extends AbstractGroovyProjectTask {
 
-    InitGroovyProjectTask(){
-        super(
-            'initGroovyProject',
-            'Initializes a new Gradle Groovy project in the current directory.'
-        )
-    }
+	InitGroovyProjectTask() {
+		super(
+				'initGroovyProject',
+				'Initializes a new Gradle Groovy project in the current directory.'
+		)
+	}
 
-    @TaskAction def init(){
-        createBase()
+	@TaskAction
+	def init() {
+		createBase()
 
-        File buildFile = ensureFileExists('build.gradle')
+		File buildFile = ensureFileExists('build.gradle')
 
-        TemplatesPlugin.prependPlugin 'groovy', buildFile
-    }
+		TemplatesPlugin.prependPlugin 'groovy', buildFile
+	}
 }

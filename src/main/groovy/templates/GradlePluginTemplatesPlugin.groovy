@@ -33,8 +33,8 @@ class GradlePluginTemplatesPlugin extends GroovyTemplatesPlugin {
 			project.apply(plugin: GroovyTemplatesPlugin)
 		}
 
-		project.task 'createGradlePlugin', type:CreateGradlePluginTask
+		project.task 'createGradlePlugin', type: CreateGradlePluginTask
 
-		project.task 'initGradlePlugin', type:InitGradlePluginTask
+		project.task 'initGradlePlugin', type: InitGradlePluginTask
 	}
 }
