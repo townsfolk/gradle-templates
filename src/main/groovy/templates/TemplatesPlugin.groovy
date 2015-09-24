@@ -18,13 +18,11 @@ package templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import templates.tasks.CreateRestProjectTask
 import templates.tasks.gradle.CreateGradlePluginTask
 import templates.tasks.gradle.InitGradlePluginTask
-import templates.tasks.groovy.CreateGroovyClassTask
 import templates.tasks.groovy.CreateGroovyProjectTask
 import templates.tasks.groovy.InitGroovyProjectTask
-import templates.tasks.java.CreateJavaClassTask
-import templates.tasks.java.CreateJavaProjectTask
 import templates.tasks.java.InitJavaProjectTask
 
 /**
@@ -46,15 +44,27 @@ class TemplatesPlugin implements Plugin<Project> {
 	def void apply(Project project) {
 		project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
 
-		project.task 'createGroovyClass', type: CreateGroovyClassTask
-		project.task 'createGroovyProject', type: CreateGroovyProjectTask
-		project.task 'initGroovyProject', type: InitGroovyProjectTask
+		CustomProps customProps = new CustomProps(project)
+		if (!customProps.isCustomPropertiesInitialized()) {
+			project.task 'initCustomProperties', {
+				group "Initialization"
+				description "Initialize the custom properties file, ${customProps.file.absolutePath}"
+				doLast {
+					customProps.initCustomPropertiesFile()
+				}
+			}
+		} else {
+			customProps.applyCustomPropertiesFile()
 
-		project.task 'createJavaClass', type: CreateJavaClassTask
-		project.task 'createJavaProject', type: CreateJavaProjectTask
-		project.task 'initJavaProject', type: InitJavaProjectTask
+			project.task 'createGroovyProject', type: CreateGroovyProjectTask
+			project.task 'initGroovyProject', type: InitGroovyProjectTask
 
-		project.task 'createGradlePlugin', type: CreateGradlePluginTask
-		project.task 'initGradlePlugin', type: InitGradlePluginTask
+			project.task 'initJavaProject', type: InitJavaProjectTask
+
+			project.task 'createGradlePlugin', type: CreateGradlePluginTask
+			project.task 'initGradlePlugin', type: InitGradlePluginTask
+
+			project.task 'createRestProject', type: CreateRestProjectTask
+		}
 	}
 }

@@ -17,7 +17,7 @@
 
 package templates.tasks.gradle
 
-import templates.ClassParser
+import templates.TemplatedFileFactory
 import templates.Input
 import templates.ProjectTemplate
 import templates.tasks.AbstractProjectTask
@@ -58,7 +58,7 @@ abstract class AbstractGradleProjectTask extends AbstractProjectTask {
 				}
 				'groovy' {
 					if (pluginClassName) {
-						def classParts = ClassParser.getClassParts(pluginClassName)
+						def classParts = TemplatedFileFactory.getClassParts(pluginClassName)
 						"${classParts.classPackagePath}" {
 							"${classParts.className}.groovy" template: '/templates/plugin/plugin-class.tmpl',
 									className: classParts.className,

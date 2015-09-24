@@ -31,12 +31,9 @@ class TemplatesPluginTest {
 		assert project.tasks.createGradlePlugin
 		assert project.tasks.initGradlePlugin
 
-		assert project.tasks.createGroovyClass
 		assert project.tasks.createGroovyProject
 		assert project.tasks.initGroovyProject
 
-		assert project.tasks.createJavaClass
-		assert project.tasks.createJavaProject
 		assert project.tasks.initJavaProject
 	}
 
