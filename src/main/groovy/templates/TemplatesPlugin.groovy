@@ -20,11 +20,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import templates.tasks.CreateBasicProjectTask
 import templates.tasks.CreateRestProjectTask
-import templates.tasks.gradle.CreateGradlePluginTask
-import templates.tasks.gradle.InitGradlePluginTask
-import templates.tasks.groovy.CreateGroovyProjectTask
-import templates.tasks.groovy.InitGroovyProjectTask
-import templates.tasks.java.InitJavaProjectTask
 
 /**
  * The core of the templates plugin.
@@ -47,14 +42,6 @@ class TemplatesPlugin implements Plugin<Project> {
 			}
 		} else {
 			customProps.applyCustomPropertiesFile()
-
-			project.task 'createGroovyProject', type: CreateGroovyProjectTask
-			project.task 'initGroovyProject', type: InitGroovyProjectTask
-
-			project.task 'initJavaProject', type: InitJavaProjectTask
-
-			project.task 'createGradlePlugin', type: CreateGradlePluginTask
-			project.task 'initGradlePlugin', type: InitGradlePluginTask
 
 			project.task 'createRestProject', type: CreateRestProjectTask
 			project.task 'createBasicProject', type: CreateBasicProjectTask
