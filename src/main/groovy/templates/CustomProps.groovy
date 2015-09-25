@@ -21,6 +21,7 @@ class CustomProps {
         file.exists()
     }
 
+
     void applyCustomPropertiesFile() {
         if (isCustomPropertiesInitialized()) {
             project.apply from: file
@@ -38,8 +39,17 @@ class CustomProps {
 		new File(workspaceDir)
 	}
 
+	File getRepoDir() {
+		String repoName = getRequiredCustomProperty("repoName")
+		new File(getWorkspaceDir(), repoName)
+	}
+
+	boolean isPropertyDefined(String name) {
+		project.properties.containsKey(name)
+	}
+
     private String getRequiredCustomProperty(String propertyName) {
-        if (!project.hasProperty(propertyName)) {
+        if (!project.properties.containsKey(propertyName)) {
             throw new GradleException("Required property '${propertyName}' is not set, have you run the initCustomProperties task?")
         }
         project.ext[propertyName]

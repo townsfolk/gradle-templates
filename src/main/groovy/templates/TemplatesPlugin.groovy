@@ -18,6 +18,7 @@ package templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import templates.tasks.CreateBasicProjectTask
 import templates.tasks.CreateRestProjectTask
 import templates.tasks.gradle.CreateGradlePluginTask
 import templates.tasks.gradle.InitGradlePluginTask
@@ -31,15 +32,6 @@ import templates.tasks.java.InitJavaProjectTask
 class TemplatesPlugin implements Plugin<Project> {
 
 	static final String group = 'Template'
-
-	static void prependPlugin(String plugin, File gradleFile) {
-		def oldText = gradleFile.text
-		gradleFile.text = ''
-		gradleFile.withPrintWriter { pw ->
-			pw.println "apply plugin: '${plugin}'"
-			pw.print oldText
-		}
-	}
 
 	def void apply(Project project) {
 		project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
@@ -65,6 +57,7 @@ class TemplatesPlugin implements Plugin<Project> {
 			project.task 'initGradlePlugin', type: InitGradlePluginTask
 
 			project.task 'createRestProject', type: CreateRestProjectTask
+			project.task 'createBasicProject', type: CreateBasicProjectTask
 		}
 	}
 }
