@@ -34,19 +34,19 @@ class CustomProps {
 """
     }
 
-	File getWorkspaceDir() {
-		String workspaceDir = expandPath(getRequiredCustomProperty('workspaceDir'))
-		new File(workspaceDir)
-	}
+    File getWorkspaceDir() {
+        String workspaceDir = expandPath(getRequiredCustomProperty('workspaceDir'))
+        new File(workspaceDir)
+    }
 
-	File getRepoDir() {
-		String repoName = getRequiredCustomProperty("repoName")
-		new File(getWorkspaceDir(), repoName)
-	}
+    File getRepoDir() {
+        String repoName = getRequiredCustomProperty("repoName")
+        new File(getWorkspaceDir(), repoName)
+    }
 
-	boolean isPropertyDefined(String name) {
-		project.properties.containsKey(name)
-	}
+    boolean isPropertyDefined(String name) {
+        project.properties.containsKey(name)
+    }
 
     private String getRequiredCustomProperty(String propertyName) {
         if (!project.properties.containsKey(propertyName)) {

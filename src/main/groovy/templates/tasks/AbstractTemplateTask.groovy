@@ -26,21 +26,21 @@ import templates.TemplatesPlugin
  */
 abstract class AbstractTemplateTask extends DefaultTask {
 
-	AbstractTemplateTask(final String description) {
-		this.group = TemplatesPlugin.group
-		this.description = description
-	}
+    AbstractTemplateTask(final String description) {
+        this.group = TemplatesPlugin.group
+        this.description = description
+    }
 
-	@TaskAction
-	def init() {
-		try {
-			renderTemplate()
-		} catch (Exception ex) {
-			ex.printStackTrace()
-			throw ex
-		}
-	}
+    @TaskAction
+    def init() {
+        try {
+            renderTemplate()
+        } catch (Exception ex) {
+            ex.printStackTrace()
+            throw ex
+        }
+    }
 
-	protected abstract void renderTemplate()
+    protected abstract void renderTemplate()
 
 }

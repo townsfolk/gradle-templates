@@ -26,25 +26,25 @@ import templates.tasks.CreateRestProjectTask
  */
 class TemplatesPlugin implements Plugin<Project> {
 
-	static final String group = 'Template'
+    static final String group = 'Template'
 
-	def void apply(Project project) {
-		project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
+    def void apply(Project project) {
+        project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
 
-		CustomProps customProps = new CustomProps(project)
-		if (!customProps.isCustomPropertiesInitialized()) {
-			project.task 'initCustomProperties', {
-				group "Initialization"
-				description "Initialize the custom properties file, ${customProps.file.absolutePath}"
-				doLast {
-					customProps.initCustomPropertiesFile()
-				}
-			}
-		} else {
-			customProps.applyCustomPropertiesFile()
+        CustomProps customProps = new CustomProps(project)
+        if (!customProps.isCustomPropertiesInitialized()) {
+            project.task 'initCustomProperties', {
+                group "Initialization"
+                description "Initialize the custom properties file, ${customProps.file.absolutePath}"
+                doLast {
+                    customProps.initCustomPropertiesFile()
+                }
+            }
+        } else {
+            customProps.applyCustomPropertiesFile()
 
-			project.task 'createRestProject', type: CreateRestProjectTask
-			project.task 'createBasicProject', type: CreateBasicProjectTask
-		}
-	}
+            project.task 'createRestProject', type: CreateRestProjectTask
+            project.task 'createBasicProject', type: CreateBasicProjectTask
+        }
+    }
 }
