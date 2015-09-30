@@ -52,6 +52,11 @@ class CreateRestProjectTask extends AbstractProjectTask {
 										"${serviceName}.java" template: "/templates/springboot/application-class.tmpl",
 												serviceName: "${serviceName}",
 												servicePackage: "${servicePackage}"
+
+										'api' {
+											'ResourcePaths.java' template: "/templates/springboot/resourcepaths-class.tmpl",
+													packageName: "${servicePackage}.api"
+										}
 									}
 								}
 							}
