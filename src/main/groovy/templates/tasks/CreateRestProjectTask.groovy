@@ -5,14 +5,14 @@ import org.gradle.api.Project
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN
 import static com.google.common.base.CaseFormat.UPPER_CAMEL
 
-class CreateRestProjectTask extends AbstractProjectTask {
+class CreateRestProjectTask extends AbstractTemplateTask {
 
 	CreateRestProjectTask() {
 		super("Create a SpringBoot REST project")
 	}
 
 	@Override
-	protected void execTask() {
+	protected void renderTemplate() {
 		RestProject restProject = RestProject.create(project)
 		restProject.initRestProject()
 	}

@@ -19,15 +19,14 @@ package templates.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import templates.Input
 import templates.TemplatesPlugin
 
 /**
  * Abstract base class for project tasks.
  */
-abstract class AbstractProjectTask extends DefaultTask {
+abstract class AbstractTemplateTask extends DefaultTask {
 
-	AbstractProjectTask(final String description) {
+	AbstractTemplateTask(final String description) {
 		this.group = TemplatesPlugin.group
 		this.description = description
 	}
@@ -35,13 +34,13 @@ abstract class AbstractProjectTask extends DefaultTask {
 	@TaskAction
 	def init() {
 		try {
-			execTask()
+			renderTemplate()
 		} catch (Exception ex) {
 			ex.printStackTrace()
 			throw ex
 		}
 	}
 
-	protected abstract void execTask()
+	protected abstract void renderTemplate()
 
 }
