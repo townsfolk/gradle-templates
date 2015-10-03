@@ -11,7 +11,9 @@ class CreateBasicProjectTask extends AbstractTemplateTask {
 
     @Override
     protected void renderTemplate() {
-        BasicProject basicProject = BasicProject.create(project)
+        boolean clean = projectProps.isPropertyDefined("clean")
+        BasicProject basicProject = createBasicProject(clean)
+
         basicProject.initGradleProject()
     }
 

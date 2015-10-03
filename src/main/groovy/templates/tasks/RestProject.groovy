@@ -1,22 +1,15 @@
 package templates.tasks
 
-import org.gradle.api.Project
-
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN
 import static com.google.common.base.CaseFormat.UPPER_CAMEL
 
 class RestProject {
 
-    public static RestProject create(Project project) {
-        BasicProject basicProject = BasicProject.create(project)
-        new RestProject(basicProject)
-    }
-
     private BasicProject basicProject
     private String serviceName
     private String servicePackage
 
-    public RestProject(BasicProject basicProject) {
+    RestProject(BasicProject basicProject) {
         this.basicProject = basicProject
         serviceName = LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.repoName)
         servicePackage = "com.blackbaud.${serviceName.toLowerCase()}"

@@ -8,9 +8,16 @@ class CreateRestResourceTask extends AbstractTemplateTask {
 
     @Override
     protected void renderTemplate() {
-        RestProject restProject = RestProject.create(project)
-        String resourceName = projectProps.getRequiredProjectProperty("resourceName").capitalize()
+        String resourceName = getResourceName()
+        BasicProject basicProject = openBasicProject()
+        RestProject restProject = new RestProject(basicProject)
+
         restProject.createRestResource(resourceName)
+    }
+
+    private String getResourceName() {
+        String resourceName = projectProps.getRequiredProjectProperty("resourceName")
+        resourceName.capitalize()
     }
 
 }

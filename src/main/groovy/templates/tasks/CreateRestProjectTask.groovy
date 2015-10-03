@@ -8,7 +8,10 @@ class CreateRestProjectTask extends AbstractTemplateTask {
 
     @Override
     protected void renderTemplate() {
-        RestProject restProject = RestProject.create(project)
+        boolean clean = projectProps.isPropertyDefined("clean")
+        BasicProject basicProject = createBasicProject(clean)
+        RestProject restProject = new RestProject(basicProject)
+
         restProject.initRestProject()
     }
 

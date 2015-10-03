@@ -1,6 +1,5 @@
 package templates.tasks
 
-import org.gradle.api.Project
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import templates.ProjectProps
@@ -8,29 +7,6 @@ import templates.GitRepo
 import templates.ProjectTemplate
 
 class BasicProject {
-
-    public static BasicProject create(Project project) {
-        ProjectProps customProps = new ProjectProps(project)
-        GitRepo gitRepo = openGitRepo(customProps)
-        new BasicProject(customProps, gitRepo)
-    }
-
-    private static GitRepo openGitRepo(ProjectProps customProps) {
-        File repoDir = customProps.repoDir
-        if (customProps.isPropertyDefined("clean")) {
-            repoDir.deleteDir()
-        }
-
-        repoDir.exists() ? GitRepo.open(repoDir) : initGitRepo(repoDir)
-    }
-
-    private static GitRepo initGitRepo(File repoDir) {
-        repoDir.mkdirs()
-        GitRepo git = GitRepo.init(repoDir)
-        git.setRemoteUrl("origin", "git@github.com:blackbaud/${repoDir.name}.git")
-        git
-    }
-
 
     @Delegate
     private GitRepo gitRepo
