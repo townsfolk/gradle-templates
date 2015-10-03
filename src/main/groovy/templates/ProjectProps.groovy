@@ -39,8 +39,12 @@ class ProjectProps {
         new File(workspaceDir)
     }
 
+    String getRepoName() {
+        getRequiredProjectProperty("repoName")
+    }
+
     File getRepoDir() {
-        String repoName = getRequiredProjectProperty("repoName")
+        String repoName = getRepoName()
         new File(getWorkspaceDir(), repoName)
     }
 

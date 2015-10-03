@@ -10,11 +10,11 @@ class BasicProject {
 
     @Delegate
     private GitRepo gitRepo
-    private ProjectProps customProps
+    private ProjectProps projectProps
     String repoName
 
-    BasicProject(ProjectProps customProps, GitRepo gitRepo) {
-        this.customProps = customProps
+    BasicProject(ProjectProps projectProps, GitRepo gitRepo) {
+        this.projectProps = projectProps
         this.gitRepo = gitRepo
         repoName = gitRepo.repoDir.name
     }
@@ -24,7 +24,7 @@ class BasicProject {
     }
 
     boolean isPropertyDefined(String name) {
-        customProps.isPropertyDefined(name)
+        projectProps.isPropertyDefined(name)
     }
 
     void initGradleProject() {
@@ -32,15 +32,26 @@ class BasicProject {
             initGradleWrapper()
             initGitignore()
             gitRepo.commitProjectFiles("initial commit, gradle wrapper")
+
             replaceGradleWrapperDistributionUrl()
             gitRepo.commitProjectFiles("use blackbaud gradle")
+
+            initGradleProperties()
+            gitRepo.commitProjectFiles("added gradle.properties")
+        }
+    }
+
+    private void initGradleProperties() {
+        applyTemplate {
+            'gradle.properties' template: "/templates/springboot/gradle.properties.tmpl",
+                    repoName: projectProps.repoName
         }
     }
 
     private void replaceGradleWrapperDistributionUrl() {
         File gradleWrapperProperties = new File(repoDir, "gradle/wrapper/gradle-wrapper.properties")
         String text = gradleWrapperProperties.text
-        String blackbaudGradleVersion = customProps.getRequiredProjectProperty("blackbaudGradleVersion")
+        String blackbaudGradleVersion = projectProps.getRequiredProjectProperty("blackbaudGradleVersion")
         String distributionUrl = "https://nexus-releases.blackbaudcloud.com/content/repositories/releases/com/blackbaud/gradle-blackbaud/${blackbaudGradleVersion}/gradle-blackbaud-${blackbaudGradleVersion}-bin.zip"
         gradleWrapperProperties.text = text.replaceFirst(/(?m)^distributionUrl=.*/, /distributionUrl=${distributionUrl}/)
     }
