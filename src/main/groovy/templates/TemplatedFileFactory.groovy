@@ -5,7 +5,7 @@ import org.gradle.api.Project
 class TemplatedFileFactory {
 
     private Project project
-    private CustomProps customProps
+    private ProjectProps customProps
 
     TemplatedFileFactory(Project project) {
         this.project = project

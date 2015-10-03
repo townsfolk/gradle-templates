@@ -20,6 +20,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import templates.tasks.CreateBasicProjectTask
 import templates.tasks.CreateRestProjectTask
+import templates.tasks.CreateRestResourceTask
 
 /**
  * The core of the templates plugin.
@@ -28,10 +29,10 @@ class TemplatesPlugin implements Plugin<Project> {
 
     static final String group = 'Template'
 
-    def void apply(Project project) {
+    void apply(Project project) {
         project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
 
-        CustomProps customProps = new CustomProps(project)
+        ProjectProps customProps = new ProjectProps(project)
         if (!customProps.isCustomPropertiesInitialized()) {
             project.task 'initCustomProperties', {
                 group "Initialization"
@@ -43,8 +44,9 @@ class TemplatesPlugin implements Plugin<Project> {
         } else {
             customProps.applyCustomPropertiesFile()
 
-            project.task 'createRestProject', type: CreateRestProjectTask
             project.task 'createBasicProject', type: CreateBasicProjectTask
+            project.task 'createRestProject', type: CreateRestProjectTask
+            project.task 'createRestResource', type: CreateRestResourceTask
         }
     }
 }

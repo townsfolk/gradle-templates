@@ -19,6 +19,7 @@ package templates.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
+import templates.ProjectProps
 import templates.TemplatesPlugin
 
 /**
@@ -26,9 +27,12 @@ import templates.TemplatesPlugin
  */
 abstract class AbstractTemplateTask extends DefaultTask {
 
+    protected ProjectProps projectProps
+
     AbstractTemplateTask(final String description) {
         this.group = TemplatesPlugin.group
         this.description = description
+        this.projectProps = new ProjectProps(project)
     }
 
     @TaskAction

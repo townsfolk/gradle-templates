@@ -3,19 +3,19 @@ package templates.tasks
 import org.gradle.api.Project
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
-import templates.CustomProps
+import templates.ProjectProps
 import templates.GitRepo
 import templates.ProjectTemplate
 
 class BasicProject {
 
     public static BasicProject create(Project project) {
-        CustomProps customProps = new CustomProps(project)
+        ProjectProps customProps = new ProjectProps(project)
         GitRepo gitRepo = openGitRepo(customProps)
         new BasicProject(customProps, gitRepo)
     }
 
-    private static GitRepo openGitRepo(CustomProps customProps) {
+    private static GitRepo openGitRepo(ProjectProps customProps) {
         File repoDir = customProps.repoDir
         if (customProps.isPropertyDefined("clean")) {
             repoDir.deleteDir()
@@ -34,10 +34,10 @@ class BasicProject {
 
     @Delegate
     private GitRepo gitRepo
-    private CustomProps customProps
+    private ProjectProps customProps
     String repoName
 
-    BasicProject(CustomProps customProps, GitRepo gitRepo) {
+    BasicProject(ProjectProps customProps, GitRepo gitRepo) {
         this.customProps = customProps
         this.gitRepo = gitRepo
         repoName = gitRepo.repoDir.name
@@ -80,4 +80,7 @@ class BasicProject {
         ProjectTemplate.fromRoot(repoDir, closure)
     }
 
+    void applyTemplate(String relativePath, Closure closure) {
+        ProjectTemplate.fromRoot(new File(repoDir, relativePath), closure)
+    }
 }

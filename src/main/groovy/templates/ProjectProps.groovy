@@ -3,12 +3,12 @@ package templates
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 
-class CustomProps {
+class ProjectProps {
 
     private Project project
     private File file
 
-    CustomProps(Project project) {
+    ProjectProps(Project project) {
         this.project = project
         file = project.file("gradle/custom.gradle")
     }
@@ -35,12 +35,12 @@ class CustomProps {
     }
 
     File getWorkspaceDir() {
-        String workspaceDir = expandPath(getRequiredCustomProperty('workspaceDir'))
+        String workspaceDir = expandPath(getRequiredProjectProperty('workspaceDir'))
         new File(workspaceDir)
     }
 
     File getRepoDir() {
-        String repoName = getRequiredCustomProperty("repoName")
+        String repoName = getRequiredProjectProperty("repoName")
         new File(getWorkspaceDir(), repoName)
     }
 
@@ -48,9 +48,9 @@ class CustomProps {
         project.properties.containsKey(name)
     }
 
-    private String getRequiredCustomProperty(String propertyName) {
+    String getRequiredProjectProperty(String propertyName) {
         if (!project.properties.containsKey(propertyName)) {
-            throw new GradleException("Required property '${propertyName}' is not set, have you run the initCustomProperties task?")
+            throw new GradleException("Required property '${propertyName}' is not set")
         }
         project.ext[propertyName]
     }

@@ -5,7 +5,7 @@ import templates.TemplatesPlugin
 class CreateBasicProjectTask extends AbstractTemplateTask {
 
     CreateBasicProjectTask() {
-        super("create a basic project")
+        super("Create a basic project (options: -PrepoName=?, [-Pclean]")
         group = TemplatesPlugin.group
     }
 
