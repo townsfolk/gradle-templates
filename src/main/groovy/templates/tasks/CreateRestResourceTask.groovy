@@ -17,7 +17,7 @@ class CreateRestResourceTask extends AbstractTemplateTask {
 
     private String getResourceName() {
         String resourceName = projectProps.getRequiredProjectProperty("resourceName")
-        resourceName.capitalize()
+        "${resourceName.capitalize()}Resource"
     }
 
 }

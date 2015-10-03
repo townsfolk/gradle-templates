@@ -1,30 +1,32 @@
 buildscript {
-	ext {
-		springBootVersion = "1.2.3.RELEASE"
-	}
-	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}"
-		classpath "com.blackbaud:gradle-internal:2+"
-	}
+    ext {
+        springBootVersion = "1.2.3.RELEASE"
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}"
+        classpath "com.blackbaud:gradle-internal:2+"
+    }
 }
 
 apply plugin: "blackbaud-internal"
 apply plugin: "spring-boot"
 
 dependencies {
-	compile "org.springframework.boot:spring-boot-starter-web"
-	compile "org.springframework.boot:spring-boot-starter-actuator"
-	compile "org.springframework.boot:spring-boot-starter-jersey"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-jersey"
 
-	compile "com.google.guava:guava:18.0"
-	compile "org.projectlombok:lombok:1.16.6"
-	compile("net.sf.dozer:dozer:5.5.1") {
-		exclude group: 'org.slf4j'
-	}
+    compile "com.google.guava:guava:18.0"
+    compile "org.projectlombok:lombok:1.16.6"
+    compile("net.sf.dozer:dozer:5.5.1") {
+        exclude group: 'org.slf4j'
+    }
 
-	testCompile ("org.spockframework:spock-spring:1.0-groovy-2.4") {
-		exclude group: "org.codehaus.groovy"
-	}
-	testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "org.codehaus.groovy:groovy-all:2.4.3"
+    testCompile ("org.spockframework:spock-spring:1.0-groovy-2.4") {
+        exclude group: "org.codehaus.groovy"
+    }
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
 }
 

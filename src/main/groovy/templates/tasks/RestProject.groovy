@@ -37,7 +37,7 @@ class RestProject {
             'src' {
                 'main' {
                     'resources' {
-                        'application.properties' template: "/templates/springboot/application.properties"
+                        'application.properties' template: "/templates/springboot/application.properties.tmpl"
                     }
                 }
                 'test' {
@@ -56,15 +56,15 @@ class RestProject {
 
     void createRestResource(String resourceName) {
         basicProject.applyTemplate("src/main/java/com/blackbaud/${serviceName.toLowerCase()}/resources") {
-            "${resourceName}Resource.java" template: "/templates/springboot/rest-resource-class.tmpl",
+            "${resourceName}.java" template: "/templates/springboot/rest-resource-class.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
 
         basicProject.applyTemplate("src/componentTest/groovy/com/blackbaud/${serviceName.toLowerCase()}/resources") {
-            "${resourceName}ResourceSpec.java" template: "/templates/springboot/rest-resource-spec.tmpl",
+            "${resourceName}Spec.groovy" template: "/templates/springboot/rest-resource-spec.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
 
-            "${resourceName}ResourceWireSpec.java" template: "/templates/springboot/rest-resource-wirespec.tmpl",
+            "${resourceName}WireSpec.groovy" template: "/templates/springboot/rest-resource-wirespec.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
     }
