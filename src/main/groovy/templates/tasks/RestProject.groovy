@@ -8,11 +8,13 @@ class RestProject {
     private BasicProject basicProject
     private String serviceName
     private String servicePackage
+    private String servicePackagePath
 
     RestProject(BasicProject basicProject) {
         this.basicProject = basicProject
         serviceName = LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.repoName)
         servicePackage = "com.blackbaud.${serviceName.toLowerCase()}"
+        servicePackagePath = servicePackage.replaceAll("\\.", "/")
     }
 
     void initRestProject() {
@@ -21,15 +23,22 @@ class RestProject {
     }
 
     private void createRestBase() {
-        basicProject.applyTemplate("src/main/java/com/blackbaud/${serviceName.toLowerCase()}") {
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}") {
             "${serviceName}.java" template: "/templates/springboot/application-class.tmpl",
-                    serviceName: "${serviceName}",
-                    servicePackage: "${servicePackage}"
+                    serviceName: serviceName, servicePackage: servicePackage
 
             'api' {
                 'ResourcePaths.java' template: "/templates/springboot/resourcepaths-class.tmpl",
                         packageName: "${servicePackage}.api"
             }
+        }
+
+        basicProject.applyTemplate("src/componentTest/java/${servicePackagePath}") {
+            "ComponentTest.java" template: "/templates/springboot/component-test-annotation.java.tmpl",
+                    serviceName: serviceName, packageName: servicePackage
+
+            "${serviceName}TestConfig.java" template: "/templates/springboot/application-test-config.java.tmpl",
+                    className: "${serviceName}TestConfig", packageName: servicePackage
         }
 
         basicProject.applyTemplate {
@@ -46,6 +55,10 @@ class RestProject {
                 'componentTest' {
                     'resources' {
                         'logback.xml' template: "/templates/logback/logback.tmpl"
+
+                        'db' {
+                            "test_cleanup.sql" content: ""
+                        }
                     }
                 }
             }
@@ -55,12 +68,12 @@ class RestProject {
     }
 
     void createRestResource(String resourceName) {
-        basicProject.applyTemplate("src/main/java/com/blackbaud/${serviceName.toLowerCase()}/resources") {
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/resources") {
             "${resourceName}.java" template: "/templates/springboot/rest-resource-class.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
 
-        basicProject.applyTemplate("src/componentTest/groovy/com/blackbaud/${serviceName.toLowerCase()}/resources") {
+        basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}/resources") {
             "${resourceName}Spec.groovy" template: "/templates/springboot/rest-resource-spec.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
 
