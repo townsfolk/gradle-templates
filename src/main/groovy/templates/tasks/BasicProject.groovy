@@ -32,7 +32,17 @@ class BasicProject {
             initGradleWrapper()
             initGitignore()
             gitRepo.commitProjectFiles("initial commit, gradle wrapper")
+            replaceGradleWrapperDistributionUrl()
+            gitRepo.commitProjectFiles("use blackbaud gradle")
         }
+    }
+
+    private void replaceGradleWrapperDistributionUrl() {
+        File gradleWrapperProperties = new File(repoDir, "gradle/wrapper/gradle-wrapper.properties")
+        String text = gradleWrapperProperties.text
+        String blackbaudGradleVersion = customProps.getRequiredProjectProperty("blackbaudGradleVersion")
+        String distributionUrl = "https://nexus-releases.blackbaudcloud.com/content/repositories/releases/com/blackbaud/gradle-blackbaud/${blackbaudGradleVersion}/gradle-blackbaud-${blackbaudGradleVersion}-bin.zip"
+        gradleWrapperProperties.text = text.replaceFirst(/(?m)^distributionUrl=.*/, /distributionUrl=${distributionUrl}/)
     }
 
     private void initGradleWrapper() {
