@@ -21,30 +21,23 @@ class RestProject {
     }
 
     private void createRestBase() {
+        basicProject.applyTemplate("src/main/java/com/blackbaud/${serviceName.toLowerCase()}") {
+            "${serviceName}.java" template: "/templates/springboot/application-class.tmpl",
+                    serviceName: "${serviceName}",
+                    servicePackage: "${servicePackage}"
+
+            'api' {
+                'ResourcePaths.java' template: "/templates/springboot/resourcepaths-class.tmpl",
+                        packageName: "${servicePackage}.api"
+            }
+        }
+
         basicProject.applyTemplate {
             'build.gradle' template: "/templates/springboot/build.gradle.tmpl"
             'src' {
                 'main' {
-                    'java' {
-                        'com' {
-                            'blackbaud' {
-                                "${serviceName.toLowerCase()}" {
-                                    "${serviceName}.java" template: "/templates/springboot/application-class.tmpl",
-                                            serviceName: "${serviceName}",
-                                            servicePackage: "${servicePackage}"
-
-                                    'api' {
-                                        'ResourcePaths.java' template: "/templates/springboot/resourcepaths-class.tmpl",
-                                                packageName: "${servicePackage}.api"
-                                    }
-                                }
-                            }
-                        }
-                    }
                     'resources' {
-                        'application.properties' content: """server.port=8080
-management.port=8081
-"""
+                        'application.properties' template: "/templates/springboot/application.properties"
                     }
                 }
                 'test' {
@@ -57,7 +50,8 @@ management.port=8081
                 }
             }
         }
-        basicProject.commitProjectFiles("initial commit, springboot rest")
+
+        basicProject.commitProjectFiles("springboot rest bootstrap")
     }
 
     void createRestResource(String resourceName) {
