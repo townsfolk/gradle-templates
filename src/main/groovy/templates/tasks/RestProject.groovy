@@ -24,11 +24,11 @@ class RestProject {
 
     private void createRestBase() {
         basicProject.applyTemplate("src/main/java/${servicePackagePath}") {
-            "${serviceName}.java" template: "/templates/springboot/application-class.tmpl",
+            "${serviceName}.java" template: "/templates/springboot/application-class.java.tmpl",
                     serviceName: serviceName, servicePackage: servicePackage
 
             'api' {
-                'ResourcePaths.java' template: "/templates/springboot/resourcepaths-class.tmpl",
+                'ResourcePaths.java' template: "/templates/springboot/resource-paths.java.tmpl",
                         packageName: "${servicePackage}.api"
             }
         }
@@ -69,15 +69,15 @@ class RestProject {
 
     void createRestResource(String resourceName) {
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/resources") {
-            "${resourceName}.java" template: "/templates/springboot/rest-resource-class.tmpl",
+            "${resourceName}.java" template: "/templates/springboot/rest-resource.java.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
 
         basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}/resources") {
-            "${resourceName}Spec.groovy" template: "/templates/springboot/rest-resource-spec.tmpl",
+            "${resourceName}Spec.groovy" template: "/templates/springboot/rest-resource-spec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
 
-            "${resourceName}WireSpec.groovy" template: "/templates/springboot/rest-resource-wirespec.tmpl",
+            "${resourceName}WireSpec.groovy" template: "/templates/springboot/rest-resource-wirespec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
     }
