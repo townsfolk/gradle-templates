@@ -1,6 +1,9 @@
 package templates.tasks
 
+import org.gradle.api.GradleException
+
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN
+import static com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import static com.google.common.base.CaseFormat.UPPER_CAMEL
 
 class RestProject {
@@ -73,18 +76,37 @@ class RestProject {
     }
 
     void createRestResource(String resourceName) {
+        String resourcePath = "${UPPER_CAMEL.to(LOWER_UNDERSCORE, resourceName)}"
+        String resourceVarName = "${resourcePath.toUpperCase()}_PATH"
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/resources") {
-            "${resourceName}.java" template: "/templates/springboot/rest-resource.java.tmpl",
-                    resourceName: resourceName, servicePackage: "${servicePackage}"
+            "${resourceName}Resource.java" template: "/templates/springboot/rest-resource.java.tmpl",
+                    resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
         }
+        addResourcePathConstant(resourcePath, resourceVarName)
 
         basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}/resources") {
-            "${resourceName}Spec.groovy" template: "/templates/springboot/rest-resource-spec.groovy.tmpl",
+            "${resourceName}ResourceSpec.groovy" template: "/templates/springboot/rest-resource-spec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
 
-            "${resourceName}WireSpec.groovy" template: "/templates/springboot/rest-resource-wirespec.groovy.tmpl",
+            "${resourceName}ResourceWireSpec.groovy" template: "/templates/springboot/rest-resource-wirespec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
+    }
+
+    private void addResourcePathConstant(String resourcePath, String resourceVarName) {
+        File resourcePathsFile = new File(basicProject.repoDir, "src/main/java/${servicePackagePath}/api/ResourcePaths.java")
+        if (resourcePathsFile.exists() == false) {
+            throw new GradleException("Failed to resolve ResurcePaths.java at expected location=${resourcePathsFile.absolutePath}")
+        }
+        String resourcePathsText = resourcePathsFile.text
+        resourcePathsText = resourcePathsText.replaceAll(/(?m)\s*}\s*/, """
+    public static final String ${resourceVarName} = "/${resourcePath}";
+
+}
+"""
+        )
+        println resourcePathsText
+        resourcePathsFile.text = resourcePathsText
     }
 
 }

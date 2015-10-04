@@ -11,9 +11,9 @@ import javax.ws.rs.core.UriInfo;
 
 
 @Component
-//@Path(ResourcePaths._PATH)
+@Path(ResourcePaths.${resourcePathVar})
 @Produces(MediaType.APPLICATION_JSON)
-public class ${resourceName} {
+public class ${resourceName}Resource {
 
     @Context
     private UriInfo uriInfo;
