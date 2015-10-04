@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import spock.lang.Specification
 
-import static com.blackbaud.ARandom.aRandom
+import static ${servicePackage}.ARandom.aRandom
 
 @ComponentTest
 class ${resourceName}WireSpec extends Specification {
@@ -14,7 +14,7 @@ class ${resourceName}WireSpec extends Specification {
     @Autowired
     private RESTClient client
 
-    @Value("http://localhost:\${server.port}")
+    @Value("http://localhost:\\\${server.port}")
     private final String BASE_URI
 
 }

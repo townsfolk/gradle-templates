@@ -22,11 +22,13 @@ dependencies {
         exclude group: 'org.slf4j'
     }
 
-    testCompile "org.codehaus.groovy:groovy-all:2.4.3"
-    testCompile ("org.spockframework:spock-spring:1.0-groovy-2.4") {
+    mainTestCompile "com.blackbaud:common-test:0.+"
+    mainTestCompile "org.codehaus.groovy:groovy-all:2.4.3"
+    mainTestCompile ("org.spockframework:spock-spring:1.0-groovy-2.4") {
         exclude group: "org.codehaus.groovy"
     }
-    testCompile "org.springframework.boot:spring-boot-starter-test"
-    testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+
+    componentTestCompile "org.springframework.boot:spring-boot-starter-test"
+    componentTestCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
 }
 

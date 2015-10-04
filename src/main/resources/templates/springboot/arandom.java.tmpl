@@ -1,0 +1,13 @@
+package ${packageName};
+
+import com.blackbaud.testsupport.RandomGenerator;
+import lombok.experimental.Delegate;
+
+public class ARandom {
+
+    public static final ARandom aRandom = new ARandom();
+
+    @Delegate
+    private RandomGenerator randomGenerator = new RandomGenerator();
+
+}

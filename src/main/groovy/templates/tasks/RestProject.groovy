@@ -41,6 +41,11 @@ class RestProject {
                     className: "${serviceName}TestConfig", packageName: servicePackage
         }
 
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}") {
+            "ARandom.java" template: "/templates/springboot/arandom.java.tmpl",
+                    packageName: servicePackage
+        }
+
         basicProject.applyTemplate {
             'build.gradle' template: "/templates/springboot/build.gradle.tmpl"
             'src' {
