@@ -36,15 +36,14 @@ class BasicProject {
             replaceGradleWrapperDistributionUrl()
             gitRepo.commitProjectFiles("use blackbaud gradle")
 
-            initGradleProperties()
-            gitRepo.commitProjectFiles("added gradle.properties")
+            initBasicGradleBuild()
+            gitRepo.commitProjectFiles("added build.gradle")
         }
     }
 
-    private void initGradleProperties() {
+    private void initBasicGradleBuild() {
         applyTemplate {
-            'gradle.properties' template: "/templates/springboot/gradle.properties.tmpl",
-                    repoName: projectProps.repoName
+            'build.gradle' template: "/templates/basic/build.gradle.tmpl"
         }
     }
 

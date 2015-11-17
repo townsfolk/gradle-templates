@@ -105,7 +105,6 @@ class RestProject {
 }
 """
         )
-        println resourcePathsText
         resourcePathsFile.text = resourcePathsText
     }
 

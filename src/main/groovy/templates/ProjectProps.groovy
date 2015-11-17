@@ -30,7 +30,7 @@ class ProjectProps {
 
     void initCustomPropertiesFile() {
         file.delete()
-        file << """ext.workspaceDir="~/workspace"
+        file << """ext.workspaceDir=".."
 """
     }
 
