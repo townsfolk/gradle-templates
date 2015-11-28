@@ -1,12 +1,12 @@
 package templates.tasks
 
-import templates.TemplatesPlugin
+import templates.BlackbaudTemplatesPlugin
 
 class CreateBasicProjectTask extends AbstractTemplateTask {
 
     CreateBasicProjectTask() {
         super("Create a basic project (options: -PrepoName=?, [-Pclean])")
-        group = TemplatesPlugin.group
+        group = BlackbaudTemplatesPlugin.GROUP
     }
 
     @Override

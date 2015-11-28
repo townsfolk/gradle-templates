@@ -19,10 +19,9 @@ package templates.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
-import org.gradle.api.tasks.TaskAction
 import templates.GitRepo
 import templates.ProjectProps
-import templates.TemplatesPlugin
+import templates.BlackbaudTemplatesPlugin
 
 /**
  * Abstract base class for project tasks.
@@ -31,8 +30,8 @@ abstract class AbstractTemplateTask extends DefaultTask {
 
     protected ProjectProps projectProps
 
-    AbstractTemplateTask(final String description) {
-        this.group = TemplatesPlugin.group
+    AbstractTemplateTask(String description) {
+        this.group = BlackbaudTemplatesPlugin.GROUP
         this.description = description
         this.projectProps = new ProjectProps(project)
     }

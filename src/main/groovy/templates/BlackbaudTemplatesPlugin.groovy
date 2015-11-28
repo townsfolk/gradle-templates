@@ -26,9 +26,9 @@ import templates.tasks.CreateRestResourceTask
 /**
  * The core of the templates plugin.
  */
-class TemplatesPlugin implements Plugin<Project> {
+class BlackbaudTemplatesPlugin implements Plugin<Project> {
 
-    static final String group = 'Template'
+    static final String GROUP = 'Template'
 
     void apply(Project project) {
         ProjectProps customProps = new ProjectProps(project)

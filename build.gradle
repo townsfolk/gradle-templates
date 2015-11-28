@@ -1,12 +1,11 @@
-apply plugin: 'groovy'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
-apply plugin: 'templates'
-
-repositories {
-    mavenCentral()
+buildscript {
+    dependencies {
+        classpath "com.blackbaud:gradle-internal:2+"
+    }
 }
+
+apply plugin: "blackbaud-internal"
+apply plugin: "blackbaud-templates"
 
 dependencies {
     compile gradleApi()
