@@ -31,8 +31,6 @@ class TemplatesPlugin implements Plugin<Project> {
     static final String group = 'Template'
 
     void apply(Project project) {
-        project.convention.plugins.templatePlugin = new TemplatesPluginConvention()
-
         ProjectProps customProps = new ProjectProps(project)
         if (!customProps.isCustomPropertiesInitialized()) {
             customProps.initCustomPropertiesFile()
