@@ -1,5 +1,6 @@
 package templates.tasks
 
+import org.gradle.api.GradleException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import templates.ProjectProps
@@ -79,4 +80,17 @@ class BasicProject {
     void applyTemplate(String relativePath, Closure closure) {
         ProjectTemplate.fromRoot(new File(repoDir, relativePath), closure)
     }
+
+    File getProjectFile(String filePath) {
+        new File(repoDir, filePath)
+    }
+
+    File getProjectFileOrFail(String filePath) {
+        File file = getProjectFile(filePath)
+        if (file.exists() == false) {
+            throw new GradleException("Failed to resolve ${file.name} at expected location=${file.absolutePath}")
+        }
+        file
+    }
+
 }

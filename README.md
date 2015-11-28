@@ -30,3 +30,7 @@ Creates a skeleton SpringBoot REST project (includes build.gradle, application c
 #### createRestResource
 
 Creates a resource in an existing SpringBoot REST project (includes the Resource, ResourceSpec, ResourceWireSpec, etc)
+
+#### addPostgresContainer
+
+Adds a Postgres docker container configuration to an existing project

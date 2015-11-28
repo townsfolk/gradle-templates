@@ -59,6 +59,11 @@ abstract class AbstractTemplateTask extends DefaultTask {
         new BasicProject(projectProps, gitRepo)
     }
 
+    protected RestProject openRestProject() {
+        BasicProject basicProject = openBasicProject()
+        new RestProject(basicProject)
+    }
+
     private GitRepo openOrInitGitRepo(boolean clean) {
         File repoDir = projectProps.repoDir
         if (clean) {

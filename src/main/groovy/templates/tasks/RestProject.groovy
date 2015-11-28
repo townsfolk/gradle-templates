@@ -1,7 +1,5 @@
 package templates.tasks
 
-import org.gradle.api.GradleException
-
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN
 import static com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import static com.google.common.base.CaseFormat.UPPER_CAMEL
@@ -94,10 +92,7 @@ class RestProject {
     }
 
     private void addResourcePathConstant(String resourcePath, String resourceVarName) {
-        File resourcePathsFile = new File(basicProject.repoDir, "src/main/java/${servicePackagePath}/api/ResourcePaths.java")
-        if (resourcePathsFile.exists() == false) {
-            throw new GradleException("Failed to resolve ResurcePaths.java at expected location=${resourcePathsFile.absolutePath}")
-        }
+        File resourcePathsFile = basicProject.getProjectFileOrFail("src/main/java/${servicePackagePath}/api/ResourcePaths.java")
         String resourcePathsText = resourcePathsFile.text
         resourcePathsText = resourcePathsText.replaceAll(/(?m)\s*}\s*/, """
     public static final String ${resourceVarName} = "/${resourcePath}";

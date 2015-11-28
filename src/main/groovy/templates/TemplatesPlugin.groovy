@@ -18,6 +18,7 @@ package templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import templates.tasks.AddPostgresContainerTask
 import templates.tasks.CreateBasicProjectTask
 import templates.tasks.CreateRestProjectTask
 import templates.tasks.CreateRestResourceTask
@@ -41,6 +42,7 @@ class TemplatesPlugin implements Plugin<Project> {
         project.task 'createBasicProject', type: CreateBasicProjectTask
         project.task 'createRestProject', type: CreateRestProjectTask
         project.task 'createRestResource', type: CreateRestResourceTask
+        project.task 'addPostgresContainer', type: AddPostgresContainerTask
     }
 
 }
