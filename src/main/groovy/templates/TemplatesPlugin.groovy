@@ -34,19 +34,13 @@ class TemplatesPlugin implements Plugin<Project> {
 
         ProjectProps customProps = new ProjectProps(project)
         if (!customProps.isCustomPropertiesInitialized()) {
-            project.task 'initCustomProperties', {
-                group "Initialization"
-                description "Initialize the custom properties file, ${customProps.file.absolutePath}"
-                doLast {
-                    customProps.initCustomPropertiesFile()
-                }
-            }
-        } else {
-            customProps.applyCustomPropertiesFile()
-
-            project.task 'createBasicProject', type: CreateBasicProjectTask
-            project.task 'createRestProject', type: CreateRestProjectTask
-            project.task 'createRestResource', type: CreateRestResourceTask
+            customProps.initCustomPropertiesFile()
         }
+
+        customProps.applyCustomPropertiesFile()
+        project.task 'createBasicProject', type: CreateBasicProjectTask
+        project.task 'createRestProject', type: CreateRestProjectTask
+        project.task 'createRestResource', type: CreateRestResourceTask
     }
+
 }

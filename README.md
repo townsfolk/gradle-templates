@@ -9,11 +9,10 @@ renaming/deleting/etc.  This project exists b/c that process is error prone and 
 ## Initialization
 
 This project requires a primary workspace directory to be configred - a default root directory for all subsequent operations.
-First, you'll need to initialize gradle/custom.properties by executing
 
-```./gradlew initCustomProps```
-
-The default workspace is `..`, the directory where you checked out the gradle-templates project.
+The default workspace is `..`, the directory where you checked out the gradle-templates project.  This value is stored
+in `gradle/custom.gradle` which is initialized when the plugin is first applied.  Edit this file if you want to change 
+the workspace directory.
 
 
 ## Usage
