@@ -5,10 +5,12 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}"
         classpath "com.blackbaud:gradle-internal:2+"
+        classpath "com.blackbaud:gradle-templates:2+"
     }
 }
 
 apply plugin: "blackbaud-internal"
+apply plugin: "blackbaud-templates"
 apply plugin: "spring-boot"
 
 dependencies {
