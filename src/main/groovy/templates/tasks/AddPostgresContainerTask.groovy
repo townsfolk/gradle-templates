@@ -1,5 +1,7 @@
 package templates.tasks
 
+import org.gradle.api.tasks.TaskAction
+
 
 class AddPostgresContainerTask extends AbstractTemplateTask {
 
@@ -7,12 +9,8 @@ class AddPostgresContainerTask extends AbstractTemplateTask {
         super("Add a Postgres container and default configuration to an existing project")
     }
 
-    @Override
-    protected void renderTemplate() {
-        addPostgresContainer()
-    }
-
-    private void addPostgresContainer() {
+    @TaskAction
+    void addPostgresContainer() {
         BasicProject basicProject = openBasicProject()
 
         File buildFile = basicProject.getProjectFileOrFail("build.gradle")

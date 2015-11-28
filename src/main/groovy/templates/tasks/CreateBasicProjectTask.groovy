@@ -1,6 +1,7 @@
 package templates.tasks
 
 import templates.BlackbaudTemplatesPlugin
+import org.gradle.api.tasks.TaskAction
 
 class CreateBasicProjectTask extends AbstractTemplateTask {
 
@@ -9,8 +10,8 @@ class CreateBasicProjectTask extends AbstractTemplateTask {
         group = BlackbaudTemplatesPlugin.GROUP
     }
 
-    @Override
-    protected void renderTemplate() {
+    @TaskAction
+    void createBasicProject() {
         boolean clean = projectProps.isPropertyDefined("clean")
         BasicProject basicProject = createBasicProject(clean)
 

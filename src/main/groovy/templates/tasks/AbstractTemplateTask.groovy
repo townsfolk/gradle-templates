@@ -36,18 +36,6 @@ abstract class AbstractTemplateTask extends DefaultTask {
         this.projectProps = new ProjectProps(project)
     }
 
-    @TaskAction
-    def init() {
-        try {
-            renderTemplate()
-        } catch (Exception ex) {
-            ex.printStackTrace()
-            throw ex
-        }
-    }
-
-    protected abstract void renderTemplate()
-
     protected BasicProject createBasicProject(boolean clean) {
         GitRepo gitRepo = openOrInitGitRepo(clean)
         new BasicProject(projectProps, gitRepo)

@@ -1,16 +1,17 @@
 package templates.tasks
 
+import org.gradle.api.tasks.TaskAction
+
 class CreateRestResourceTask extends AbstractTemplateTask {
 
     CreateRestResourceTask() {
         super("Create a SpringBoot REST resource (options: -PresourceName=?)")
     }
 
-    @Override
-    protected void renderTemplate() {
+    @TaskAction
+    void createRestResource() {
         String resourceName = getResourceName()
         RestProject restProject = openRestProject()
-
         restProject.createRestResource(resourceName)
     }
 
