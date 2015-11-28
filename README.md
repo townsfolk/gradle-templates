@@ -17,7 +17,15 @@ the workspace directory.
 
 ## Usage
 
+There are two intended uses for this project - as a creator of new projects and augmentor of existing projects.
+
 Run the `./gradlew tasks` command and look at the group `Template tasks` to see a list of the available tasks.
+
+
+### Project Creation Tasks
+
+The project creation tasks are only available when run from this project.  All tasks require the project property
+`repoName` to be specified in order to identify the target directory.  
 
 #### createBasicProject
 
@@ -26,6 +34,25 @@ Creates a basic gradle project with a simple build.gradle file.
 #### createRestProject
 
 Creates a skeleton SpringBoot REST project (includes build.gradle, application class, and supporting classes)
+
+
+### Project Augmentation Tasks
+
+The project augmentation tasks are available when run from this project but also when the `blackbaud-templates` plugin
+is applied to another project like so...  
+
+```
+buildscript {
+    dependencies {
+        classpath "com.blackbaud:gradle-templates:2+"
+    }
+}
+
+apply plugin: "blackbaud-templates"
+```
+
+In this case, the target directory will be the project which applies the plugin and the project property `repoName` 
+will be ignored.
 
 #### createRestResource
 
