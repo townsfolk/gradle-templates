@@ -4,7 +4,7 @@ package templates.tasks
 class AddPostgresContainerTask extends AbstractTemplateTask {
 
     AddPostgresContainerTask() {
-        super("Add a Postgres container and default configuration to an existing project (options: -PrepoName=?)")
+        super("Add a Postgres container and default configuration to an existing project")
     }
 
     @Override

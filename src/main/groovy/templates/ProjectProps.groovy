@@ -6,31 +6,28 @@ import org.gradle.api.Project
 class ProjectProps {
 
     private Project project
-    private File file
 
     ProjectProps(Project project) {
         this.project = project
-        file = project.file("gradle/custom.gradle")
     }
 
-    File getFile() {
-        file
+    boolean isThisProjectGradleTemplates() {
+        project.hasProperty("artifactId") && project.ext.artifactId == "gradle-templates"
     }
-
-    boolean isCustomPropertiesInitialized() {
-        file.exists()
-    }
-
 
     void applyCustomPropertiesFile() {
-        if (isCustomPropertiesInitialized()) {
-            project.apply from: file
+        if (customPropertiesFile.exists() == false) {
+            initCustomPropertiesFile()
         }
+        project.apply from: customPropertiesFile
     }
 
-    void initCustomPropertiesFile() {
-        file.delete()
-        file << """ext.workspaceDir=".."
+    private File getCustomPropertiesFile() {
+        project.file("gradle/custom.gradle")
+    }
+
+    private void initCustomPropertiesFile() {
+        customPropertiesFile << """ext.workspaceDir=".."
 """
     }
 
@@ -39,13 +36,16 @@ class ProjectProps {
         new File(workspaceDir)
     }
 
-    String getRepoName() {
-        getRequiredProjectProperty("repoName")
+    /**
+     * If this is the gradle-templates project, the target repo directory is determined via a required project
+     * property 'repoName'.  Otherwise, returns the current project directory.
+     */
+    File getRepoDir() {
+        isThisProjectGradleTemplates() ? new File(getWorkspaceDir(), getRepoName()) : project.projectDir
     }
 
-    File getRepoDir() {
-        String repoName = getRepoName()
-        new File(getWorkspaceDir(), repoName)
+    private String getRepoName() {
+        getRequiredProjectProperty("repoName")
     }
 
     boolean isPropertyDefined(String name) {

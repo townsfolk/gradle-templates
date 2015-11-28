@@ -3,7 +3,7 @@ package templates.tasks
 class CreateRestResourceTask extends AbstractTemplateTask {
 
     CreateRestResourceTask() {
-        super("Create a SpringBoot REST resource (options: -PrepoName=?, -PresourceName=?)")
+        super("Create a SpringBoot REST resource (options: -PresourceName=?)")
     }
 
     @Override

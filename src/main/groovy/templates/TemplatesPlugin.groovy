@@ -32,13 +32,14 @@ class TemplatesPlugin implements Plugin<Project> {
 
     void apply(Project project) {
         ProjectProps customProps = new ProjectProps(project)
-        if (!customProps.isCustomPropertiesInitialized()) {
-            customProps.initCustomPropertiesFile()
+
+        if (customProps.isThisProjectGradleTemplates()) {
+            customProps.applyCustomPropertiesFile()
+
+            project.task 'createBasicProject', type: CreateBasicProjectTask
+            project.task 'createRestProject', type: CreateRestProjectTask
         }
 
-        customProps.applyCustomPropertiesFile()
-        project.task 'createBasicProject', type: CreateBasicProjectTask
-        project.task 'createRestProject', type: CreateRestProjectTask
         project.task 'createRestResource', type: CreateRestResourceTask
         project.task 'addPostgresContainer', type: AddPostgresContainerTask
     }
