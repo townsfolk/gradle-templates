@@ -49,6 +49,8 @@ class RestProject {
 
         basicProject.applyTemplate {
             'build.gradle' template: "/templates/springboot/build.gradle.tmpl"
+            'gradle.properties' template: "/templates/springboot/gradle.properties.tmpl",
+                    artifactId: basicProject.repoName
             'src' {
                 'main' {
                     'resources' {
@@ -64,6 +66,21 @@ class RestProject {
 
                         'db' {
                             "test_cleanup.sql" content: ""
+                        }
+                    }
+                }
+            }
+        }
+
+        basicProject.applyTemplate {
+            'settings.gradle' content: "include 'client'"
+            'client' {
+                'build.gradle' template: "/templates/springboot/rest/client/build.gradle.tmpl"
+                'src' {
+                    'main' {
+                        'resources' {
+                            'swagger-gen-config.json' template: "/templates/springboot/rest/client/swagger-gen-config.json.tmpl",
+                                    packageName: servicePackage, artifactId: basicProject.repoName
                         }
                     }
                 }

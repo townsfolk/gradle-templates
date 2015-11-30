@@ -1,0 +1,17 @@
+apply plugin: "blackbaud-internal-rest"
+
+ext {
+    artifactId="\${project.parent.ext.artifactId}-client"
+}
+
+swagger {
+    generateClient
+}
+
+cpdMain {
+    exclude "*"
+}
+
+pmdMain {
+    exclude "*"
+}
