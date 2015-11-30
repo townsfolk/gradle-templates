@@ -9,7 +9,7 @@ buildscript {
     }
 }
 
-apply plugin: "blackbaud-internal"
+apply plugin: "blackbaud-internal-rest"
 apply plugin: "blackbaud-templates"
 apply plugin: "spring-boot"
 
@@ -34,3 +34,6 @@ dependencies {
     componentTestCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
 }
 
+swagger {
+    generateDocs
+}

@@ -31,6 +31,8 @@ docker {
         env "POSTGRES_PASSWORD=postgres"
     }
 }
+
+componentTest.dependsOn startPostgres
 """)
 
         File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")

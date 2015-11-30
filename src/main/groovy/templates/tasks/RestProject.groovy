@@ -29,32 +29,32 @@ class RestProject {
                     serviceName: serviceName, servicePackage: servicePackage
 
             'api' {
-                'ResourcePaths.java' template: "/templates/springboot/resource-paths.java.tmpl",
+                'ResourcePaths.java' template: "/templates/springboot/rest/resource-paths.java.tmpl",
                         packageName: "${servicePackage}.api"
             }
         }
 
         basicProject.applyTemplate("src/componentTest/java/${servicePackagePath}") {
-            "ComponentTest.java" template: "/templates/springboot/component-test-annotation.java.tmpl",
+            "ComponentTest.java" template: "/templates/springboot/rest/component-test-annotation.java.tmpl",
                     serviceName: serviceName, packageName: servicePackage
 
-            "${serviceName}TestConfig.java" template: "/templates/springboot/application-test-config.java.tmpl",
+            "${serviceName}TestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
                     className: "${serviceName}TestConfig", packageName: servicePackage
         }
 
         basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}") {
-            "ARandom.java" template: "/templates/springboot/arandom.java.tmpl",
+            "ARandom.java" template: "/templates/test/arandom.java.tmpl",
                     packageName: servicePackage
         }
 
         basicProject.applyTemplate {
-            'build.gradle' template: "/templates/springboot/build.gradle.tmpl"
-            'gradle.properties' template: "/templates/springboot/gradle.properties.tmpl",
+            'build.gradle' template: "/templates/springboot/rest/build.gradle.tmpl"
+            'gradle.properties' template: "/templates/basic/gradle.properties.tmpl",
                     artifactId: basicProject.repoName
             'src' {
                 'main' {
                     'resources' {
-                        'application.properties' template: "/templates/springboot/application.properties.tmpl"
+                        'application.properties' template: "/templates/springboot/rest/application.properties.tmpl"
                     }
                 }
                 'test' {
@@ -94,16 +94,16 @@ class RestProject {
         String resourcePath = "${UPPER_CAMEL.to(LOWER_UNDERSCORE, resourceName)}"
         String resourceVarName = "${resourcePath.toUpperCase()}_PATH"
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/resources") {
-            "${resourceName}Resource.java" template: "/templates/springboot/rest-resource.java.tmpl",
+            "${resourceName}Resource.java" template: "/templates/springboot/rest/resource.java.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
         }
         addResourcePathConstant(resourcePath, resourceVarName)
 
         basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}/resources") {
-            "${resourceName}ResourceSpec.groovy" template: "/templates/springboot/rest-resource-spec.groovy.tmpl",
+            "${resourceName}ResourceSpec.groovy" template: "/templates/springboot/rest/resource-spec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
 
-            "${resourceName}ResourceWireSpec.groovy" template: "/templates/springboot/rest-resource-wirespec.groovy.tmpl",
+            "${resourceName}ResourceWireSpec.groovy" template: "/templates/springboot/rest/resource-wirespec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
     }
