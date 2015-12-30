@@ -12,16 +12,27 @@ class BasicProject {
     @Delegate
     private GitRepo gitRepo
     private ProjectProps projectProps
+    private File targetDir
     String repoName
 
     BasicProject(ProjectProps projectProps, GitRepo gitRepo) {
         this.projectProps = projectProps
         this.gitRepo = gitRepo
-        repoName = gitRepo.repoDir.name
+        this.repoName = gitRepo.repoDir.name
+        this.targetDir = gitRepo.repoDir
+        this.targetDir = projectProps.module ? new File(gitRepo.repoDir, projectProps.module) : gitRepo.repoDir
     }
 
     File getRepoDir() {
         gitRepo.repoDir
+    }
+
+    File getTargetDir() {
+        targetDir
+    }
+
+    String getModule() {
+        return projectProps.module
     }
 
     boolean isPropertyDefined(String name) {
@@ -74,15 +85,15 @@ class BasicProject {
     }
 
     void applyTemplate(Closure closure) {
-        ProjectTemplate.fromRoot(repoDir, closure)
+        ProjectTemplate.fromRoot(targetDir, closure)
     }
 
     void applyTemplate(String relativePath, Closure closure) {
-        ProjectTemplate.fromRoot(new File(repoDir, relativePath), closure)
+        ProjectTemplate.fromRoot(new File(targetDir, relativePath), closure)
     }
 
     File getProjectFile(String filePath) {
-        new File(repoDir, filePath)
+        new File(targetDir, filePath)
     }
 
     File getProjectFileOrFail(String filePath) {

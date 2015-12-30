@@ -13,7 +13,7 @@ class RestProject {
 
     RestProject(BasicProject basicProject) {
         this.basicProject = basicProject
-        serviceName = LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.repoName)
+        serviceName = LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.module ?: basicProject.repoName)
         servicePackage = "com.blackbaud.${serviceName.toLowerCase()}"
         servicePackagePath = servicePackage.replaceAll("\\.", "/")
     }
@@ -109,7 +109,14 @@ class RestProject {
     }
 
     private void addResourcePathConstant(String resourcePath, String resourceVarName) {
-        File resourcePathsFile = basicProject.getProjectFileOrFail("src/main/java/${servicePackagePath}/api/ResourcePaths.java")
+        File resourcePathsFile = basicProject.getProjectFile("src/main/java/${servicePackagePath}/api/ResourcePaths.java")
+        if (resourcePathsFile.exists() == false) {
+            basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
+                'ResourcePaths.java' template: "/templates/springboot/rest/resource-paths.java.tmpl",
+                                     packageName: "${servicePackage}.api"
+            }
+        }
+
         String resourcePathsText = resourcePathsFile.text
         resourcePathsText = resourcePathsText.replaceAll(/(?m)\s*}\s*/, """
     public static final String ${resourceVarName} = "/${resourcePath}";
