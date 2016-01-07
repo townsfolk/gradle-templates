@@ -35,6 +35,10 @@ Creates a basic gradle project with a simple build.gradle file.
 
 Creates a skeleton SpringBoot REST project (includes build.gradle, application class, and supporting classes)
 
+You WILL get an error when running `./gradlew bootRun`:
+* After creating your project, update application.properties `server.port` and `management.port` values following
+the convention described in the [Blackbaud Wiki](https://wiki.blackbaud.com/display/LUM/Microservice+Port+Mapping+Registry)
+
 
 ### Project Augmentation Tasks
 
