@@ -17,7 +17,7 @@ class AddPostgresContainerTask extends AbstractTemplateTask {
         buildFile.append("""
 buildscript {
     dependencies {
-        classpath "com.blackbaud:gradle-docker:1.2+"
+        classpath "com.blackbaud:gradle-docker:1.+"
     }
 }
 

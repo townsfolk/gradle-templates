@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath "com.blackbaud:gradle-internal:3+"
+        classpath "com.blackbaud:gradle-internal:3.+"
     }
 }
 
