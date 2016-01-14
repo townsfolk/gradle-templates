@@ -32,7 +32,7 @@ docker {
     }
 }
 
-componentTest.dependsOn startPostgres
+componentTest.dependsOn System.getenv("BUILD_NUMBER") ? refreshPostgres : startPostgres
 """)
 
         File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")
