@@ -1,5 +1,6 @@
 package templates.tasks
 
+import static com.google.common.base.CaseFormat.LOWER_CAMEL
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN
 import static com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import static com.google.common.base.CaseFormat.UPPER_CAMEL
@@ -46,6 +47,10 @@ class RestProject {
 
         basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}") {
             "ARandom.java" template: "/templates/test/arandom.java.tmpl",
+                    packageName: servicePackage
+            "RandomBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
+                    packageName: servicePackage
+            "RandomClientBuilderSupport.java" template: "/templates/test/random-client-builder-support.java.tmpl",
                     packageName: servicePackage
         }
 
@@ -140,25 +145,45 @@ class RestProject {
             "${resourceName}ResourceWireSpec.groovy" template: "/templates/springboot/rest/resource-wirespec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
+
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core/domain") {
+            "Random${resourceName}EntityBuilder.groovy" template: "/templates/test/random-builder.groovy.tmpl",
+                    packageName: "${servicePackage}.core.domain", resourceName: "${resourceName}Entity"
+        }
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/client/model") {
+            "Random${resourceName}Builder.groovy" template: "/templates/test/random-builder.groovy.tmpl",
+                    packageName: "${servicePackage}.client.model", resourceName: resourceName
+        }
+
+        String resourceNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, resourceName)
+        appendToClass(basicProject.findFile("RandomBuilderSupport.java"), """
+
+    public Random${resourceName}EntityBuilder ${resourceNameLowerCamel}Entity() {
+        return new Random${resourceName}EntityBuilder();
+    }
+""")
+        appendToClass(basicProject.findFile("RandomClientBuilderSupport.java"), """
+
+    public Random${resourceName}Builder ${resourceNameLowerCamel}() {
+        return new Random${resourceName}Builder();
+    }
+""")
     }
 
     private void addResourcePathConstant(String resourcePath, String resourceVarName) {
         File resourcePathsFile = basicProject.getProjectFile("src/main/java/${servicePackagePath}/api/ResourcePaths.java")
         if (resourcePathsFile.exists() == false) {
-            basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
-                'ResourcePaths.java' template: "/templates/springboot/rest/resource-paths.java.tmpl",
-                                     packageName: "${servicePackage}.api"
-            }
+            addResourcePaths()
         }
 
-        String resourcePathsText = resourcePathsFile.text
-        resourcePathsText = resourcePathsText.replaceAll(/(?m)\s*}\s*/, """
+        appendToClass(resourcePathsFile, """
     public static final String ${resourceVarName} = "/${resourcePath}";
+""")
+    }
 
-}
-"""
-        )
-        resourcePathsFile.text = resourcePathsText
+    private void appendToClass(File classFile, String textToAppend) {
+        classFile.text = classFile.text.replaceFirst(/(?ms)\s*}\s*(?!.*?\s*}\s*)/, """${textToAppend}
+}""")
     }
 
 }

@@ -8,6 +8,16 @@ public class ARandom {
     public static final ARandom aRandom = new ARandom();
 
     @Delegate
-    private RandomGenerator randomGenerator = new RandomGenerator();
+    private RandomClientBuilderSupport randomClientBuilderSupport;
+    @Delegate
+    private RandomBuilderSupport randomBuilderSupport;
+    @Delegate
+    private RandomGenerator randomGenerator;
+
+    public ARandom() {
+        randomClientBuilderSupport = new RandomClientBuilderSupport();
+        randomBuilderSupport = new RandomBuilderSupport();
+        randomGenerator = new RandomGenerator();
+    }
 
 }

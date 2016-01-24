@@ -3,8 +3,8 @@ package templates.tasks
 import org.gradle.api.GradleException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
-import templates.ProjectProps
 import templates.GitRepo
+import templates.ProjectProps
 import templates.ProjectTemplate
 
 class BasicProject {
@@ -97,6 +97,19 @@ class BasicProject {
             throw new GradleException("Failed to resolve ${file.name} at expected location=${file.absolutePath}")
         }
         file
+    }
+
+    File findFile(String fileName) {
+        File matchingFile = null
+        targetDir.eachFileRecurse { File file ->
+            if (file.name == fileName) {
+                matchingFile = file
+            }
+        }
+        if (matchingFile == null) {
+            throw new RuntimeException("Failed to find file with name=${fileName} from baseDir=${targetDir.absolutePath}")
+        }
+        matchingFile
     }
 
 }
