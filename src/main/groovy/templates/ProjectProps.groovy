@@ -44,15 +44,6 @@ class ProjectProps {
         isThisProjectGradleTemplates() ? new File(getWorkspaceDir(), getRepoName()) : project.projectDir
     }
 
-    String getModule() {
-        try {
-            project.ext["module"]
-        } catch (Exception ex) {
-            // apparently, 'module' is defined in project.properties
-            null
-        }
-    }
-
     private String getRepoName() {
         getRequiredProjectProperty("repoName")
     }

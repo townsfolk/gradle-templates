@@ -12,7 +12,7 @@ class CreateRestProjectTask extends AbstractTemplateTask {
     void createRestProject() {
         boolean clean = projectProps.isPropertyDefined("clean")
         BasicProject basicProject = createBasicProject(clean)
-        RestProject restProject = new RestProject(basicProject)
+        RestProject restProject = new RestProject(basicProject, basicProject.repoName)
         restProject.initRestProject()
     }
 

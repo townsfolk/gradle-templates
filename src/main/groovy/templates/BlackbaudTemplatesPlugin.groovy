@@ -20,6 +20,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import templates.tasks.AddPostgresContainerTask
 import templates.tasks.CreateBasicProjectTask
+import templates.tasks.CreateEmbeddedServiceTask
 import templates.tasks.CreateRestProjectTask
 import templates.tasks.CreateRestResourceTask
 
@@ -41,6 +42,7 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
         }
 
         project.task 'createRestResource', type: CreateRestResourceTask
+        project.task 'createRestEmbeddedService', type: CreateEmbeddedServiceTask
         project.task 'addPostgresContainer', type: AddPostgresContainerTask
     }
 

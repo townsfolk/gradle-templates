@@ -20,7 +20,6 @@ class BasicProject {
         this.gitRepo = gitRepo
         this.repoName = gitRepo.repoDir.name
         this.targetDir = gitRepo.repoDir
-        this.targetDir = projectProps.module ? new File(gitRepo.repoDir, projectProps.module) : gitRepo.repoDir
     }
 
     File getRepoDir() {
@@ -29,10 +28,6 @@ class BasicProject {
 
     File getTargetDir() {
         targetDir
-    }
-
-    String getModule() {
-        return projectProps.module
     }
 
     boolean isPropertyDefined(String name) {

@@ -5,7 +5,7 @@ import org.gradle.api.tasks.TaskAction
 class CreateRestResourceTask extends AbstractTemplateTask {
 
     CreateRestResourceTask() {
-        super("Create a SpringBoot REST resource (options: -PresourceName=? [-Pmodule=?])")
+        super("Create a SpringBoot REST resource (options: -PresourceName=?)")
     }
 
     @TaskAction

@@ -8,14 +8,20 @@ class RestProject {
 
     private BasicProject basicProject
     private String serviceName
+    private String serviceId
     private String servicePackage
     private String servicePackagePath
 
     RestProject(BasicProject basicProject) {
+        this(basicProject, LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.repoName))
+    }
+
+    RestProject(BasicProject basicProject, String serviceName) {
         this.basicProject = basicProject
-        serviceName = LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.module ?: basicProject.repoName)
-        servicePackage = "com.blackbaud.${serviceName.toLowerCase()}"
-        servicePackagePath = servicePackage.replaceAll("\\.", "/")
+        this.serviceName = serviceName
+        this.serviceId = "${UPPER_CAMEL.to(LOWER_HYPHEN, serviceName)}"
+        this.servicePackage = "com.blackbaud.${serviceName.toLowerCase()}"
+        this.servicePackagePath = servicePackage.replaceAll("\\.", "/")
     }
 
     void initRestProject() {
@@ -24,14 +30,10 @@ class RestProject {
     }
 
     private void createRestBase() {
+        addResourcePaths()
         basicProject.applyTemplate("src/main/java/${servicePackagePath}") {
             "${serviceName}.java" template: "/templates/springboot/application-class.java.tmpl",
                     serviceName: serviceName, servicePackage: servicePackage
-
-            'api' {
-                'ResourcePaths.java' template: "/templates/springboot/rest/resource-paths.java.tmpl",
-                        packageName: "${servicePackage}.api"
-            }
         }
 
         basicProject.applyTemplate("src/componentTest/java/${servicePackagePath}") {
@@ -50,7 +52,7 @@ class RestProject {
         basicProject.applyTemplate {
             'build.gradle' template: "/templates/springboot/rest/build.gradle.tmpl"
             'gradle.properties' template: "/templates/basic/gradle.properties.tmpl",
-                    artifactId: basicProject.repoName
+                    artifactId: serviceId
             'src' {
                 'main' {
                     'resources' {
@@ -88,6 +90,38 @@ class RestProject {
         }
 
         basicProject.commitProjectFiles("springboot rest bootstrap")
+    }
+
+    private void addResourcePaths() {
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
+            'ResourcePaths.java' template: "/templates/springboot/rest/resource-paths.java.tmpl",
+                    packageName: "${servicePackage}.api"
+        }
+    }
+
+    void createEmbeddedService() {
+        addResourcePaths()
+        createRestResource(serviceName)
+
+        String moduleName = "client-${serviceId}"
+        basicProject.getProjectFile("settings.gradle").withWriterAppend { BufferedWriter writer ->
+            writer.newLine()
+            writer.write("include '${moduleName}'")
+        }
+        basicProject.applyTemplate {
+            "${moduleName}" {
+                'build.gradle' template: "/templates/springboot/rest/client/embedded-build.gradle.tmpl",
+                        embeddedService: serviceName.toLowerCase()
+                'src' {
+                    'main' {
+                        'resources' {
+                            'swagger-gen-config.json' template: "/templates/springboot/rest/client/swagger-gen-config.json.tmpl",
+                                    packageName: servicePackage, artifactId: "${serviceId}-client"
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void createRestResource(String resourceName) {
