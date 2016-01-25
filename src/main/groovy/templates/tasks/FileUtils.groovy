@@ -3,7 +3,7 @@ package templates.tasks
 
 class FileUtils {
 
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator")
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator")
 
     static void appendToClass(File classFile, String textToAppend) {
         classFile.text = classFile.text.replaceFirst(/(?ms)\s*}\s*(?!.*?\s*}\s*)/, """${textToAppend}
