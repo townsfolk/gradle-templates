@@ -132,11 +132,21 @@ class RestProject {
     void createRestResource(String resourceName) {
         String resourcePath = "${UPPER_CAMEL.to(LOWER_UNDERSCORE, resourceName)}"
         String resourceVarName = "${resourcePath.toUpperCase()}_PATH"
+
+        addResourcePathConstant(resourcePath, resourceVarName)
+
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/resources") {
             "${resourceName}Resource.java" template: "/templates/springboot/rest/resource.java.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
         }
-        addResourcePathConstant(resourcePath, resourceVarName)
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
+            "${resourceName}.java" template: "/templates/springboot/rest/resource-api.java.tmpl",
+                    resourceName: resourceName, packageName: "${servicePackage}.api"
+        }
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
+            "${resourceName}.java" template: "/templates/springboot/rest/resource-entity.java.tmpl",
+                    resourceName: resourceName, packageName: "${servicePackage}.core.domain", tableName: resourcePath
+        }
 
         basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}/resources") {
             "${resourceName}ResourceSpec.groovy" template: "/templates/springboot/rest/resource-spec.groovy.tmpl",
