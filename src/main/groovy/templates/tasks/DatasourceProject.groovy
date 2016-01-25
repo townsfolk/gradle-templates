@@ -40,6 +40,7 @@ spring.datasource.password=postgres
     }
 
     private createLiquibaseChangeLog() {
+        getLiquibaseChangeLog().parentFile.mkdirs()
         getLiquibaseChangeLog().text = """databaseChangeLog:
 """
     }
