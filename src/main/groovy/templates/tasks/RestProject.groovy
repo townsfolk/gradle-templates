@@ -19,15 +19,20 @@ class RestProject {
 
     RestProject(BasicProject basicProject, String serviceName) {
         this.basicProject = basicProject
-        this.serviceName = serviceName
+        this.serviceName = serviceName.capitalize()
         this.serviceId = "${UPPER_CAMEL.to(LOWER_HYPHEN, serviceName)}"
         this.servicePackage = "com.blackbaud.${serviceName.toLowerCase()}"
         this.servicePackagePath = servicePackage.replaceAll("\\.", "/")
     }
 
-    void initRestProject() {
+    void initRestProject(boolean postgres) {
         basicProject.initGradleProject()
         createRestBase()
+        if (postgres) {
+            DatasourceProject datasourceProject = new DatasourceProject(basicProject)
+            datasourceProject.initPostgres()
+            basicProject.commitProjectFiles("initialize postgres container")
+        }
     }
 
     private void createRestBase() {
@@ -93,7 +98,6 @@ class RestProject {
                 }
             }
         }
-
         basicProject.commitProjectFiles("springboot rest bootstrap")
     }
 
@@ -104,9 +108,9 @@ class RestProject {
         }
     }
 
-    void createEmbeddedService() {
+    void createEmbeddedService(boolean addEntity) {
         addResourcePaths()
-        createRestResource(serviceName)
+        createRestResource(serviceName, addEntity)
 
         String moduleName = "client-${serviceId}"
         basicProject.getProjectFile("settings.gradle").withWriterAppend { BufferedWriter writer ->
@@ -129,25 +133,16 @@ class RestProject {
         }
     }
 
-    void createRestResource(String resourceName) {
+    void createRestResource(String resourceName, boolean addEntity) {
         String resourcePath = "${UPPER_CAMEL.to(LOWER_UNDERSCORE, resourceName)}"
         String resourceVarName = "${resourcePath.toUpperCase()}_PATH"
+        String resourceNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, resourceName)
 
         addResourcePathConstant(resourcePath, resourceVarName)
-
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/resources") {
             "${resourceName}Resource.java" template: "/templates/springboot/rest/resource.java.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
         }
-        basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
-            "${resourceName}.java" template: "/templates/springboot/rest/resource-api.java.tmpl",
-                    resourceName: resourceName, packageName: "${servicePackage}.api"
-        }
-        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
-            "${resourceName}.java" template: "/templates/springboot/rest/resource-entity.java.tmpl",
-                    resourceName: resourceName, packageName: "${servicePackage}.core.domain", tableName: resourcePath
-        }
-
         basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}/resources") {
             "${resourceName}ResourceSpec.groovy" template: "/templates/springboot/rest/resource-spec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
@@ -156,28 +151,42 @@ class RestProject {
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
 
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core/domain") {
-            "Random${resourceName}EntityBuilder.groovy" template: "/templates/test/random-builder.groovy.tmpl",
-                    packageName: "${servicePackage}.core.domain", resourceName: "${resourceName}Entity"
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
+            "${resourceName}.java" template: "/templates/springboot/rest/resource-api.java.tmpl",
+                    resourceName: resourceName, packageName: "${servicePackage}.api"
         }
         basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/client/model") {
             "Random${resourceName}Builder.groovy" template: "/templates/test/random-builder.groovy.tmpl",
-                    packageName: "${servicePackage}.client.model", resourceName: resourceName
+                    targetClass: resourceName, packageName: "${servicePackage}.client.model"
         }
-
-        String resourceNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, resourceName)
-        appendToClass(basicProject.findFile("RandomBuilderSupport.java"), """
-
-    public Random${resourceName}EntityBuilder ${resourceNameLowerCamel}Entity() {
-        return new Random${resourceName}EntityBuilder();
-    }
-""")
-        appendToClass(basicProject.findFile("RandomClientBuilderSupport.java"), """
+        FileUtils.appendToClass(basicProject.findFile("RandomClientBuilderSupport.java"), """
 
     public Random${resourceName}Builder ${resourceNameLowerCamel}() {
         return new Random${resourceName}Builder();
     }
 """)
+
+        if (addEntity) {
+            basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
+                "${resourceName}Entity.java" template: "/templates/springboot/rest/resource-entity.java.tmpl",
+                        resourceName: resourceName, packageName: "${servicePackage}.core.domain", tableName: resourcePath
+            }
+
+            basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core/domain") {
+                "Random${resourceName}EntityBuilder.groovy" template: "/templates/test/random-builder.groovy.tmpl",
+                        targetClass: "${resourceName}Entity", packageName: "${servicePackage}.core.domain"
+            }
+
+            FileUtils.appendToClass(basicProject.findFile("RandomBuilderSupport.java"), """
+
+    public Random${resourceName}EntityBuilder ${resourceNameLowerCamel}Entity() {
+        return new Random${resourceName}EntityBuilder();
+    }
+""")
+
+            DatasourceProject datasourceProject = new DatasourceProject(basicProject)
+            datasourceProject.addCreateTableScript(resourcePath)
+        }
     }
 
     private void addResourcePathConstant(String resourcePath, String resourceVarName) {
@@ -186,14 +195,9 @@ class RestProject {
             addResourcePaths()
         }
 
-        appendToClass(resourcePathsFile, """
+        FileUtils.appendToClass(resourcePathsFile, """
     public static final String ${resourceVarName} = "/${resourcePath}";
 """)
-    }
-
-    private void appendToClass(File classFile, String textToAppend) {
-        classFile.text = classFile.text.replaceFirst(/(?ms)\s*}\s*(?!.*?\s*}\s*)/, """${textToAppend}
-}""")
     }
 
 }

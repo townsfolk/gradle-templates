@@ -5,14 +5,15 @@ import org.gradle.api.tasks.TaskAction
 class CreateRestResourceTask extends AbstractTemplateTask {
 
     CreateRestResourceTask() {
-        super("Create a SpringBoot REST resource (options: -PresourceName=?)")
+        super("Create a SpringBoot REST resource (options: -PresourceName=?, [-PsuppressEntity])")
     }
 
     @TaskAction
     void createRestResource() {
+        boolean addEntity = projectProps.isPropertyDefined("suppressEntity") == false
         String resourceName = getResourceName()
         RestProject restProject = openRestProject()
-        restProject.createRestResource(resourceName)
+        restProject.createRestResource(resourceName, addEntity)
     }
 
     private String getResourceName() {
