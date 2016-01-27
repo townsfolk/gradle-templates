@@ -166,6 +166,11 @@ class RestProject {
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
 
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/config") {
+            "JerseyConfig.java" template: "/templates/springboot/rest/jersey-config.java.tmpl",
+                                servicePackage: "${servicePackage}"
+        }
+
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
             "${resourceName}.java" template: "/templates/springboot/rest/resource-api.java.tmpl",
                     resourceName: resourceName, packageName: "${servicePackage}.api"
