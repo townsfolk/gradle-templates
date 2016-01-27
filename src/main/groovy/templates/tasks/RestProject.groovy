@@ -42,6 +42,11 @@ class RestProject {
                     serviceName: serviceName, servicePackage: servicePackage
         }
 
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/config") {
+            "JerseyConfig.java" template: "/templates/springboot/rest/jersey-config.java.tmpl",
+                                servicePackage: "${servicePackage}"
+        }
+
         basicProject.applyTemplate("src/componentTest/java/${servicePackagePath}") {
             "ComponentTest.java" template: "/templates/springboot/rest/component-test-annotation.java.tmpl",
                     serviceName: serviceName, packageName: servicePackage
@@ -164,11 +169,6 @@ class RestProject {
 
             "${resourceName}ResourceWireSpec.groovy" template: "/templates/springboot/rest/resource-wirespec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
-        }
-
-        basicProject.applyTemplate("src/main/java/${servicePackagePath}/config") {
-            "JerseyConfig.java" template: "/templates/springboot/rest/jersey-config.java.tmpl",
-                                servicePackage: "${servicePackage}"
         }
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
