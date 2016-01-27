@@ -50,13 +50,17 @@ class RestProject {
                     className: "${serviceName}TestConfig", packageName: servicePackage
         }
 
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}") {
-            "ARandom.java" template: "/templates/test/arandom.java.tmpl",
-                    packageName: servicePackage
-            "RandomBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
-                    packageName: servicePackage
-            "RandomClientBuilderSupport.java" template: "/templates/test/random-client-builder-support.java.tmpl",
-                    packageName: servicePackage
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/client") {
+            "ClientARandom.java" template: "/templates/test/client-arandom.java.tmpl",
+                    packageName: "${servicePackage}.client"
+            "RandomClientBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
+                    packageName: "${servicePackage}.client", qualifier: "Client"
+        }
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core") {
+            "CoreARandom.java" template: "/templates/test/core-arandom.java.tmpl",
+                    packageName: "${servicePackage}.core"
+            "RandomCoreBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
+                    packageName: "${servicePackage}.core", qualifier: "Core"
         }
 
         basicProject.applyTemplate {
@@ -194,9 +198,9 @@ class RestProject {
                         targetClass: "${resourceName}Entity", packageName: "${servicePackage}.core.domain"
             }
 
-            File randomBuilderSupport = basicProject.findFile("RandomBuilderSupport.java")
-            FileUtils.appendAfterLine(randomBuilderSupport, "import", "import ${servicePackage}.core.domain.Random${serviceName}EntityBuilder;")
-            FileUtils.appendToClass(randomBuilderSupport, """
+            File randomCoreeBuilderSupport = basicProject.findFile("RandomCoreBuilderSupport.java")
+            FileUtils.appendAfterLine(randomCoreeBuilderSupport, "import", "import ${servicePackage}.core.domain.Random${serviceName}EntityBuilder;")
+            FileUtils.appendToClass(randomCoreeBuilderSupport, """
 
     public Random${resourceName}EntityBuilder ${resourceNameLowerCamel}Entity() {
         return new Random${resourceName}EntityBuilder();
