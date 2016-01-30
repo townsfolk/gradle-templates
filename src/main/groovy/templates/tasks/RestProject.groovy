@@ -195,6 +195,8 @@ class RestProject {
     }
 """)
 
+        FileUtils.appendAfterLine(basicProject.findFile("JerseyConfig.java"), /packages\s*(/, "        packages(\${servicePackage}.resources\");")
+
         if (addEntity) {
             basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
                 "${resourceName}Entity.java" template: "/templates/springboot/rest/resource-entity.java.tmpl",
