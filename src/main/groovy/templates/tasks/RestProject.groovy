@@ -31,6 +31,9 @@ class RestProject {
         if (postgres) {
             DatasourceProject datasourceProject = new DatasourceProject(basicProject)
             datasourceProject.initPostgres()
+            FileUtils.appendAfterLine(basicProject.getProjectFile("build.gradle"), /compile.*common-spring-boot/,
+                    "    compile \"com.blackbaud:common-spring-boot-persistence:\${springBootVersion}-2.+\"")
+
             basicProject.commitProjectFiles("initialize postgres container")
         }
     }
