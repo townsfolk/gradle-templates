@@ -66,7 +66,7 @@ class RestProject {
         }
         basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core") {
             "CoreARandom.java" template: "/templates/test/core-arandom.java.tmpl",
-                    packageName: "${servicePackage}.core"
+                    servicePackageName: servicePackage
             "RandomCoreBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
                     packageName: "${servicePackage}.core", qualifier: "Core"
         }
