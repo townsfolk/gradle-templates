@@ -35,7 +35,7 @@ class RestProject {
                     """\
     compile "com.blackbaud:common-spring-boot-persistence:\${springBootVersion}-2.+"
     compile "postgresql:postgresql:9.0-801.jdbc4"
-    compile "org.liquibase:liquibase-core:3.3.2""""
+    compile "org.liquibase:liquibase-core:3.3.2\""""
             )
 
             basicProject.commitProjectFiles("initialize postgres container")
