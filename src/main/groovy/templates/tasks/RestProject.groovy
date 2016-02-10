@@ -195,7 +195,7 @@ class RestProject {
     }
 """)
 
-        FileUtils.appendAfterLine(basicProject.findFile("JerseyConfig.java"), /packages\s*\(/, "        packages(\${servicePackage}.resources\");")
+        FileUtils.appendAfterLine(basicProject.findFile("JerseyConfig.java"), /packages\s*\(/, "        packages(\"${servicePackage}.resources\");")
 
         if (addEntity) {
             basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
