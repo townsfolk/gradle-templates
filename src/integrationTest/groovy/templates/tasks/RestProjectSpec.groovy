@@ -13,19 +13,35 @@ public class RestProjectSpec extends AbstractProjectSpecification {
     @Rule
     public TemporaryFolder projectDir = new TemporaryFolder()
     private TestGradleBuild testGradleBuild
-    private BasicProject basicProject
+    private RestProject restProject
 
     def setup() {
-        testGradleBuild = new TestGradleBuild(projectDir.root)
+        project.ext["blackbaudGradleVersion"] = "2.7-bb.1.0"
         GitRepo repo = GitRepo.init(projectDir.root)
         ProjectProps projectProps = new ProjectProps(project)
-        basicProject = new BasicProject(projectProps, repo)
+        BasicProject basicProject = new BasicProject(projectProps, repo)
+        basicProject.initGradleProject()
+        restProject = new RestProject(basicProject, "service")
+        testGradleBuild = new TestGradleBuild(projectDir.root)
     }
 
     def "initRestProject should successfully build"() {
         given:
-        RestProject restProject = new RestProject(basicProject, basicProject.repoName)
         restProject.initRestProject(true)
+        testGradleBuild.initBuildscriptPluginPathString()
+
+        when:
+        testGradleBuild.run("build")
+
+        then:
+        notThrown(Exception)
+    }
+
+    def "createRestResource should successfully build"() {
+        given:
+        restProject.initRestProject(true)
+        restProject.createRestResource("Fubar", true)
+        testGradleBuild.initBuildscriptPluginPathString()
 
         when:
         testGradleBuild.run("build")
