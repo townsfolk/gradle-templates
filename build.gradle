@@ -6,6 +6,7 @@ buildscript {
 
 apply plugin: "blackbaud-internal"
 apply plugin: "blackbaud-templates"
+apply plugin: "integration-test"
 
 dependencies {
     compile gradleApi()
@@ -13,5 +14,9 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'org.eclipse.jgit:org.eclipse.jgit:4.0.2.201509141540-r'
 
+    testCompile gradleTestKit()
+    testCompile 'com.blackbaud:gradle-internal-test:3.+'
     testCompile 'junit:junit:4.11'
 }
+
+check.dependsOn integrationTest
