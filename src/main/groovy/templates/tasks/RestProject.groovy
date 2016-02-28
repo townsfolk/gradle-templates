@@ -38,6 +38,10 @@ class RestProject {
     compile "org.liquibase:liquibase-core:3.3.2\""""
             )
 
+            basicProject.applyTemplate("src/deploy/cloudfoundry") {
+                "app-descriptor.yml" template: "/templates/deploy/app-descriptor-postgres.yml.tmpl"
+            }
+
             basicProject.commitProjectFiles("initialize postgres container")
         }
     }
@@ -52,6 +56,10 @@ class RestProject {
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/config") {
             "JerseyConfig.java" template: "/templates/springboot/rest/jersey-config.java.tmpl",
                                 servicePackage: "${servicePackage}"
+        }
+
+        basicProject.applyTemplate("src/deploy/cloudfoundry") {
+            "app-descriptor.yml" template: "/templates/deploy/app-descriptor.yml.tmpl"
         }
 
         basicProject.applyTemplate("src/componentTest/java/${servicePackagePath}") {

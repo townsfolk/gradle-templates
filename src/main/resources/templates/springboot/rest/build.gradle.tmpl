@@ -29,3 +29,9 @@ dependencies {
 swagger {
     generateDocs
 }
+
+jar {
+    metaInf {
+        from 'src/deploy/cloudfoundry'
+    }
+}
