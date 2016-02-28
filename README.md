@@ -31,6 +31,9 @@ The project creation tasks are only available when run from this project.  All t
 
 Creates a basic gradle project with a simple build.gradle file.
 
+Supported task options:
+* clean - if the target directory already exists, delete it
+
 #### createRestProject
 
 Creates a skeleton SpringBoot REST project (includes build.gradle, application class, and supporting classes)
@@ -39,6 +42,9 @@ You WILL get an error when running `./gradlew bootRun`:
 * After creating your project, update application.properties `server.port` and `management.port` values following
 the convention described in the [Blackbaud Wiki](https://wiki.blackbaud.com/display/LUM/Microservice+Port+Mapping+Registry)
 
+Supported task options:
+* clean - if the target directory already exists, delete it
+* postgres - initializes the project with a postgres container and supporting files
 
 ### Project Augmentation Tasks
 
