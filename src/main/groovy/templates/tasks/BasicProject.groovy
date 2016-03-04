@@ -58,7 +58,7 @@ class BasicProject {
         File gradleWrapperProperties = new File(repoDir, "gradle/wrapper/gradle-wrapper.properties")
         String text = gradleWrapperProperties.text
         String blackbaudGradleVersion = projectProps.getRequiredProjectProperty("blackbaudGradleVersion")
-        String distributionUrl = "https://nexus-releases.blackbaudcloud.com/content/repositories/releases/com/blackbaud/gradle-blackbaud/${blackbaudGradleVersion}/gradle-blackbaud-${blackbaudGradleVersion}-bin.zip"
+        String distributionUrl = "https://nexus-lonxt-dev.blackbaudcloud.com/content/repositories/releases/com/blackbaud/gradle-blackbaud/${blackbaudGradleVersion}/gradle-blackbaud-${blackbaudGradleVersion}-bin.zip"
         gradleWrapperProperties.text = text.replaceFirst(/(?m)^distributionUrl=.*/, /distributionUrl=${distributionUrl}/)
     }
 
