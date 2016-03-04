@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- NOTE: this should be included first since it defines default properties, otherwise it could override -->
-    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="com/blackbaud/boot/logback/common.xml" />
 
-    <property name="LOG_FILE" value="logs/application.log"/>
-    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(\${PID:- }){magenta} %clr(---){faint} %mdc %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wex"/>
-    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p \${PID:- } --- %mdc --- [%t] %-40.40logger{39} : %m%n%wex"/>
+	<logger name="com.blackbaud" level="DEBUG"/>
 
-    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-
-    <logger name="com.blackbaud" level="DEBUG"/>
-
-    <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
-    </root>
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</root>
 
 </configuration>
