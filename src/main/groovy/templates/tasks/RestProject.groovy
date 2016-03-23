@@ -14,7 +14,7 @@ class RestProject {
     private String servicePackagePath
 
     RestProject(BasicProject basicProject) {
-        this(basicProject, LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.repoName))
+        this(basicProject, basicProject.serviceName)
     }
 
     RestProject(BasicProject basicProject, String serviceName) {

@@ -13,7 +13,7 @@ class CreateRestProjectTask extends AbstractTemplateTask {
         boolean clean = projectProps.isPropertyDefined("clean")
         boolean postgres = projectProps.isPropertyDefined("postgres")
         BasicProject basicProject = createBasicProject(clean)
-        RestProject restProject = new RestProject(basicProject, basicProject.repoName)
+        RestProject restProject = new RestProject(basicProject, basicProject.serviceName)
         restProject.initRestProject(postgres)
     }
 

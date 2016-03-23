@@ -7,6 +7,9 @@ import templates.GitRepo
 import templates.ProjectProps
 import templates.ProjectTemplate
 
+import static com.google.common.base.CaseFormat.LOWER_HYPHEN
+import static com.google.common.base.CaseFormat.UPPER_CAMEL
+
 class BasicProject {
 
     @Delegate
@@ -20,6 +23,10 @@ class BasicProject {
         this.gitRepo = gitRepo
         this.repoName = gitRepo.repoDir.name
         this.targetDir = gitRepo.repoDir
+    }
+
+    String getServiceName() {
+        LOWER_HYPHEN.to(UPPER_CAMEL, repoName)
     }
 
     File getRepoDir() {
