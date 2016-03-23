@@ -84,7 +84,8 @@ class RestProject {
         }
 
         basicProject.applyTemplate {
-            'build.gradle' template: "/templates/springboot/rest/build.gradle.tmpl"
+            'build.gradle' template: "/templates/springboot/rest/build.gradle.tmpl",
+                    servicePackageName: servicePackage
             'gradle.properties' template: "/templates/basic/gradle.properties.tmpl",
                     artifactId: serviceId
             'src' {
@@ -108,8 +109,6 @@ class RestProject {
             }
         }
 
-        addClientSubModule("client", false)
-
         basicProject.commitProjectFiles("springboot rest bootstrap")
     }
 
@@ -123,7 +122,6 @@ class RestProject {
     void createEmbeddedService(boolean addEntity) {
         addResourcePaths()
         createRestResource(serviceName, addEntity)
-        addClientSubModule("client-${serviceId}", true)
 
         println "********************************************************"
         println "********************************************************"
@@ -132,44 +130,6 @@ class RestProject {
         println ""
         println "********************************************************"
         println "********************************************************"
-    }
-
-    private void addClientSubModule(String moduleName, boolean embedded) {
-        basicProject.applyTemplate {
-            "${moduleName}" {
-                if (embedded) {
-                    'build.gradle' template: "/templates/springboot/rest/client/embedded-build.gradle.tmpl",
-                                   embeddedService: serviceName.toLowerCase()
-                } else {
-                    'build.gradle' template: "/templates/springboot/rest/client/build.gradle.tmpl"
-                }
-            }
-        }
-        addModuleToGradleSettings(moduleName)
-
-        basicProject.applyTemplate("${moduleName}/src/main/resources") {
-            'swagger-gen-config.json' template: "/templates/springboot/rest/client/swagger-gen-config.json.tmpl",
-                    packageName: servicePackage, artifactId: "${serviceId}-client"
-        }
-
-        File buildFile = basicProject.getProjectFileOrFail("build.gradle")
-        FileUtils.appendAfterLine(buildFile, "mainTestCompile", /    mainTestCompile project(":${moduleName}")/)
-    }
-
-    private Object addModuleToGradleSettings(String moduleName) {
-        File settingsGradle = basicProject.getProjectFile("settings.gradle")
-
-        if (settingsGradle.exists()) {
-            List<String> lines = settingsGradle.readLines()
-            if (lines[0] =~ /^include.*/) {
-                lines[0] += ", '${moduleName}'"
-            } else {
-                lines.add("include '${moduleName}'")
-            }
-            settingsGradle.text = lines.join(FileUtils.LINE_SEPARATOR)
-        } else {
-            settingsGradle.text = "include '${moduleName}'"
-        }
     }
 
     void createRestResource(String resourceName, boolean addEntity) {
