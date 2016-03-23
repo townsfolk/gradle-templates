@@ -16,7 +16,7 @@ public class RestProjectSpec extends AbstractProjectSpecification {
     private RestProject restProject
 
     def setup() {
-        project.ext["blackbaudGradleVersion"] = "2.7-bb.1.0"
+        project.ext["blackbaudGradleVersion"] = "2.7-bb.1.1"
         GitRepo repo = GitRepo.init(projectDir.root)
         ProjectProps projectProps = new ProjectProps(project)
         BasicProject basicProject = new BasicProject(projectProps, repo)

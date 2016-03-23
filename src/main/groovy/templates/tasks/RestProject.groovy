@@ -70,11 +70,11 @@ class RestProject {
                     className: "${serviceName}TestConfig", packageName: servicePackage
         }
 
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/client") {
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/api") {
             "ClientARandom.java" template: "/templates/test/client-arandom.java.tmpl",
-                    packageName: "${servicePackage}.client"
+                    packageName: "${servicePackage}.api"
             "RandomClientBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
-                    packageName: "${servicePackage}.client", qualifier: "Client"
+                    packageName: "${servicePackage}.api", qualifier: "Client"
         }
         basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core") {
             "CoreARandom.java" template: "/templates/test/core-arandom.java.tmpl",
@@ -142,6 +142,10 @@ class RestProject {
             "${resourceName}Resource.java" template: "/templates/springboot/rest/resource.java.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
         }
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/client") {
+            "${resourceName}Client.java" template: "/templates/springboot/rest/resource-client.java.tmpl",
+                                         resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
+        }
         basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}/resources") {
             "${resourceName}ResourceSpec.groovy" template: "/templates/springboot/rest/resource-spec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
@@ -154,12 +158,12 @@ class RestProject {
             "${resourceName}.java" template: "/templates/springboot/rest/resource-api.java.tmpl",
                     resourceName: resourceName, packageName: "${servicePackage}.api"
         }
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/client/model") {
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/api") {
             "Random${resourceName}Builder.groovy" template: "/templates/test/random-client-builder.groovy.tmpl",
                     targetClass: resourceName, servicePackageName: servicePackage
         }
         File randomClientBuilderSupport = basicProject.findFile("RandomClientBuilderSupport.java")
-        FileUtils.appendAfterLine(randomClientBuilderSupport, "package", "import ${servicePackage}.client.model.Random${resourceName}Builder;")
+        FileUtils.appendAfterLine(randomClientBuilderSupport, "package", "import ${servicePackage}.api.Random${resourceName}Builder;")
         FileUtils.appendToClass(randomClientBuilderSupport, """
 
     public Random${resourceName}Builder ${resourceNameLowerCamel}() {
