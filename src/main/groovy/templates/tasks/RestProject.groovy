@@ -66,8 +66,8 @@ class RestProject {
             "ComponentTest.java" template: "/templates/springboot/rest/component-test-annotation.java.tmpl",
                     serviceName: serviceName, packageName: servicePackage
 
-            "${serviceName}TestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
-                    className: "${serviceName}TestConfig", packageName: servicePackage
+            "TestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
+                    className: "TestConfig", packageName: servicePackage
         }
 
         basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/api") {
@@ -153,6 +153,15 @@ class RestProject {
             "${resourceName}ResourceWireSpec.groovy" template: "/templates/springboot/rest/resource-wirespec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
+        File testConfig = basicProject.findFile("TestConfig.java")
+        FileUtils.appendToClass(testConfig, """
+
+    @Bean
+    public ${resourceName}Client ${resourceNameLowerCamel}Client() {
+        return new ${resourceName}Client(hostUri)
+                .header(testTokenSupport.createTestTokenHeader());
+    }
+""")
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
             "${resourceName}.java" template: "/templates/springboot/rest/resource-api.java.tmpl",
