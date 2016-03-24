@@ -14,7 +14,7 @@ class RestProject {
     private String servicePackagePath
 
     RestProject(BasicProject basicProject) {
-        this(basicProject, LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.repoName))
+        this(basicProject, basicProject.serviceName)
     }
 
     RestProject(BasicProject basicProject, String serviceName) {
@@ -66,15 +66,15 @@ class RestProject {
             "ComponentTest.java" template: "/templates/springboot/rest/component-test-annotation.java.tmpl",
                     serviceName: serviceName, packageName: servicePackage
 
-            "${serviceName}TestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
-                    className: "${serviceName}TestConfig", packageName: servicePackage
+            "TestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
+                    className: "TestConfig", packageName: servicePackage
         }
 
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/client") {
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/api") {
             "ClientARandom.java" template: "/templates/test/client-arandom.java.tmpl",
-                    packageName: "${servicePackage}.client"
+                    packageName: "${servicePackage}.api"
             "RandomClientBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
-                    packageName: "${servicePackage}.client", qualifier: "Client"
+                    packageName: "${servicePackage}.api", qualifier: "Client"
         }
         basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core") {
             "CoreARandom.java" template: "/templates/test/core-arandom.java.tmpl",
@@ -84,7 +84,8 @@ class RestProject {
         }
 
         basicProject.applyTemplate {
-            'build.gradle' template: "/templates/springboot/rest/build.gradle.tmpl"
+            'build.gradle' template: "/templates/springboot/rest/build.gradle.tmpl",
+                    servicePackageName: servicePackage
             'gradle.properties' template: "/templates/basic/gradle.properties.tmpl",
                     artifactId: serviceId
             'src' {
@@ -108,8 +109,6 @@ class RestProject {
             }
         }
 
-        addClientSubModule("client", false)
-
         basicProject.commitProjectFiles("springboot rest bootstrap")
     }
 
@@ -123,7 +122,6 @@ class RestProject {
     void createEmbeddedService(boolean addEntity) {
         addResourcePaths()
         createRestResource(serviceName, addEntity)
-        addClientSubModule("client-${serviceId}", true)
 
         println "********************************************************"
         println "********************************************************"
@@ -132,44 +130,6 @@ class RestProject {
         println ""
         println "********************************************************"
         println "********************************************************"
-    }
-
-    private void addClientSubModule(String moduleName, boolean embedded) {
-        basicProject.applyTemplate {
-            "${moduleName}" {
-                if (embedded) {
-                    'build.gradle' template: "/templates/springboot/rest/client/embedded-build.gradle.tmpl",
-                                   embeddedService: serviceName.toLowerCase()
-                } else {
-                    'build.gradle' template: "/templates/springboot/rest/client/build.gradle.tmpl"
-                }
-            }
-        }
-        addModuleToGradleSettings(moduleName)
-
-        basicProject.applyTemplate("${moduleName}/src/main/resources") {
-            'swagger-gen-config.json' template: "/templates/springboot/rest/client/swagger-gen-config.json.tmpl",
-                    packageName: servicePackage, artifactId: "${serviceId}-client"
-        }
-
-        File buildFile = basicProject.getProjectFileOrFail("build.gradle")
-        FileUtils.appendAfterLine(buildFile, "mainTestCompile", /    mainTestCompile project(":${moduleName}")/)
-    }
-
-    private Object addModuleToGradleSettings(String moduleName) {
-        File settingsGradle = basicProject.getProjectFile("settings.gradle")
-
-        if (settingsGradle.exists()) {
-            List<String> lines = settingsGradle.readLines()
-            if (lines[0] =~ /^include.*/) {
-                lines[0] += ", '${moduleName}'"
-            } else {
-                lines.add("include '${moduleName}'")
-            }
-            settingsGradle.text = lines.join(FileUtils.LINE_SEPARATOR)
-        } else {
-            settingsGradle.text = "include '${moduleName}'"
-        }
     }
 
     void createRestResource(String resourceName, boolean addEntity) {
@@ -182,6 +142,10 @@ class RestProject {
             "${resourceName}Resource.java" template: "/templates/springboot/rest/resource.java.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
         }
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/client") {
+            "${resourceName}Client.java" template: "/templates/springboot/rest/resource-client.java.tmpl",
+                                         resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
+        }
         basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}/resources") {
             "${resourceName}ResourceSpec.groovy" template: "/templates/springboot/rest/resource-spec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
@@ -189,17 +153,26 @@ class RestProject {
             "${resourceName}ResourceWireSpec.groovy" template: "/templates/springboot/rest/resource-wirespec.groovy.tmpl",
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
+        File testConfig = basicProject.findFile("TestConfig.java")
+        FileUtils.appendToClass(testConfig, """
+
+    @Bean
+    public ${resourceName}Client ${resourceNameLowerCamel}Client() {
+        return new ${resourceName}Client(hostUri)
+                .header(testTokenSupport.createTestTokenHeader());
+    }
+""")
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
             "${resourceName}.java" template: "/templates/springboot/rest/resource-api.java.tmpl",
                     resourceName: resourceName, packageName: "${servicePackage}.api"
         }
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/client/model") {
+        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/api") {
             "Random${resourceName}Builder.groovy" template: "/templates/test/random-client-builder.groovy.tmpl",
                     targetClass: resourceName, servicePackageName: servicePackage
         }
         File randomClientBuilderSupport = basicProject.findFile("RandomClientBuilderSupport.java")
-        FileUtils.appendAfterLine(randomClientBuilderSupport, "package", "import ${servicePackage}.client.model.Random${resourceName}Builder;")
+        FileUtils.appendAfterLine(randomClientBuilderSupport, "package", "import ${servicePackage}.api.Random${resourceName}Builder;")
         FileUtils.appendToClass(randomClientBuilderSupport, """
 
     public Random${resourceName}Builder ${resourceNameLowerCamel}() {
