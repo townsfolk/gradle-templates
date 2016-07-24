@@ -2,14 +2,4 @@
 applications:
 - type: basic-service
   services:
-    - bluemoon-config
-    - postgres
-
-environment-overrides:
-- space: dev-apps|int-apps
-  service-plans:
-    postgres: postgres-micro
-
-- space: uat-apps
-  service-plans:
-    postgres: postgres-medium
+    - postgres-shared

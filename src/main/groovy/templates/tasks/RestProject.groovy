@@ -42,6 +42,14 @@ class RestProject {
                 "app-descriptor.yml" template: "/templates/deploy/app-descriptor-postgres.yml.tmpl"
             }
 
+            File componentTestFile = basicProject.findFile("ComponentTest.java")
+            FileUtils.appendAfterLine(componentTestFile, /import.*WebAppConfiguration/,
+                    "import org.springframework.test.context.jdbc.Sql;"
+            )
+            FileUtils.appendAfterLine(componentTestFile, /.*@WebAppConfiguration/,
+                    "@Sql(scripts = \"classpath:/db/test_cleanup.sql\", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)"
+            )
+
             basicProject.commitProjectFiles("initialize postgres container")
         }
     }
@@ -154,6 +162,12 @@ class RestProject {
                     resourceName: resourceName, servicePackage: "${servicePackage}"
         }
         File testConfig = basicProject.findFile("TestConfig.java")
+        FileUtils.appendAfterLine(testConfig, /import.*/,
+                                  """import org.springframework.context.annotation.Bean;
+import ${servicePackage}.client.${resourceName}Client;
+"""
+
+        )
         FileUtils.appendToClass(testConfig, """
 
     @Bean
