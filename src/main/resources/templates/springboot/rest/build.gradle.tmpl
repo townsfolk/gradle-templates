@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = "1.3.5.RELEASE"
+        springBootVersion = "1.4.1.RELEASE"
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}"
@@ -33,7 +33,7 @@ dependencies {
     clientCompile "com.blackbaud:common-spring-boot-rest:\${springBootVersion}-2.+"
 
     mainTestCompile "com.blackbaud:common-test:1.+"
-    mainTestCompile "org.codehaus.groovy:groovy-all:2.4.3"
+    mainTestCompile "org.codehaus.groovy:groovy-all:2.4.7"
     mainTestCompile ("org.spockframework:spock-spring:1.0-groovy-2.4") {
         exclude group: "org.codehaus.groovy"
     }
