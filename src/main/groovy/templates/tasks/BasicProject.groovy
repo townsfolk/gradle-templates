@@ -16,12 +16,14 @@ class BasicProject {
     private GitRepo gitRepo
     private ProjectProps projectProps
     private File targetDir
+    private String packagePath
     String repoName
 
     BasicProject(ProjectProps projectProps, GitRepo gitRepo) {
         this.projectProps = projectProps
         this.gitRepo = gitRepo
         this.repoName = gitRepo.repoDir.name
+        this.packagePath = "com.blackbaud.${repoName.toLowerCase()}"
         this.targetDir = gitRepo.repoDir
     }
 
@@ -52,6 +54,9 @@ class BasicProject {
 
             initBasicGradleBuild()
             gitRepo.commitProjectFiles("added build.gradle")
+
+            initBasicTest()
+            gitRepo.commitProjectFiles("add basic test")
         }
     }
 
@@ -83,6 +88,13 @@ class BasicProject {
     private void initGitignore() {
         applyTemplate {
             '.gitignore' template: "/templates/git/gitignore.tmpl"
+        }
+    }
+
+    private void initBasicTest() {
+        applyTemplate {
+            "src/test/groovy/${this.packagePath}.common/${this.repoName}Spec.groovy" template: "/templates/test/basic-spec.groovy.tmpl",
+                                                                                     packagePath: this.packagePath, repoName: this.repoName
         }
     }
 

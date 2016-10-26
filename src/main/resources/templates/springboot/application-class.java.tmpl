@@ -6,11 +6,9 @@ import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoC
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
-import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@EntityScan({"${servicePackage}", "com.blackbaud.boot.converters"})
 @ComponentScan("${servicePackage}")
 @EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class})
 public class ${serviceName} {

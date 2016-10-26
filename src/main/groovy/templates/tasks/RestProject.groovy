@@ -27,7 +27,7 @@ class RestProject {
 
     void initRestProject(boolean postgres) {
         basicProject.initGradleProject()
-        createRestBase()
+        createRestBase(postgres)
         if (postgres) {
             DatasourceProject datasourceProject = new DatasourceProject(basicProject)
             datasourceProject.initPostgres()
@@ -54,11 +54,16 @@ class RestProject {
         }
     }
 
-    private void createRestBase() {
+    private void createRestBase(boolean postgres) {
         addResourcePaths()
+
         basicProject.applyTemplate("src/main/java/${servicePackagePath}") {
             "${serviceName}.java" template: "/templates/springboot/application-class.java.tmpl",
                     serviceName: serviceName, servicePackage: servicePackage
+        }
+
+        if (postgres) {
+            applyEntityScan()
         }
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/config") {
@@ -118,6 +123,15 @@ class RestProject {
         }
 
         basicProject.commitProjectFiles("springboot rest bootstrap")
+    }
+
+    private void applyEntityScan() {
+        String entityScan = "@EntityScan({\"${servicePackage}\", \"com.blackbaud.boot.converters\"})"
+        String entityScanImport = "import org.springframework.boot.orm.jpa.EntityScan;"
+        File applicationClassFile = basicProject.findFile("${serviceName}.java")
+
+        FileUtils.appendAfterLine(applicationClassFile, "@SpringBootApplication", entityScan)
+        FileUtils.appendAfterLine(applicationClassFile, "ManagementWebSecurityAutoConfiguration;", entityScanImport)
     }
 
     private void addResourcePaths() {
