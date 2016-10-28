@@ -66,6 +66,14 @@ class RestProject {
             applyEntityScan()
         }
 
+        basicProject.applyTemplate("src/main/resources") {
+            "bootstrap.properties" template: "/templates/springboot/bootstrap.properties.tmpl", serviceId: "${serviceId}"
+        }
+
+        basicProject.applyTemplate("src/main/resources") {
+            "bootstrap-cloud.properties" template: "/templates/springboot/bootstrap-cloud.properties.tmpl"
+        }
+
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/config") {
             "JerseyConfig.java" template: "/templates/springboot/rest/jersey-config.java.tmpl",
                                 servicePackage: "${servicePackage}"
