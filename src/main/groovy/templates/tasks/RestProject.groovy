@@ -145,7 +145,7 @@ class RestProject {
 
     private void applyEntityScan() {
         String entityScan = "@EntityScan({\"${servicePackage}\", \"com.blackbaud.boot.converters\"})"
-        String entityScanImport = "import org.springframework.boot.orm.jpa.EntityScan;"
+        String entityScanImport = "import org.springframework.boot.autoconfigure.domain.EntityScan;"
         File applicationClassFile = basicProject.findFile("${serviceName}.java")
 
         FileUtils.appendAfterLine(applicationClassFile, "@SpringBootApplication", entityScan)
