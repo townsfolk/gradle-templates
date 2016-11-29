@@ -60,13 +60,6 @@ class RestProject {
     void initKafka() {
         KafkaProject kafkaProject = new KafkaProject(basicProject)
         kafkaProject.initKafka()
-
-        FileUtils.appendAfterLine(basicProject.getBuildFile(), /ext \{/,
-                '        commonKafkaVersion = "2.+"')
-        FileUtils.appendAfterLine(basicProject.getBuildFile(), /compile.*common-spring-boot/,
-                '    compile "com.blackbaud:common-kafka:${commonKafkaVersion}"')
-        FileUtils.appendAfterLine(basicProject.getBuildFile(), /mainTestCompile/,
-                '    mainTestCompile "com.blackbaud:common-kafka-test:${commonKafkaVersion}"')
     }
 
     private void createRestBase() {

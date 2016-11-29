@@ -13,6 +13,13 @@ class KafkaProject {
         basicProject.addDockerPlugin()
         basicProject.applyPlugin("kafka")
 
+        FileUtils.appendAfterLine(basicProject.getBuildFile(), /ext \{/,
+                '        commonKafkaVersion = "2.+"')
+        FileUtils.appendAfterLine(basicProject.getBuildFile(), /compile.*common-spring-boot/,
+                '    compile "com.blackbaud:common-kafka:${commonKafkaVersion}"')
+        FileUtils.appendAfterLine(basicProject.getBuildFile(), /mainTestCompile/,
+                '    mainTestCompile "com.blackbaud:common-kafka-test:${commonKafkaVersion}"')
+
         File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         componentTestPropertiesFile.append("""
 kafka.consumer.groupId=${basicProject.repoName}-test
