@@ -18,6 +18,7 @@ package templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import templates.tasks.AddKafkaContainerTask
 import templates.tasks.AddPostgresContainerTask
 import templates.tasks.CreateBasicProjectTask
 import templates.tasks.CreateEmbeddedServiceTask
@@ -44,6 +45,7 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
         project.task 'createRestResource', type: CreateRestResourceTask
         project.task 'createRestEmbeddedService', type: CreateEmbeddedServiceTask
         project.task 'addPostgresContainer', type: AddPostgresContainerTask
+        project.task 'addKafkaContainer', type: AddKafkaContainerTask
     }
 
 }

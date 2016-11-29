@@ -16,7 +16,7 @@ public class RestProjectSpec extends AbstractProjectSpecification {
     private RestProject restProject
 
     def setup() {
-        project.ext["blackbaudGradleVersion"] = "2.7-bb.1.1"
+        project.ext["blackbaudGradleVersion"] = "2.14.1-bb.1.0"
         GitRepo repo = GitRepo.init(projectDir.root)
         ProjectProps projectProps = new ProjectProps(project)
         BasicProject basicProject = new BasicProject(projectProps, repo)
@@ -27,7 +27,9 @@ public class RestProjectSpec extends AbstractProjectSpecification {
 
     def "initRestProject should successfully build"() {
         given:
-        restProject.initRestProject(true)
+        restProject.initRestProject()
+        restProject.initPostgres()
+        restProject.initKafka()
         testGradleBuild.initBuildscriptPluginPathString()
 
         when:
@@ -39,7 +41,9 @@ public class RestProjectSpec extends AbstractProjectSpecification {
 
     def "createRestResource should successfully build"() {
         given:
-        restProject.initRestProject(true)
+        restProject.initRestProject()
+        restProject.initPostgres()
+        restProject.initKafka()
         restProject.createRestResource("Fubar", true)
         testGradleBuild.initBuildscriptPluginPathString()
 

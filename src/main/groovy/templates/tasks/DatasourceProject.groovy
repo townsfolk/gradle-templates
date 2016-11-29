@@ -9,32 +9,23 @@ class DatasourceProject {
     }
 
     void initPostgres() {
-        File buildFile = basicProject.getProjectFileOrFail("build.gradle")
+        basicProject.addDockerPlugin()
+        basicProject.applyPlugin("postgres")
 
-        FileUtils.appendAfterLine(buildFile, "com.blackbaud:gradle-internal:", '        classpath "com.blackbaud:gradle-docker:1.+"')
-        FileUtils.appendAfterLine(buildFile, 'apply\\s+plugin:\\s+"blackbaud-internal', 'apply plugin: "docker"')
-        buildFile.append("""
-
-docker {
-    container {
-        imageName "postgres:9.4"
-        publish "5432:5432"
-        env "POSTGRES_USER=postgres"
-        env "POSTGRES_PASSWORD=postgres"
-    }
-}
-
-componentTest.dependsOn System.getenv("BUILD_NUMBER") ? refreshPostgres : startPostgres
+        File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
+        componentTestPropertiesFile.append("""
+spring.datasource.url=jdbc:postgresql://local.docker:5432/${basicProject.repoName}-test
 """)
 
-        File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")
-        if (applicationPropertiesFile.exists()) {
-            applicationPropertiesFile.append("""
-spring.datasource.url=jdbc:postgresql://local.docker:5432/
+        File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
+        applicationPropertiesFile.append("""
+spring.datasource.url=jdbc:postgresql://local.docker:5432/${basicProject.repoName}
 spring.datasource.username=postgres
 spring.datasource.password=postgres
+spring.datasource.test-on-borrow=true
+spring.datasource.validation-interval=30000
+spring.datasource.validation-query=SELECT 1;
 """)
-        }
 
         createLiquibaseChangeLog()
     }

@@ -60,6 +60,22 @@ class BasicProject {
         }
     }
 
+    File getBuildFile() {
+        getProjectFileOrFail("build.gradle")
+    }
+
+    void addDockerPlugin() {
+        File buildFile = getBuildFile()
+
+        if ((buildFile.text =~ /(?ms).*classpath.*gradle-docker.*/).matches() == false) {
+            FileUtils.appendAfterLine(buildFile, "com.blackbaud:gradle-internal:", '        classpath "com.blackbaud:gradle-docker:1.+"')
+        }
+    }
+
+    void applyPlugin(String pluginName) {
+        FileUtils.appendAfterLine(getBuildFile(), /apply\s+plugin:\s+"blackbaud-internal/, /apply plugin: "${pluginName}"/)
+    }
+
     private void initBasicGradleBuild() {
         applyTemplate {
             'build.gradle' template: "/templates/basic/build.gradle.tmpl"

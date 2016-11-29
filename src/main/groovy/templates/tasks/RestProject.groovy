@@ -25,45 +25,56 @@ class RestProject {
         this.servicePackagePath = servicePackage.replaceAll("\\.", "/")
     }
 
-    void initRestProject(boolean postgres) {
+    void initRestProject() {
         basicProject.initGradleProject()
-        createRestBase(postgres)
-        if (postgres) {
-            DatasourceProject datasourceProject = new DatasourceProject(basicProject)
-            datasourceProject.initPostgres()
-            FileUtils.appendAfterLine(basicProject.getProjectFile("build.gradle"), /compile.*common-spring-boot/,
-                    """\
+        createRestBase()
+    }
+
+    void initPostgres() {
+        applyEntityScan()
+
+        DatasourceProject datasourceProject = new DatasourceProject(basicProject)
+        datasourceProject.initPostgres()
+        FileUtils.appendAfterLine(basicProject.getProjectFile("build.gradle"), /compile.*common-spring-boot/,
+                """\
     compile "com.blackbaud:common-spring-boot-persistence:\${springBootVersion}-2.+"
     compile "postgresql:postgresql:9.0-801.jdbc4"
     compile "org.liquibase:liquibase-core\""""
-            )
+        )
 
-            basicProject.applyTemplate("src/deploy/cloudfoundry") {
-                "app-descriptor.yml" template: "/templates/deploy/app-descriptor-postgres.yml.tmpl"
-            }
-
-            File componentTestFile = basicProject.findFile("ComponentTest.java")
-            FileUtils.appendAfterLine(componentTestFile, /import.*WebAppConfiguration/,
-                    "import org.springframework.test.context.jdbc.Sql;"
-            )
-            FileUtils.appendAfterLine(componentTestFile, /.*@WebAppConfiguration/,
-                    "@Sql(scripts = \"classpath:/db/test_cleanup.sql\", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)"
-            )
-
-            basicProject.commitProjectFiles("initialize postgres container")
+        basicProject.applyTemplate("src/deploy/cloudfoundry") {
+            "app-descriptor.yml" template: "/templates/deploy/app-descriptor-postgres.yml.tmpl"
         }
+
+        File componentTestFile = basicProject.findFile("ComponentTest.java")
+        FileUtils.appendAfterLine(componentTestFile, /import.*WebAppConfiguration/,
+                "import org.springframework.test.context.jdbc.Sql;"
+        )
+        FileUtils.appendAfterLine(componentTestFile, /.*@WebAppConfiguration/,
+                "@Sql(scripts = \"classpath:/db/test_cleanup.sql\", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)"
+        )
+
+        basicProject.commitProjectFiles("initialize postgres container")
     }
 
-    private void createRestBase(boolean postgres) {
+    void initKafka() {
+        KafkaProject kafkaProject = new KafkaProject(basicProject)
+        kafkaProject.initKafka()
+
+        FileUtils.appendAfterLine(basicProject.getBuildFile(), /ext \{/,
+                '        commonKafkaVersion = "2.+"')
+        FileUtils.appendAfterLine(basicProject.getBuildFile(), /compile.*common-spring-boot/,
+                '    compile "com.blackbaud:common-kafka:${commonKafkaVersion}"')
+        FileUtils.appendAfterLine(basicProject.getBuildFile(), /mainTestCompile/,
+                '    mainTestCompile "com.blackbaud:common-kafka-test:${commonKafkaVersion}"')
+    }
+
+    private void createRestBase() {
         addResourcePaths()
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}") {
             "${serviceName}.java" template: "/templates/springboot/application-class.java.tmpl",
                     serviceName: serviceName, servicePackage: servicePackage
-        }
-
-        if (postgres) {
-            applyEntityScan()
         }
 
         basicProject.applyTemplate("src/main/resources") {
@@ -113,6 +124,7 @@ class RestProject {
                 'main' {
                     'resources' {
                         'application.properties' template: "/templates/springboot/rest/application.properties.tmpl"
+                        'logback.xml' template: "/templates/logback/logback.tmpl"
                     }
                 }
                 'test' {
@@ -120,8 +132,6 @@ class RestProject {
                 }
                 'componentTest' {
                     'resources' {
-                        'logback.xml' template: "/templates/logback/logback.tmpl"
-
                         'db' {
                             "test_cleanup.sql" content: ""
                         }
