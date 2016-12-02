@@ -22,7 +22,7 @@ class KafkaProject {
 
         File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         componentTestPropertiesFile.append("""
-kafka.consumer.groupId=${basicProject.repoName}-test
+kafka.consumer.groupId=\${spring.application.name}-test
 """)
 
         File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
@@ -35,7 +35,7 @@ kafka.brokers=local.docker
 kafka.defaultBrokerPort=9096
 kafka.sessionTimeout=10000
 
-kafka.consumer.groupId=${basicProject.repoName}-local
+kafka.consumer.groupId=\${spring.application.name}-local
 kafka.consumer.sessionTimeout=10000
 """)
     }
