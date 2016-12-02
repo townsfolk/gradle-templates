@@ -14,12 +14,12 @@ class DatasourceProject {
 
         File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         componentTestPropertiesFile.append("""
-spring.datasource.url=jdbc:postgresql://local.docker:5432/${basicProject.repoName}-test
+spring.datasource.url=jdbc:postgresql://local.docker:5432/\${spring.application.name}-test
 """)
 
         File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
         applicationPropertiesFile.append("""
-spring.datasource.url=jdbc:postgresql://local.docker:5432/${basicProject.repoName}
+spring.datasource.url=jdbc:postgresql://local.docker:5432/\${spring.application.name}
 spring.datasource.username=postgres
 spring.datasource.password=postgres
 spring.datasource.test-on-borrow=true
