@@ -10,8 +10,6 @@ class RestProject {
     private BasicProject basicProject
     private String serviceName
     private String serviceId
-    private String servicePackage
-    private String servicePackagePath
 
     RestProject(BasicProject basicProject) {
         this(basicProject, basicProject.serviceName)
@@ -21,8 +19,14 @@ class RestProject {
         this.basicProject = basicProject
         this.serviceName = serviceName.capitalize()
         this.serviceId = "${UPPER_CAMEL.to(LOWER_HYPHEN, serviceName)}"
-        this.servicePackage = "com.blackbaud.${serviceName.toLowerCase()}"
-        this.servicePackagePath = servicePackage.replaceAll("\\.", "/")
+    }
+
+    String getServicePackage() {
+        basicProject.servicePackage
+    }
+
+    String getServicePackagePath() {
+        basicProject.servicePackagePath
     }
 
     void initRestProject() {

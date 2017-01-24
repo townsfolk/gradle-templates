@@ -16,19 +16,25 @@ class BasicProject {
     private GitRepo gitRepo
     private ProjectProps projectProps
     private File targetDir
-    private String packagePath
     String repoName
 
     BasicProject(ProjectProps projectProps, GitRepo gitRepo) {
         this.projectProps = projectProps
         this.gitRepo = gitRepo
         this.repoName = gitRepo.repoDir.name
-        this.packagePath = "com.blackbaud.${repoName.toLowerCase()}"
         this.targetDir = gitRepo.repoDir
     }
 
     String getServiceName() {
         LOWER_HYPHEN.to(UPPER_CAMEL, repoName)
+    }
+
+    String getServicePackage() {
+        "com.blackbaud.${serviceName.toLowerCase()}"
+    }
+
+    String getServicePackagePath() {
+        servicePackage.replaceAll ( "\\.", "/" )
     }
 
     File getRepoDir() {
@@ -109,8 +115,8 @@ class BasicProject {
 
     private void initBasicTest() {
         applyTemplate {
-            "src/test/groovy/${this.packagePath}.common/${this.repoName}Spec.groovy" template: "/templates/test/basic-spec.groovy.tmpl",
-                                                                                     packagePath: this.packagePath, repoName: this.repoName
+            "src/test/groovy/${servicePackagePath}/${this.serviceName}Spec.groovy" template: "/templates/test/basic-spec.groovy.tmpl",
+                                                                                   serviceName: serviceName, servicePackage: servicePackage
         }
     }
 
