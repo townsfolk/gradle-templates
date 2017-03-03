@@ -61,6 +61,17 @@ class RestProject {
         basicProject.commitProjectFiles("initialize postgres container")
     }
 
+    void initMybatis() {
+        basicProject.applyPlugin("mybatis")
+
+        basicProject.applyTemplate("src/main/resources") {
+            "mybatis-generator-config.xml" template: "/templates/mybatis/mybatis-generator-config.xml.tmpl",
+                    serviceId: serviceId, serviceName: serviceName.toLowerCase()
+        }
+
+        basicProject.commitProjectFiles("initialize mybatis")
+    }
+
     void initKafka() {
         KafkaProject kafkaProject = new KafkaProject(basicProject)
         kafkaProject.initKafka()

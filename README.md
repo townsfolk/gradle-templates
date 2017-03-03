@@ -45,6 +45,7 @@ the convention described in the [Blackbaud Wiki](https://wiki.blackbaud.com/disp
 Supported task options:
 * clean - if the target directory already exists, delete it
 * postgres - initializes the project with a postgres container and supporting files
+* mybatis - initializes the project with a mybatis generator config and applies the mybatis plugin; also, applies the postgres option above
 * kafka - initializes the project with a kafka container and supporting files
 
 ### Project Augmentation Tasks
