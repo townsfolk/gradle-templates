@@ -27,11 +27,11 @@ kafka.consumer.groupId=\${spring.application.name}-test
 
         File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
         applicationPropertiesFile.append("""
-kafka.zkNodes=local.docker
+kafka.zkNodes=docker.localhost
 kafka.defaultZkPort=2181
-kafka.schemaRegHosts=local.docker
+kafka.schemaRegHosts=docker.localhost
 kafka.schemaRegPort=8081
-kafka.brokers=local.docker
+kafka.brokers=docker.localhost
 kafka.defaultBrokerPort=9096
 kafka.sessionTimeout=10000
 
