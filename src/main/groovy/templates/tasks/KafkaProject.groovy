@@ -14,7 +14,7 @@ class KafkaProject {
         basicProject.applyPlugin("kafka")
 
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /ext \{/,
-                '        commonKafkaVersion = "2.+"')
+                '        commonKafkaVersion = "3.+"')
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /compile.*common-spring-boot/,
                 '    compile "com.blackbaud:common-kafka:${commonKafkaVersion}"')
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /mainTestCompile/,
