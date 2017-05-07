@@ -28,6 +28,8 @@ abstract class AbstractTemplateExportTask extends DefaultTask {
 
     private final templatePaths = []
 
+    protected String name
+
     /**
      * Creates a new template export task with the given properties and templates.
      *
