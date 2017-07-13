@@ -38,4 +38,25 @@ class GitRepo {
         config.save()
     }
 
+    static GitRepo openOrInitGitRepo(File repoDir, boolean clean) {
+        if (clean) {
+            repoDir.deleteDir()
+        }
+        repoDir.exists() ? openGitRepo(repoDir) : initGitRepo(repoDir)
+    }
+
+    static GitRepo openGitRepo(File repoDir) {
+        if (repoDir.exists() == false) {
+            throw new RuntimeException("Cannot open git project, dir=${repoDir.absolutePath}")
+        }
+        open(repoDir)
+    }
+
+    static GitRepo initGitRepo(File repoDir) {
+        repoDir.mkdirs()
+        GitRepo git = init(repoDir)
+        git.setRemoteUrl("origin", "git@github.com:blackbaud/${repoDir.name}.git")
+        git
+    }
+
 }
