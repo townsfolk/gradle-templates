@@ -1,0 +1,28 @@
+package ${servicePackage}.resources;
+
+import ${servicePackage}.api.ResourcePaths;
+import ${servicePackage}.api.${resourceName};
+import java.util.List;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+@Component
+@Path(ResourcePaths.${resourcePathVar})
+@Produces(MediaType.APPLICATION_JSON)
+public class ${resourceName}Resource {
+
+    @Context
+    private UriInfo uriInfo;
+
+    @GET
+    public List<${resourceName}> findAll() {
+        return null;
+    }
+
+}

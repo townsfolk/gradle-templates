@@ -1,61 +1,75 @@
-# Gradle Templates Plugin
+# Blackbaud Project Templates
 
-## Introduction
+This project is used to bootstrap new projects as well as adding to existing projects.  
 
-The Gradle Templates plugin helps you get started using Gradle by providing convenient tasks for creating new projects that work with the Gradle build system.
-Eg. To create a new Java project you can run:
+There are times during development where the easiest way forward is to copy a set of classes and then proceed 
+renaming/deleting/etc.  This project exists b/c that process is error prone and just generally sucks.
 
-```gradle createJavaProject```
 
-Which will prompt you for the name of your new project and then create a new directory with it. It will also create a standard directory structure in your
-project's directory that works with Gradle's default configurations.
+## Initialization
 
-The plugin also makes it easy to create your own templates which can be useful in creating new projects, or creating components within your projects. Eg.
-It's easy to create a simple task to generate a new GSP that fits your company's standard layout. Or to create a more complex task to generate a new servlet
-and add the entry into your webapp's web.xml file.
+This project requires a primary workspace directory to be configured - a default root directory for all subsequent operations.
 
-## Installation
+The default workspace is `..`, the directory where you checked out the gradle-templates project.  This value is stored
+in `gradle/custom.gradle` which is initialized when the plugin is first applied.  Edit this file if you want to change 
+the workspace directory.
 
-The standard way to install this plugin is by adding the following to your build.gradle file:
-
-```groovy
-buildscript {
-    repositories {
-        maven {
-			url 'http://dl.bintray.com/cjstehno/public'
-		}
-    }
-    dependencies {
-        classpath 'gradle-templates:gradle-templates:1.5'
-    }
-}
-
-apply plugin:'templates'
-```
-
-Other methods of installation are documented on the project [installation](https://github.com/townsfolk/gradle-templates/wiki/Installation) page.
 
 ## Usage
 
-Run the `gradle tasks` command to see a list of "create", "init", and "export" tasks provided by the default plugin templates.
+There are two intended uses for this project - as a creator of new projects and augmentor of existing projects.
 
-Running a create or init task will prompt the user for information and then generate the appropriate content.
+Run the `./gradlew tasks` command and look at the group `Template tasks` to see a list of the available tasks.
 
-The main difference between the `create*Project` and `init*Project` tasks is that the create tasks end up creating a new directory
-for your new project, and the init tasks will create the default directory structure under the current directory.
 
-The `export*` tasks cause the templates to be exported to the local project.
+### Project Creation Tasks
 
-Other usage documentation can be found on the project [Usage](https://github.com/townsfolk/gradle-templates/wiki/Usage) page.
+The project creation tasks are only available when run from this project.  All tasks require the project property
+`repoName` to be specified in order to identify the target directory.  
 
-## Details
+#### createBasicProject
 
-* Version: 1.5
-* Project Site: [http://cjstehno.github.io/gradle-templates](http://cjstehno.github.io/gradle-templates)
-* Project Repo: [https://github.com/townsfolk/gradle-templates](https://github.com/townsfolk/gradle-templates)
-* Wiki/Documentation: [https://github.com/townsfolk/gradle-templates/wiki](https://github.com/townsfolk/gradle-templates/wiki)
-* License: [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html)
-* Questions, bugs, issues: [https://github.com/townsfolk/gradle-templates/issues](https://github.com/townsfolk/gradle-templates/issues)
+Creates a basic gradle project with a simple build.gradle file.
 
-[![Build Status](https://drone.io/github.com/cjstehno/gradle-templates/status.png)](https://drone.io/github.com/cjstehno/gradle-templates/latest)
+Supported task options:
+* clean - if the target directory already exists, delete it
 
+#### createRestProject
+
+Creates a skeleton SpringBoot REST project (includes build.gradle, application class, and supporting classes)
+
+You WILL get an error when running `./gradlew bootRun`:
+* After creating your project, update application.properties `server.port` and `management.port` values following
+the convention described in the [Blackbaud Wiki](https://wiki.blackbaud.com/display/LUM/Microservice+Port+Mapping+Registry)
+
+Supported task options:
+* clean - if the target directory already exists, delete it
+* postgres - initializes the project with a postgres container and supporting files
+* mybatis - initializes the project with a mybatis generator config and applies the mybatis plugin; also, applies the postgres option above
+* kafka - initializes the project with a kafka container and supporting files
+
+### Project Augmentation Tasks
+
+The project augmentation tasks are available when run from this project but also when the `blackbaud-templates` plugin
+is applied to another project like so...  
+
+```
+buildscript {
+    dependencies {
+        classpath "com.blackbaud:gradle-templates:2+"
+    }
+}
+
+apply plugin: "blackbaud-templates"
+```
+
+In this case, the target directory will be the project which applies the plugin and the project property `repoName` 
+will be ignored.
+
+#### createRestResource
+
+Creates a resource in an existing SpringBoot REST project (includes the Resource, ResourceSpec, ResourceWireSpec, etc)
+
+#### addPostgresContainer
+
+Adds a Postgres docker container configuration to an existing project

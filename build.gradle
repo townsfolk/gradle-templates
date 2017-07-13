@@ -1,12 +1,27 @@
-apply plugin: 'groovy'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
+buildscript {
+    dependencies {
+        classpath "com.blackbaud:gradle-internal:3.+"
+    }
+}
 
-repositories { mavenCentral() }
+apply plugin: "blackbaud-internal"
+apply plugin: "blackbaud-templates"
+apply plugin: "integration-test"
 
 dependencies {
-	compile gradleApi()
-	compile localGroovy()
+    compile gradleApi()
+    compile localGroovy()
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:4.0.2.201509141540-r'
 
+    testCompile gradleTestKit()
+    testCompile ('com.blackbaud:gradle-internal-test:3.+') {
+        exclude group: 'org.spockframework'
+    }
+    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+        exclude group: 'org.codehaus.groovy'
+    }
     testCompile 'junit:junit:4.11'
 }
+
+check.dependsOn integrationTest

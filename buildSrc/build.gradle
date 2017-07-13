@@ -1,0 +1,20 @@
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:4.0.2.201509141540-r'
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDir '../src/main/groovy'
+        }
+        resources {
+            srcDir '../src/main/resources'
+        }
+    }
+}
