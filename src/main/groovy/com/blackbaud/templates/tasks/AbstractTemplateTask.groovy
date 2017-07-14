@@ -15,13 +15,12 @@
  * limitations under the License.
  */
 
-package templates.tasks
+package com.blackbaud.templates.tasks
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.GradleException
-import templates.GitRepo
-import templates.ProjectProps
-import templates.BlackbaudTemplatesPlugin
+import com.blackbaud.templates.GitRepo
+import com.blackbaud.templates.ProjectProps
+import com.blackbaud.templates.BlackbaudTemplatesPlugin
 
 /**
  * Abstract base class for project tasks.
@@ -37,12 +36,13 @@ abstract class AbstractTemplateTask extends DefaultTask {
     }
 
     protected BasicProject createBasicProject(boolean clean) {
-        GitRepo gitRepo = openOrInitGitRepo(clean)
+        GitRepo gitRepo = GitRepo.openOrInitGitRepo(projectProps.repoDir, clean)
+
         new BasicProject(projectProps, gitRepo)
     }
 
     protected BasicProject openBasicProject() {
-        GitRepo gitRepo = openGitRepo(projectProps.repoDir)
+        GitRepo gitRepo = GitRepo.openGitRepo(projectProps.repoDir)
         new BasicProject(projectProps, gitRepo)
     }
 
@@ -54,29 +54,6 @@ abstract class AbstractTemplateTask extends DefaultTask {
     protected RestProject openRestProject(String serviceName) {
         BasicProject basicProject = openBasicProject()
         new RestProject(basicProject, serviceName)
-    }
-
-    private GitRepo openOrInitGitRepo(boolean clean) {
-        File repoDir = projectProps.repoDir
-        if (clean) {
-            repoDir.deleteDir()
-        }
-
-        repoDir.exists() ? openGitRepo(repoDir) : initGitRepo(repoDir)
-    }
-
-    private GitRepo openGitRepo(File repoDir) {
-        if (repoDir.exists() == false) {
-            throw new GradleException("Cannot open git project, dir=${repoDir.absolutePath}")
-        }
-        GitRepo.open(repoDir)
-    }
-
-    private GitRepo initGitRepo(File repoDir) {
-        repoDir.mkdirs()
-        GitRepo git = GitRepo.init(repoDir)
-        git.setRemoteUrl("origin", "git@github.com:blackbaud/${repoDir.name}.git")
-        git
     }
 
 }

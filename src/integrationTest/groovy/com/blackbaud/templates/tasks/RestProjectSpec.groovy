@@ -1,11 +1,11 @@
-package templates.tasks
+package com.blackbaud.templates.tasks
 
 import com.blackbaud.gradle.test.AbstractProjectSpecification
 import com.blackbaud.gradle.test.TestGradleBuild
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
-import templates.GitRepo
-import templates.ProjectProps
+import com.blackbaud.templates.GitRepo
+import com.blackbaud.templates.ProjectProps
 
 
 public class RestProjectSpec extends AbstractProjectSpecification {

@@ -1,4 +1,4 @@
-package templates
+package com.blackbaud.templates
 
 import org.gradle.api.Project
 

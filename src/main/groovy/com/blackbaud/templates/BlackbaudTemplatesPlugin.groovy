@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package templates
+package com.blackbaud.templates
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import templates.tasks.AddKafkaContainerTask
-import templates.tasks.AddPostgresContainerTask
-import templates.tasks.CreateBasicProjectTask
-import templates.tasks.CreateEmbeddedServiceTask
-import templates.tasks.CreateRestProjectTask
-import templates.tasks.CreateRestResourceTask
+import com.blackbaud.templates.tasks.AddKafkaContainerTask
+import com.blackbaud.templates.tasks.AddPostgresContainerTask
+import com.blackbaud.templates.tasks.CreateBasicProjectTask
+import com.blackbaud.templates.tasks.CreateEmbeddedServiceTask
+import com.blackbaud.templates.tasks.CreateRestProjectTask
+import com.blackbaud.templates.tasks.CreateRestResourceTask
 
 /**
  * The core of the templates plugin.

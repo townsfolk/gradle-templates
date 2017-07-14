@@ -1,4 +1,4 @@
-package templates.tasks
+package com.blackbaud.templates.tasks
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package templates
+package com.blackbaud.templates
 
 import org.junit.Rule
 import org.junit.Test

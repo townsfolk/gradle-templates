@@ -1,4 +1,4 @@
-package templates.tasks
+package com.blackbaud.templates.tasks
 
 import org.gradle.api.tasks.TaskAction
 

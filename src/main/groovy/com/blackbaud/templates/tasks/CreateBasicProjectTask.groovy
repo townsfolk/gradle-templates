@@ -1,6 +1,6 @@
-package templates.tasks
+package com.blackbaud.templates.tasks
 
-import templates.BlackbaudTemplatesPlugin
+import com.blackbaud.templates.BlackbaudTemplatesPlugin
 import org.gradle.api.tasks.TaskAction
 
 class CreateBasicProjectTask extends AbstractTemplateTask {
