@@ -33,6 +33,10 @@ class BasicProject {
         this.blackbaudGradleVersion = blackbaudGradleVersion
     }
 
+    GitRepo getGitRepo() {
+        gitRepo
+    }
+
     String getServiceName() {
         LOWER_HYPHEN.to(UPPER_CAMEL, repoName)
     }

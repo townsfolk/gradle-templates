@@ -13,6 +13,7 @@ dependencies {
     compile localGroovy()
     compile 'com.google.guava:guava:18.0'
     compile 'org.eclipse.jgit:org.eclipse.jgit:4.0.2.201509141540-r'
+    compile 'org.gradle:gradle-tooling-api:2.1'
 
     testCompile gradleTestKit()
     testCompile ('com.blackbaud:gradle-internal-test:3.+') {

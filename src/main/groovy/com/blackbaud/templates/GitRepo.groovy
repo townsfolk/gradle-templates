@@ -2,18 +2,12 @@ package com.blackbaud.templates
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.StoredConfig
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 
 class GitRepo {
 
-    static GitRepo init(File repoDir) {
-        Git git = Git.init().setDirectory(repoDir).call()
-        new GitRepo(git)
-    }
-
-    static GitRepo open(File repoDir) {
-        Git git = Git.open(repoDir)
-        new GitRepo(git)
-    }
+    private static final String VSTS_GIT_BASE_URL = "https://blackbaud.visualstudio.com/Products/_git/"
+    private static final String GITHUB_BASE_URL = "https://github.com/blackbaud/"
 
     private Git git
 
@@ -38,11 +32,25 @@ class GitRepo {
         config.save()
     }
 
+    void pushProject(String username, String password) {
+       git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password)).setPushAll().call()
+    }
+
+    static GitRepo init(File repoDir) {
+        Git git = Git.init().setDirectory(repoDir).call()
+        new GitRepo(git)
+    }
+
+    static GitRepo open(File repoDir) {
+        Git git = Git.open(repoDir)
+        new GitRepo(git)
+    }
+
     static GitRepo openOrInitGitRepo(File repoDir, boolean clean) {
         if (clean) {
             repoDir.deleteDir()
         }
-        repoDir.exists() ? openGitRepo(repoDir) : initGitRepo(repoDir)
+        repoDir.exists() ? openGitRepo(repoDir) : initGitHubRepo(repoDir.name, repoDir)
     }
 
     static GitRepo openGitRepo(File repoDir) {
@@ -52,11 +60,17 @@ class GitRepo {
         open(repoDir)
     }
 
-    static GitRepo initGitRepo(File repoDir) {
+    static GitRepo initGitHubRepo(String name, File repoDir) {
         repoDir.mkdirs()
         GitRepo git = init(repoDir)
-        git.setRemoteUrl("origin", "git@github.com:blackbaud/${repoDir.name}.git")
+        git.setRemoteUrl("origin", GITHUB_BASE_URL + "${name}.git")
         git
     }
 
+    static GitRepo initVstsGitRepo(String name, File repoDir) {
+        repoDir.mkdirs()
+        GitRepo git = init(repoDir)
+        git.setRemoteUrl("origin", VSTS_GIT_BASE_URL + "${name}")
+        git
+    }
 }

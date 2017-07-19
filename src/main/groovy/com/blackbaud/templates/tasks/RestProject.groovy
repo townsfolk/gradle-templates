@@ -29,6 +29,10 @@ class RestProject {
         basicProject.servicePackagePath
     }
 
+    BasicProject getBasicProject() {
+        basicProject
+    }
+
     void initRestProject() {
         basicProject.initGradleProject()
         createRestBase()

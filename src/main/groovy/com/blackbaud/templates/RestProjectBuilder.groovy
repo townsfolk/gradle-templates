@@ -6,11 +6,13 @@ import com.blackbaud.templates.tasks.RestProject
 class RestProjectBuilder {
 
     File repoDir;
+    String name;
     String blackbaudGradleVersion;
     boolean mybatis = false;
     boolean postgres = false;
     boolean kafka = false;
     boolean clean = false;
+    boolean vsts = false;
 
     private RestProjectBuilder() {}
 
@@ -25,6 +27,11 @@ class RestProjectBuilder {
 
     public RestProjectBuilder blackbaudGradleVersion(String blackbaudGradleVersion) {
         this.blackbaudGradleVersion = blackbaudGradleVersion
+        this
+    }
+
+    public RestProjectBuilder name(String name) {
+        this.name = name;
         this
     }
 
@@ -48,7 +55,12 @@ class RestProjectBuilder {
         this
     }
 
-    public void build() {
+    public RestProjectBuilder useVsts() {
+        this.vsts = true;
+        this
+    }
+
+    public RestProject build() {
         BasicProject basicProject = createBasicProject()
         RestProject restProject = new RestProject(basicProject, basicProject.serviceName)
         restProject.initRestProject()
@@ -66,10 +78,14 @@ class RestProjectBuilder {
 
     private BasicProject createBasicProject() {
         BasicProjectBuilder basicProjectBuilder = BasicProjectBuilder.getInstance()
+                .name(name)
                 .repoDir(repoDir)
                 .blackbaudGradleVersion(blackbaudGradleVersion)
         if(clean) {
             basicProjectBuilder.clean()
+        }
+        if (vsts) {
+            basicProjectBuilder.useVsts()
         }
         basicProjectBuilder.build()
     }
