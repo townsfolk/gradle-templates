@@ -1,19 +1,16 @@
 package ${packageName};
 
-import java.util.UUID;
-import lombok.AllArgsConstructor;
+<%if (upperCamel) out.println 'import com.fasterxml.jackson.databind.PropertyNamingStrategy;\nimport com.fasterxml.jackson.databind.annotation.JsonNaming;'%>import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@EqualsAndHashCode(of = "id")
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor<% if (upperCamel) out.print '\n@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)'%>
 public class ${resourceName} {
 
-    private UUID id;
+    String replaceme;
 
 }

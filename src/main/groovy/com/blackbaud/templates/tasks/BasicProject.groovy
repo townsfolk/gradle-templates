@@ -147,7 +147,9 @@ class BasicProject {
     }
 
     File getProjectFile(String filePath) {
-        new File(targetDir, filePath)
+        File file = new File(targetDir, filePath)
+        file.parentFile.mkdirs()
+        file
     }
 
     File getProjectFileOrFail(String filePath) {

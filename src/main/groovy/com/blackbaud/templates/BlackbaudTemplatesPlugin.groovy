@@ -16,14 +16,17 @@
  */
 package com.blackbaud.templates
 
+import com.blackbaud.templates.tasks.AddApiObjectTask
+import com.blackbaud.templates.tasks.AddJpaObjectTask
+import com.blackbaud.templates.tasks.CreateBasicResourceTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import com.blackbaud.templates.tasks.AddKafkaContainerTask
 import com.blackbaud.templates.tasks.AddPostgresContainerTask
-import com.blackbaud.templates.tasks.CreateBasicProjectTask
+import com.blackbaud.templates.tasks.CreateLibraryProjectTask
 import com.blackbaud.templates.tasks.CreateEmbeddedServiceTask
-import com.blackbaud.templates.tasks.CreateRestProjectTask
-import com.blackbaud.templates.tasks.CreateRestResourceTask
+import com.blackbaud.templates.tasks.CreateDeployableProjectTask
+import com.blackbaud.templates.tasks.CreateCrudResourceTask
 
 /**
  * The core of the templates plugin.
@@ -38,14 +41,17 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
         if (customProps.isThisProjectGradleTemplates()) {
             customProps.applyCustomPropertiesFile()
 
-            project.task 'createBasicProject', type: CreateBasicProjectTask
-            project.task 'createRestProject', type: CreateRestProjectTask
+            project.task 'createLibraryProject', type: CreateLibraryProjectTask
+            project.task 'createDeployableProject', type: CreateDeployableProjectTask
         }
 
-        project.task 'createRestResource', type: CreateRestResourceTask
+        project.task 'createCrudResource', type: CreateCrudResourceTask
+        project.task 'createBasicResource', type: CreateBasicResourceTask
         project.task 'createRestEmbeddedService', type: CreateEmbeddedServiceTask
         project.task 'addPostgresContainer', type: AddPostgresContainerTask
         project.task 'addKafkaContainer', type: AddKafkaContainerTask
+        project.task 'addApiObject', type: AddApiObjectTask
+        project.task 'addJpaObject', type: AddJpaObjectTask
     }
 
 }

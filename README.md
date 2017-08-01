@@ -27,16 +27,16 @@ Run the `./gradlew tasks` command and look at the group `Template tasks` to see 
 The project creation tasks are only available when run from this project.  All tasks require the project property
 `repoName` to be specified in order to identify the target directory.  
 
-#### createBasicProject
+#### createLibraryProject
 
 Creates a basic gradle project with a simple build.gradle file.
 
 Supported task options:
 * clean - if the target directory already exists, delete it
 
-#### createRestProject
+#### createDeployableProject
 
-Creates a skeleton SpringBoot REST project (includes build.gradle, application class, and supporting classes)
+Creates a skeleton SpringBoot project (includes build.gradle, application class, and supporting classes)
 
 You WILL get an error when running `./gradlew bootRun`:
 * After creating your project, update application.properties `server.port` and `management.port` values following

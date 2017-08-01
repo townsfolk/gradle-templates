@@ -20,7 +20,7 @@ class FileUtils {
                 break
             }
         }
-        file.text = lines.join(LINE_SEPARATOR)
+        file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
     }
 
 }

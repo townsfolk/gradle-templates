@@ -2,18 +2,18 @@ package com.blackbaud.templates.tasks
 
 import org.gradle.api.tasks.TaskAction
 
-class CreateRestResourceTask extends AbstractTemplateTask {
+class CreateBasicResourceTask extends AbstractTemplateTask {
 
-    CreateRestResourceTask() {
-        super("Create a SpringBoot REST resource (options: -PresourceName=?, [-PsuppressEntity])")
+    CreateBasicResourceTask() {
+        super("Create a SpringBoot REST resource (options: -PresourceName=?, [-PaddWireSpec])")
     }
 
     @TaskAction
-    void createRestResource() {
-        boolean addEntity = projectProps.isPropertyDefined("suppressEntity") == false
+    void createBasicResource() {
+        boolean addWireSpec = projectProps.isPropertyDefined("addWireSpec")
         String resourceName = getResourceName()
         RestProject restProject = openRestProject()
-        restProject.createRestResource(resourceName, addEntity)
+        restProject.createBasicResource(resourceName, addWireSpec)
     }
 
     private String getResourceName() {

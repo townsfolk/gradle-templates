@@ -3,15 +3,15 @@ package com.blackbaud.templates.tasks
 import com.blackbaud.templates.BlackbaudTemplatesPlugin
 import org.gradle.api.tasks.TaskAction
 
-class CreateBasicProjectTask extends AbstractTemplateTask {
+class CreateLibraryProjectTask extends AbstractTemplateTask {
 
-    CreateBasicProjectTask() {
-        super("Create a basic project (options: -PrepoName=?, [-Pclean])")
+    CreateLibraryProjectTask() {
+        super("Create a library project (options: -PrepoName=?, [-Pclean])")
         group = BlackbaudTemplatesPlugin.GROUP
     }
 
     @TaskAction
-    void createBasicProject() {
+    void createLibraryProject() {
         boolean clean = projectProps.isPropertyDefined("clean")
         BasicProject basicProject = createBasicProject(clean)
 

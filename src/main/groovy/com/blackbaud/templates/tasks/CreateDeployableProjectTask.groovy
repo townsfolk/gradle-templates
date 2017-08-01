@@ -2,14 +2,14 @@ package com.blackbaud.templates.tasks
 
 import org.gradle.api.tasks.TaskAction
 
-class CreateRestProjectTask extends AbstractTemplateTask {
+class CreateDeployableProjectTask extends AbstractTemplateTask {
 
-    CreateRestProjectTask() {
+    CreateDeployableProjectTask() {
         super("Create a SpringBoot REST project (options: -PrepoName=?, [-Pclean, -Ppostgres, -Pmybatis, -Pkafka])")
     }
 
     @TaskAction
-    void createRestProject() {
+    void createDeployableProject() {
         boolean clean = projectProps.isPropertyDefined("clean")
         BasicProject basicProject = createBasicProject(clean)
         RestProject restProject = new RestProject(basicProject, basicProject.serviceName)

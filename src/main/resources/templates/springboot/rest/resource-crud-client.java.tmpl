@@ -1,0 +1,35 @@
+package ${servicePackage}.client;
+
+import com.blackbaud.rest.client.AbstractClientBuilder;
+import com.blackbaud.rest.client.CrudClient;
+import com.blackbaud.rest.client.request.ClientRequest;
+import ${servicePackage}.api.ResourcePaths;
+import ${servicePackage}.api.${resourceName};
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+public class ${resourceName}Client extends CrudClient<${resourceName}, ${resourceName}Client> {
+
+    // clone ctor
+    public ${resourceName}Client() {}
+
+    private ${resourceName}Client(ClientRequest clientRequest) {
+        super(clientRequest.path(ResourcePaths.${resourcePathVar}), ${resourceName}.class);
+    }
+
+
+    public static Builder builder() {
+        return new Builder()
+                .luminateNextGenDefaults();
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Builder extends AbstractClientBuilder<${resourceName}Client, Builder> {
+
+        @Override
+        public ${resourceName}Client build() {
+            return new ${resourceName}Client(clientRequestBuilder.build());
+        }
+    }
+
+}
