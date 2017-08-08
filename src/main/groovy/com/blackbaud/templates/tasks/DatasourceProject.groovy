@@ -39,16 +39,7 @@ class DatasourceProject {
         applyPostgresCompileDependencies()
         applyApplicationProperties()
         applyTestCleanupSql()
-        applyPostgresServiceToAppDescriptor()
-    }
-
-    private void applyPostgresServiceToAppDescriptor() {
-        File appDescriptor = basicProject.getProjectFileOrFail("src/deploy/cloudfoundry/app-descriptor.yml")
-        String anchor = appDescriptor.text.contains("services:") ? "services:" : "type:"
-        FileUtils.appendAfterLine(appDescriptor, anchor, """\
-  services:
-    - postgres-shared
-""")
+        basicProject.appendServiceToAppDescriptor("postgres-shared")
     }
 
     private void applyTestCleanupSql() {

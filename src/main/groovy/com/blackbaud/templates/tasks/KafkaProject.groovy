@@ -20,6 +20,8 @@ class KafkaProject {
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /mainTestCompile/,
                 '    mainTestCompile "com.blackbaud:common-kafka-test:${commonKafkaVersion}"')
 
+        basicProject.appendServiceToAppDescriptor("kafka")
+
         File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         componentTestPropertiesFile.append("""
 kafka.consumer.groupId=\${spring.application.name}-test

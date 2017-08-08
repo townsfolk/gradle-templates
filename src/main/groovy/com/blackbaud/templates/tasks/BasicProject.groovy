@@ -173,4 +173,18 @@ class BasicProject {
         matchingFile
     }
 
+    void appendServiceToAppDescriptor(String service) {
+        File appDescriptor = getProjectFileOrFail("src/deploy/cloudfoundry/app-descriptor.yml")
+        if (appDescriptor.text.contains("services:")) {
+            FileUtils.appendAfterLine(appDescriptor, "services:", """\
+    - ${service}""")
+
+        } else {
+            FileUtils.appendAfterLine(appDescriptor, "type:", """\
+  services:
+    - ${service}""")
+
+        }
+    }
+
 }
