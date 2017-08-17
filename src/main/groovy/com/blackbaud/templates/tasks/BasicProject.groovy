@@ -16,6 +16,7 @@ class BasicProject {
     private GitRepo gitRepo
     private File targetDir
     String repoName
+    private File gradleUserHomeDir
     private String blackbaudGradleVersion
     private ProjectProps projectProps
 
@@ -26,11 +27,12 @@ class BasicProject {
         this.projectProps = projectProps
     }
 
-    BasicProject(String blackbaudGradleVersion, GitRepo gitRepo) {
+    BasicProject(String blackbaudGradleVersion, GitRepo gitRepo, File gradleUserHomeDir) {
         this.gitRepo = gitRepo
         this.repoName = gitRepo.repoDir.name
         this.targetDir = gitRepo.repoDir
         this.blackbaudGradleVersion = blackbaudGradleVersion
+        this.gradleUserHomeDir = gradleUserHomeDir
     }
 
     GitRepo getGitRepo() {
@@ -115,9 +117,14 @@ class BasicProject {
     }
 
     private void initGradleWrapper() {
-        ProjectConnection connection = GradleConnector.newConnector()
+        GradleConnector connector = GradleConnector.newConnector()
                 .forProjectDirectory(repoDir)
-                .connect()
+
+        if (gradleUserHomeDir != null) {
+            connector.useGradleUserHomeDir(gradleUserHomeDir)
+        }
+
+        ProjectConnection connection = connector.connect()
         try {
             connection.newBuild().forTasks("wrapper").run()
         } finally {

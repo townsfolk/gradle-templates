@@ -6,6 +6,7 @@ class BasicProjectBuilder {
 
     File repoDir;
     String name;
+    File gradleUserHome;
     String blackbaudGradleVersion;
     boolean clean = false;
     boolean vsts = false;
@@ -23,6 +24,11 @@ class BasicProjectBuilder {
 
     public BasicProjectBuilder blackbaudGradleVersion(String blackbaudGradleVersion) {
         this.blackbaudGradleVersion = blackbaudGradleVersion
+        this
+    }
+
+    public BasicProjectBuilder gradleUserHome(File gradleUserHome) {
+        this.gradleUserHome = gradleUserHome
         this
     }
 
@@ -48,7 +54,7 @@ class BasicProjectBuilder {
         } else {
             gitRepo = GitRepo.initGitHubRepo(name, repoDir)
         }
-        BasicProject basicProject = new BasicProject(blackbaudGradleVersion, gitRepo)
+        BasicProject basicProject = new BasicProject(blackbaudGradleVersion, gitRepo, gradleUserHome)
         basicProject.initGradleProject()
         basicProject
     }
