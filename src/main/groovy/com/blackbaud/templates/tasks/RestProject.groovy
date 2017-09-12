@@ -1,6 +1,6 @@
 package com.blackbaud.templates.tasks
 
-import org.eclipse.jgit.util.FileUtil
+import com.blackbaud.templates.ProjectProps
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN
@@ -10,33 +10,31 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL
 class RestProject {
 
     private BasicProject basicProject
-    private String serviceName
-    private String serviceId
 
     RestProject(BasicProject basicProject) {
-        this(basicProject, basicProject.serviceName)
+        this.basicProject = basicProject
     }
 
-    RestProject(BasicProject basicProject, String serviceName) {
-        this.basicProject = basicProject
-        this.serviceName = serviceName.capitalize()
-        this.serviceId = "${UPPER_CAMEL.to(LOWER_HYPHEN, serviceName)}"
+    ProjectProps getProjectProps() {
+        basicProject.projectProps
     }
 
     String getServiceId() {
-        serviceId
+        "${UPPER_CAMEL.to(LOWER_HYPHEN, serviceName)}"
     }
 
     String getServiceName() {
-        serviceName
+        String defaultServiceName = LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.repoName).capitalize()
+        projectProps.getOptionalProjectPropertyOrDefault("serviceName", defaultServiceName)
     }
 
     String getServicePackage() {
-        basicProject.servicePackage
+        String defaultPackageName = "com.blackbaud.${serviceName.toLowerCase()}"
+        projectProps.getOptionalProjectPropertyOrDefault("servicePackageName", defaultPackageName)
     }
 
     String getServicePackagePath() {
-        basicProject.servicePackagePath
+        servicePackage.replaceAll ("\\.", "/" )
     }
 
     BasicProject getBasicProject() {
@@ -124,18 +122,6 @@ class RestProject {
         }
 
         basicProject.commitProjectFiles("springboot rest bootstrap")
-    }
-
-    void createEmbeddedService(boolean addEntity) {
-        createCrudResource(serviceName, addEntity, false)
-
-        println "********************************************************"
-        println "********************************************************"
-        println ""
-        println "Remember to add ${servicePackage} to @ComponentScan list!"
-        println ""
-        println "********************************************************"
-        println "********************************************************"
     }
 
     void createCrudResource(String resourceName, boolean addEntity, boolean addWireSpec) {

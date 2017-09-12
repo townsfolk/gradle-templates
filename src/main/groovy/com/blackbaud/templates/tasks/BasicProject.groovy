@@ -7,9 +7,6 @@ import com.blackbaud.templates.GitRepo
 import com.blackbaud.templates.ProjectProps
 import com.blackbaud.templates.ProjectTemplate
 
-import static com.google.common.base.CaseFormat.LOWER_HYPHEN
-import static com.google.common.base.CaseFormat.UPPER_CAMEL
-
 class BasicProject {
 
     @Delegate
@@ -39,16 +36,8 @@ class BasicProject {
         gitRepo
     }
 
-    String getServiceName() {
-        LOWER_HYPHEN.to(UPPER_CAMEL, repoName)
-    }
-
-    String getServicePackage() {
-        "com.blackbaud.${serviceName.toLowerCase()}"
-    }
-
-    String getServicePackagePath() {
-        servicePackage.replaceAll ( "\\.", "/" )
+    ProjectProps getProjectProps() {
+        projectProps
     }
 
     File getRepoDir() {
@@ -71,8 +60,8 @@ class BasicProject {
             initBasicGradleBuild()
             gitRepo.commitProjectFiles("added build.gradle")
 
-            initBasicTest()
-            gitRepo.commitProjectFiles("add basic test")
+            new File(repoDir, "src/main/java").mkdirs()
+            new File(repoDir, "src/test/groovy").mkdirs()
         }
     }
 
@@ -95,6 +84,8 @@ class BasicProject {
     private void initBasicGradleBuild() {
         applyTemplate {
             'build.gradle' template: "/templates/basic/build.gradle.tmpl"
+            'gradle.properties' template: "/templates/basic/gradle.properties.tmpl",
+                    artifactId: repoName
         }
     }
 
@@ -102,7 +93,7 @@ class BasicProject {
         File gradleWrapperProperties = new File(repoDir, "gradle/wrapper/gradle-wrapper.properties")
         String text = gradleWrapperProperties.text
         String blackbaudGradleVersion = getBlackbaudGradleVersion()
-        String distributionUrl = "https://nexus-oscf-dev.blackbaudcloud.com/content/repositories/releases/com/blackbaud/gradle-blackbaud/${blackbaudGradleVersion}/gradle-blackbaud-${blackbaudGradleVersion}-bin.zip"
+        String distributionUrl = "https://raw.githubusercontent.com/blackbaud/blackbaud-gradle-distributions/master/gradle-blackbaud-${blackbaudGradleVersion}-bin.zip"
         gradleWrapperProperties.text = text.replaceFirst(/(?m)^distributionUrl=.*/, /distributionUrl=${distributionUrl}/)
     }
 
@@ -135,13 +126,6 @@ class BasicProject {
     private void initGitignore() {
         applyTemplate {
             '.gitignore' template: "/templates/git/gitignore.tmpl"
-        }
-    }
-
-    private void initBasicTest() {
-        applyTemplate {
-            "src/test/groovy/${servicePackagePath}/${this.serviceName}Spec.groovy" template: "/templates/test/basic-spec.groovy.tmpl",
-                                                                                   serviceName: serviceName, servicePackage: servicePackage
         }
     }
 

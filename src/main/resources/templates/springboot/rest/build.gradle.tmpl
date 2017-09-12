@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}"
-        classpath "com.blackbaud:gradle-internal:3.+"
+        classpath "com.blackbaud:gradle-internal:4.+"
         classpath "com.blackbaud:gradle-templates:2.+"
     }
 }
@@ -12,6 +12,10 @@ buildscript {
 apply plugin: "blackbaud-internal-rest"
 apply plugin: "blackbaud-templates"
 apply plugin: "spring-boot"
+
+ext {
+    servicePackageName="${servicePackageName}"
+}
 
 configurations {
     client
@@ -29,16 +33,21 @@ sourceSets {
 
 dependencies {
     compile "com.blackbaud:common-spring-boot-rest:\${springBootVersion}-2.+"
+    compileOnly "org.projectlombok:lombok:1.16.18"
 
     clientCompile "com.blackbaud:common-spring-boot-rest:\${springBootVersion}-2.+"
 
-    mainTestCompile "com.blackbaud:common-spring-boot-rest-test:\${springBootVersion}-2.+"
-    mainTestCompile "com.blackbaud:common-test:1.+"
-    mainTestCompile "org.codehaus.groovy:groovy-all:2.4.7"
-    mainTestCompile ("org.spockframework:spock-spring:1.0-groovy-2.4") {
+    mainTestCompile "com.blackbaud:common-test:3.+"
+
+    sharedTestCompile "com.blackbaud:common-spring-boot-rest-test:\${springBootVersion}-2.+"
+    sharedTestCompile "org.codehaus.groovy:groovy-all:2.4.7"
+    sharedTestCompile ("org.spockframework:spock-core:1.1-groovy-2.4") {
         exclude group: "org.codehaus.groovy"
     }
-    mainTestCompile "org.springframework.boot:spring-boot-starter-test"
+    sharedTestCompile ("org.spockframework:spock-spring:1.1-groovy-2.4") {
+        exclude group: "org.codehaus.groovy"
+    }
+    sharedTestCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
 swagger {

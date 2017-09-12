@@ -52,6 +52,14 @@ class ProjectProps {
         project.properties.containsKey(name)
     }
 
+    String getOptionalProjectPropertyOrDefault(String propertyName, String defaultValue) {
+        String value = defaultValue
+        if (project.properties.containsKey(propertyName)) {
+            value = project.ext[propertyName]
+        }
+        value
+    }
+
     String getRequiredProjectProperty(String propertyName) {
         if (!project.properties.containsKey(propertyName)) {
             throw new GradleException("Required property '${propertyName}' is not set")

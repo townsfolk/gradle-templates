@@ -68,7 +68,7 @@ class RestProjectBuilder {
 
     public RestProject build() {
         BasicProject basicProject = createBasicProject()
-        RestProject restProject = new RestProject(basicProject, basicProject.serviceName)
+        RestProject restProject = new RestProject(basicProject)
         restProject.initRestProject()
         if (mybatis) {
             restProject.initPostgres()

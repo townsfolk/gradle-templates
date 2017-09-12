@@ -47,6 +47,8 @@ Supported task options:
 * postgres - initializes the project with a postgres container and supporting files
 * mybatis - initializes the project with a mybatis generator config and applies the mybatis plugin; also, applies the postgres option above
 * kafka - initializes the project with a kafka container and supporting files
+* serviceName - the name of the SpringBoot application entrypoint, defaults to the repository name, converted to upper camel-case
+* servicePackageName - the name of the core package (contains the application entrypoint), defaults to "com.blackbaud.${serviceName.toLowercase()}"
 
 ### Project Augmentation Tasks
 

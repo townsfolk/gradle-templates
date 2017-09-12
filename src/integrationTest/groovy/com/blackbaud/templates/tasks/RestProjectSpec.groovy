@@ -20,11 +20,12 @@ class RestProjectSpec extends AbstractProjectSpecification {
 
     def setup() {
         project.ext["blackbaudGradleVersion"] = "2.14.1-bb.1.0"
-        GitRepo repo = GitRepo.init(projectDir.root)
+        File serviceDir = new File(projectDir.root, "service")
+        GitRepo repo = GitRepo.init(serviceDir)
         ProjectProps projectProps = new ProjectProps(project)
         BasicProject basicProject = new BasicProject(projectProps, repo)
         basicProject.initGradleProject()
-        restProject = new RestProject(basicProject, "service")
+        restProject = new RestProject(basicProject)
         testGradleBuild = new TestGradleBuild(projectDir.root)
     }
 

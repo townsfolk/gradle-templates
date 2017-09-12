@@ -1,6 +1,3 @@
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-
 buildscript {
     dependencies {
         classpath "com.blackbaud:gradle-internal:3.+"
@@ -11,14 +8,15 @@ apply plugin: "blackbaud-internal"
 apply plugin: "blackbaud-templates"
 apply plugin: "integration-test"
 
-println "Using gradle version: ${parseGradleVersionFromWrapperProps()}"
+setGradleVersions()
+println "Using gradle version: ${gradleVersion}"
 
 dependencies {
     compileOnly gradleApi()
     compile localGroovy()
     compile 'com.google.guava:guava:18.0'
     compile 'org.eclipse.jgit:org.eclipse.jgit:4.0.2.201509141540-r'
-    compile "org.gradle:gradle-tooling-api:${parseGradleVersionFromWrapperProps()}"
+    compile "org.gradle:gradle-tooling-api:${gradleVersion}"
 
     testCompile gradleTestKit()
     testCompile ('com.blackbaud:gradle-internal-test:3.+') {
@@ -32,17 +30,20 @@ dependencies {
 
 check.dependsOn integrationTest
 
-def parseGradleVersionFromWrapperProps() {
-  try {
-    def  props = new Properties();
-    File propFile = new File('gradle/wrapper/gradle-wrapper.properties')
-    props.load(propFile.newDataInputStream())
-    String distUrl = props.getProperty('distributionUrl')
-    Pattern pattern = Pattern.compile("gradle-blackbaud\\/(.*)-bb.[0-9].[0-9]\\/gradle-blackbaud");
-    Matcher matcher = pattern.matcher(distUrl);
-    matcher.find()
-    return matcher.group(1)
-  } catch (Exception ex) {
-    throw new RuntimeException("Failed to parse gradle version from gradlle-wrapper.properties. Please ensure distributionUrl is set!")
-  }
+def setGradleVersions() {
+    def group
+    try {
+      def props = new Properties()
+      File propFile = new File('gradle/wrapper/gradle-wrapper.properties')
+      props.load(propFile.newDataInputStream())
+      String distUrl = props.getProperty('distributionUrl')
+      group = (distUrl =~ "gradle-blackbaud-((.*)-bb.[0-9]+.[0-9]+)-bin.zip")
+    } catch (Exception ex) {
+      throw new RuntimeException("Failed to parse gradle version from gradle-wrapper.properties. Please ensure distributionUrl is set!")
+    }
+
+    ext {
+        gradleVersion=group[0][2]
+        blackbaudGradleVersion=group[0][1]
+    }
 }
