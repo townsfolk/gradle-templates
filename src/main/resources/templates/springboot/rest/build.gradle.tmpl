@@ -5,7 +5,7 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}"
         classpath "com.blackbaud:gradle-internal:4.+"
-        classpath "com.blackbaud:gradle-templates:2.+"
+        classpath "com.blackbaud:gradle-templates:3.+"
     }
 }
 
@@ -13,47 +13,36 @@ apply plugin: "blackbaud-internal-rest"
 apply plugin: "blackbaud-templates"
 apply plugin: "spring-boot"
 
-ext {
-    servicePackageName="${servicePackageName}"
-}
+allprojects {
+    apply plugin: "blackbaud-internal"
 
-configurations {
-    client
-}
+    ext {
+        servicePackageName="${servicePackageName}"
+        commonSpringBootVersion = "\${springBootVersion}-2.+"
+        spockVersion = "1.1-groovy-2.4"
+    }
 
-sourceSets {
-    client {
-        java {
-            srcDir "src/main/java"
-            include "${servicePackageName.replace(".", "/")}/api/**"
-            include "${servicePackageName.replace(".", "/")}/client/**"
-        }
+    dependencies {
+        compileOnly "org.projectlombok:lombok:1.16.18"
+
+        mainTestCompile "com.blackbaud:common-test:3.+"
+        mainTestCompileOnly "org.codehaus.groovy:groovy-all:2.4.7"
     }
 }
 
 dependencies {
-    compile "com.blackbaud:common-spring-boot-rest:\${springBootVersion}-2.+"
-    compileOnly "org.projectlombok:lombok:1.16.18"
+    compile "com.blackbaud:common-spring-boot-rest:\${commonSpringBootVersion}"
 
-    clientCompile "com.blackbaud:common-spring-boot-rest:\${springBootVersion}-2.+"
-
-    mainTestCompile "com.blackbaud:common-test:3.+"
-
-    sharedTestCompile "com.blackbaud:common-spring-boot-rest-test:\${springBootVersion}-2.+"
-    sharedTestCompile "org.codehaus.groovy:groovy-all:2.4.7"
-    sharedTestCompile ("org.spockframework:spock-core:1.1-groovy-2.4") {
-        exclude group: "org.codehaus.groovy"
-    }
-    sharedTestCompile ("org.spockframework:spock-spring:1.1-groovy-2.4") {
-        exclude group: "org.codehaus.groovy"
-    }
+    sharedTestCompile "com.blackbaud:common-spring-boot-rest-test:\${commonSpringBootVersion}"
     sharedTestCompile "org.springframework.boot:spring-boot-starter-test"
+    sharedTestCompile ("org.spockframework:spock-core:\${spockVersion}") {
+        exclude group: "org.codehaus.groovy"
+    }
+    sharedTestCompile ("org.spockframework:spock-spring:\${spockVersion}") {
+        exclude group: "org.codehaus.groovy"
+    }
 }
 
 swagger {
     generateDocs
-}
-
-publishing_ext {
-    publication('client')
 }

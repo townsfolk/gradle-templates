@@ -24,17 +24,15 @@ class RestProject {
     }
 
     String getServiceName() {
-        String defaultServiceName = LOWER_HYPHEN.to(UPPER_CAMEL, basicProject.repoName).capitalize()
-        projectProps.getOptionalProjectPropertyOrDefault("serviceName", defaultServiceName)
+        basicProject.serviceName
     }
 
     String getServicePackage() {
-        String defaultPackageName = "com.blackbaud.${serviceName.toLowerCase()}"
-        projectProps.getOptionalProjectPropertyOrDefault("servicePackageName", defaultPackageName)
+        basicProject.servicePackage
     }
 
     String getServicePackagePath() {
-        servicePackage.replaceAll ("\\.", "/" )
+        basicProject.servicePackagePath
     }
 
     BasicProject getBasicProject() {
@@ -93,10 +91,10 @@ class RestProject {
                     className: "TestConfig", packageName: servicePackage
         }
 
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core") {
+        basicProject.applyTemplate("src/sharedTest/groovy/${servicePackagePath}/core") {
             "CoreARandom.java" template: "/templates/test/core-arandom.java.tmpl",
                     servicePackageName: servicePackage
-            "RandomCoreBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
+            "CoreRandomBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
                     packageName: "${servicePackage}.core", qualifier: "Core"
         }
 
@@ -212,7 +210,7 @@ import ${servicePackage}.client.${resourceName}Client;
                                          resourceName: resourceName, packageName: "${servicePackage}.core.domain", tableName: resourcePath
         }
 
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/core/domain") {
+        basicProject.applyTemplate("src/sharedTest/groovy/${servicePackagePath}/core/domain") {
             "Random${resourceName}EntityBuilder.groovy" template: "/templates/test/random-core-builder.groovy.tmpl",
                                                         targetClass: "${resourceName}Entity", servicePackageName: servicePackage
         }
@@ -231,41 +229,7 @@ import ${servicePackage}.client.${resourceName}Client;
     }
 
     void addApiObject(String resourceName, boolean upperCamel = false) {
-        String resourceNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, resourceName)
-
-        basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
-            "${resourceName}.java" template: "/templates/springboot/rest/resource-api.java.tmpl",
-                                   resourceName: resourceName, packageName: "${servicePackage}.api",
-                                   upperCamel: upperCamel
-        }
-        basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/api") {
-            "Random${resourceName}Builder.groovy" template: "/templates/test/random-client-builder.groovy.tmpl",
-                                                  targetClass: resourceName, servicePackageName: servicePackage
-        }
-
-        File randomClientBuilderSupport = basicProject.getProjectFile("src/mainTest/groovy/${servicePackagePath}/api/RandomClientBuilderSupport.java")
-        if (randomClientBuilderSupport.exists() == false) {
-            basicProject.applyTemplate("src/mainTest/groovy/${servicePackagePath}/api") {
-                "ClientARandom.java" template: "/templates/test/client-arandom.java.tmpl",
-                        packageName: "${servicePackage}.api"
-                "RandomClientBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
-                        packageName: "${servicePackage}.api", qualifier: "Client"
-            }
-
-            File coreARandom = basicProject.findFile("CoreARandom.java")
-            FileUtils.appendAfterLine(coreARandom, "import", "import ${servicePackage}.api.RandomClientBuilderSupport;")
-            FileUtils.appendAfterLine(coreARandom, /\s+private RandomCoreBuilderSupport.*/, """\
-    @Delegate
-    private RandomClientBuilderSupport randomClientBuilderSupport = new RandomClientBuilderSupport();"""
-            )
-        }
-        FileUtils.appendAfterLine(randomClientBuilderSupport, "package", "import ${servicePackage}.api.Random${resourceName}Builder;")
-        FileUtils.appendToClass(randomClientBuilderSupport, """
-
-    public Random${resourceName}Builder ${resourceNameLowerCamel}() {
-        return new Random${resourceName}Builder();
-    }
-""")
+        basicProject.addApiObject("rest", resourceName, "${servicePackage}.api.rest", upperCamel)
     }
 
     void createBasicResource(String resourceName, boolean addWireSpec) {

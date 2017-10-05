@@ -2,9 +2,9 @@ package com.blackbaud.templates.tasks
 
 import org.gradle.api.tasks.TaskAction
 
-class AddApiObjectTask extends AbstractTemplateTask {
+class AddRestApiObjectTask extends AbstractTemplateTask {
 
-    AddApiObjectTask() {
+    AddRestApiObjectTask() {
         super("Adds a JSON api object and random builder skeleton (options: -Pname=?, [-PupperCamel])")
     }
 

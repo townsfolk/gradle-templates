@@ -9,6 +9,18 @@ class KafkaProject {
         this.basicProject = basicProject
     }
 
+    String getServiceName() {
+        basicProject.serviceName
+    }
+
+    String getServicePackage() {
+        basicProject.servicePackage
+    }
+
+    String getServicePackagePath() {
+        basicProject.servicePackagePath
+    }
+
     void initKafka() {
         basicProject.addDockerPlugin()
         basicProject.applyPlugin("kafka")
@@ -40,6 +52,10 @@ kafka.sessionTimeout=10000
 kafka.consumer.groupId=\${spring.application.name}-local
 kafka.consumer.sessionTimeout=10000
 """)
+    }
+
+    void addApiObject(String resourceName) {
+        basicProject.addApiObject("kafka", resourceName, "${basicProject.servicePackage}.api.message", false)
     }
 
 }

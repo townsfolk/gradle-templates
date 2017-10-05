@@ -11,6 +11,18 @@ class FileUtils {
 """)
     }
 
+    static void appendBeforeLine(File file, String match, String lineToAdd) {
+        List<String> lines = file.readLines()
+
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines[i] =~ /${match}/) {
+                lines.add(i, lineToAdd)
+                break
+            }
+        }
+        file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
+    }
+
     static void appendAfterLine(File file, String match, String lineToAdd) {
         List<String> lines = file.readLines()
 

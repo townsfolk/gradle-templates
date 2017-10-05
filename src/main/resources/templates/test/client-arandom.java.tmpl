@@ -3,12 +3,12 @@ package ${packageName};
 import com.blackbaud.testsupport.RandomGenerator;
 import lombok.experimental.Delegate;
 
-public class ClientARandom {
+public class ${qualifier}ARandom {
 
-    public static final ClientARandom aRandom = new ClientARandom();
+    public static final ${qualifier}ARandom aRandom = new ${qualifier}ARandom();
 
     @Delegate
-    private RandomClientBuilderSupport randomClientBuilderSupport = new RandomClientBuilderSupport();
+    private ${qualifier}RandomBuilderSupport randomClientBuilderSupport = new ${qualifier}RandomBuilderSupport();
     @Delegate
     private RandomGenerator randomGenerator = new RandomGenerator();
 
