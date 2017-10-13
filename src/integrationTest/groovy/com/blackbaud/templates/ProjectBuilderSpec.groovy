@@ -2,6 +2,7 @@ package com.blackbaud.templates
 
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.util.stream.Collectors
@@ -36,6 +37,7 @@ class ProjectBuilderSpec extends Specification {
         Arrays.asList(files).stream().map{f -> f.name}.collect(Collectors.toList()).containsAll(expectedFileList)
     }
 
+    @Ignore
     def "should be able to create a rest project"() {
         given:
         def expectedFileList = [".git", ".gitignore", ".gradle", "build.gradle", "gradle", "gradlew", "gradlew.bat", "src"]
