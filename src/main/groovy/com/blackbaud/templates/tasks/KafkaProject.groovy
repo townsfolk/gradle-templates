@@ -55,7 +55,7 @@ kafka.consumer.sessionTimeout=10000
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/kafka") {
             "KafkaConfig.java" template: "/templates/springboot/kafka/kafka-config.java.tmpl",
-                               servicePackageName: servicePackage
+                               servicePackageName: "${servicePackage}.kafka"
         }
     }
 
