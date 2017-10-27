@@ -29,8 +29,8 @@ class KafkaProject {
                 '        commonKafkaVersion = "3.+"')
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /compile.*common-spring-boot/,
                 '    compile "com.blackbaud:common-kafka:${commonKafkaVersion}"')
-        FileUtils.appendAfterLine(basicProject.getBuildFile(), /mainTestCompile/,
-                '    mainTestCompile "com.blackbaud:common-kafka-test:${commonKafkaVersion}"')
+        FileUtils.appendAfterLine(basicProject.getBuildFile(), /sharedTestCompile/,
+                '    sharedTestCompile "com.blackbaud:common-kafka-test:${commonKafkaVersion}"')
 
         basicProject.appendServiceToAppDescriptor("kafka")
 
@@ -52,6 +52,11 @@ kafka.sessionTimeout=10000
 kafka.consumer.groupId=\${spring.application.name}-local
 kafka.consumer.sessionTimeout=10000
 """)
+
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/kafka") {
+            "KafkaConfig.java" template: "/templates/springboot/kafka/kafka-config.java.tmpl",
+                               servicePackageName: servicePackage
+        }
     }
 
     void addApiObject(String resourceName) {
