@@ -43,7 +43,7 @@ class DatasourceProject {
     }
 
     private void applyTestCleanupSql() {
-        basicProject.getProjectFile("src/componentTest/resources/db/test_clean.sql") << ""
+        basicProject.getProjectFile("src/componentTest/resources/db/test_cleanup.sql") << ""
         File componentTestFile = basicProject.findFile("ComponentTest.java")
         if (componentTestFile.exists()) {
             FileUtils.appendAfterLine(componentTestFile, /import.*WebAppConfiguration/,

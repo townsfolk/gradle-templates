@@ -33,6 +33,7 @@ allprojects {
 dependencies {
     compile "com.blackbaud:common-spring-boot-rest:\${commonSpringBootVersion}"
 
+    sharedTestCompile "org.codehaus.groovy:groovy-all:2.4.7"
     sharedTestCompile "com.blackbaud:common-spring-boot-rest-test:\${commonSpringBootVersion}"
     sharedTestCompile "org.springframework.boot:spring-boot-starter-test"
     sharedTestCompile ("org.spockframework:spock-core:\${spockVersion}") {
