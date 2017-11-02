@@ -215,7 +215,7 @@ import ${servicePackage}.client.${resourceName}Client;
                                                         targetClass: "${resourceName}Entity", servicePackageName: servicePackage
         }
 
-        File randomCoreBuilderSupport = basicProject.findFile("RandomCoreBuilderSupport.java")
+        File randomCoreBuilderSupport = basicProject.findFile("CoreRandomBuilderSupport.java")
         FileUtils.appendAfterLine(randomCoreBuilderSupport, "package", "import ${servicePackage}.core.domain.Random${resourceName}EntityBuilder;")
         FileUtils.appendToClass(randomCoreBuilderSupport, """
 
@@ -229,7 +229,7 @@ import ${servicePackage}.client.${resourceName}Client;
     }
 
     void addApiObject(String resourceName, boolean upperCamel = false) {
-        basicProject.addApiObject("rest", resourceName, "${servicePackage}.api.rest", upperCamel)
+        basicProject.addApiObject("rest", resourceName, servicePackage, upperCamel)
     }
 
     void createBasicResource(String resourceName, boolean addWireSpec) {

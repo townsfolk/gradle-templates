@@ -232,9 +232,10 @@ class BasicProject {
         }
     }
 
-    void addApiObject(String type, String resourceName, String apiPackage, boolean upperCamel) {
+    void addApiObject(String type, String resourceName, String servicePackage, boolean upperCamel) {
         addClientSubmodule(type)
 
+        String apiPackage = "${servicePackage}.api"
         String apiPackagePath = packageToPath(apiPackage)
         String typeUpperCase = type.capitalize()
 
