@@ -72,18 +72,24 @@ class BasicProject {
 
     void initGradleProject() {
         if (new File(repoDir, "build.gradle").exists() == false) {
-            initGradleWrapper()
-            initGitignore()
-            gitRepo.commitProjectFiles("initial commit, gradle wrapper")
-
-            replaceGradleWrapperDistributionUrl()
-            gitRepo.commitProjectFiles("use blackbaud gradle")
+            initBlackbaudGradleWrapper()
 
             initBasicGradleBuild()
             gitRepo.commitProjectFiles("added build.gradle")
 
             new File(repoDir, "src/main/java").mkdirs()
             new File(repoDir, "src/test/groovy").mkdirs()
+        }
+    }
+
+    void initBlackbaudGradleWrapper() {
+        if (new File(repoDir, "gradle/wrapper/gradle-wrapper.properties").exists() == false) {
+            initGradleWrapper()
+            initGitignore()
+            gitRepo.commitProjectFiles("initial commit, gradle wrapper")
+
+            replaceGradleWrapperDistributionUrl()
+            gitRepo.commitProjectFiles("use blackbaud gradle")
         }
     }
 

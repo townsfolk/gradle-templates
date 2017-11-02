@@ -1,0 +1,42 @@
+buildscript {
+    dependencies {
+        classpath "com.blackbaud:gradle-internal:4.+"
+    }
+}
+
+apply plugin: "blackbaud-internal"
+apply plugin: 'integration-test'
+
+ext {
+    springBootVersion = "1.4.1.RELEASE"
+}
+
+dependencies {
+    integrationTestCompile "com.google.guava:guava:23.0"
+    integrationTestCompile "com.blackbaud:common-spring-boot-rest-test:\${springBootVersion}-2.+"
+    integrationTestCompile "org.springframework.boot:spring-boot-starter-test:\${springBootVersion}"
+    integrationTestCompile "com.blackbaud:common-test:3.+"
+    integrationTestCompile "org.codehaus.groovy:groovy-all:2.4.3"
+    integrationTestCompile ("org.spockframework:spock-spring:1.1-groovy-2.4") {
+        exclude group: "org.codehaus.groovy"
+    }
+    integrationTestCompileOnly "org.projectlombok:lombok:1.16.18"
+}
+
+task configureForInt << {
+    integrationTest.systemProperty "spring.cloud.config.uri", "http://bluemoon-config-server-oscf-dev-brokers.app.oscf-dev.blackbaudcloud.com"
+    integrationTest.systemProperty "SPRING_PROFILES_INCLUDE", "oscf-dev,int-apps,oscf-dev.int-apps"
+}
+
+task integrationTestLocal (dependsOn: [ configureForInt, integrationTest] )
+
+publishing_ext {
+    publication("main") {
+        enabled false
+    }
+    publication("integrationTest") {
+        artifactId "${artifactId}"
+        archiveTask zipIntegrationTests
+        publishSources false
+    }
+}
