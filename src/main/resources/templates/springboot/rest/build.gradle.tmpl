@@ -20,10 +20,20 @@ allprojects {
         servicePackageName="${servicePackageName}"
         commonSpringBootVersion = "\${springBootVersion}-2.+"
         spockVersion = "1.1-groovy-2.4"
+        lombokVersion = "1.16.18"
+    }
+
+    // necessary until most projects have been updated to not produce lombok as a transitive dependency
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.projectlombok') {
+                details.useVersion lombokVersion
+            }
+        }
     }
 
     dependencies {
-        compileOnly "org.projectlombok:lombok:1.16.18"
+        compileOnly "org.projectlombok:lombok:\${lombokVersion}"
 
         mainTestCompile "com.blackbaud:common-test:3.+"
         mainTestCompileOnly "org.codehaus.groovy:groovy-all:2.4.7"
