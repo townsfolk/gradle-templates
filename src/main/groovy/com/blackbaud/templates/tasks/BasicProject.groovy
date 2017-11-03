@@ -180,14 +180,19 @@ class BasicProject {
     }
 
     File findFile(String fileName) {
+        File matchingFile = findOptionalFile(fileName)
+        if (matchingFile == null) {
+            throw new RuntimeException("Failed to find file with name=${fileName} from baseDir=${targetDir.absolutePath}")
+        }
+        matchingFile
+    }
+
+    File findOptionalFile(String fileName) {
         File matchingFile = null
         targetDir.eachFileRecurse { File file ->
             if (file.name == fileName) {
                 matchingFile = file
             }
-        }
-        if (matchingFile == null) {
-            throw new RuntimeException("Failed to find file with name=${fileName} from baseDir=${targetDir.absolutePath}")
         }
         matchingFile
     }

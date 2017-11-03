@@ -87,8 +87,8 @@ class RestProject {
             "ComponentTest.java" template: "/templates/springboot/rest/component-test-annotation.java.tmpl",
                     serviceName: serviceName, packageName: servicePackage
 
-            "TestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
-                    className: "TestConfig", packageName: servicePackage
+            "ComponentTestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
+                    className: "ComponentTestConfig", serviceName: serviceName, packageName: servicePackage
         }
 
         basicProject.applyTemplate("src/sharedTest/groovy/${servicePackagePath}/core") {

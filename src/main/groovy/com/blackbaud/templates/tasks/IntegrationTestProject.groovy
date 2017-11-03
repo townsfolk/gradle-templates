@@ -56,7 +56,7 @@ class IntegrationTestProject {
                     serviceName: serviceName, packageName: servicePackage
 
             "TestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
-                    className: "IntegrationTestConfig", packageName: servicePackage
+                    className: "IntegrationTestConfig", serviceName: serviceName, packageName: servicePackage
         }
 
         basicProject.applyTemplate("src/integrationTest/groovy/${servicePackagePath}/core") {

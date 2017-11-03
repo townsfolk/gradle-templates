@@ -22,6 +22,10 @@ class DatasourceProject {
         restProject.servicePackage
     }
 
+    String getServicePackagePath() {
+        restProject.servicePackagePath
+    }
+
     void initMybatis() {
         basicProject.applyPlugin("mybatis")
 
@@ -43,14 +47,22 @@ class DatasourceProject {
     }
 
     private void applyTestCleanupSql() {
-        basicProject.getProjectFile("src/componentTest/resources/db/test_cleanup.sql") << ""
-        File componentTestFile = basicProject.findFile("ComponentTest.java")
-        if (componentTestFile.exists()) {
-            FileUtils.appendAfterLine(componentTestFile, /import.*WebAppConfiguration/,
-                                      "import org.springframework.test.context.jdbc.Sql;"
-            )
-            FileUtils.appendAfterLine(componentTestFile, /.*@WebAppConfiguration/,
-                                      "@Sql(scripts = \"classpath:/db/test_cleanup.sql\", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)"
+        basicProject.getProjectFile("src/sharedTest/resources/db/test_cleanup.sql") << ""
+
+        basicProject.applyTemplate("src/sharedTest/java/${servicePackagePath}") {
+            "PersistenceTest.java" template: "/templates/springboot/rest/persistence-test-annotation.java.tmpl",
+                                   packageName: servicePackage
+        }
+
+        applyPersistenceTestAnnotationIfFileExists("ComponentTest.java")
+        applyPersistenceTestAnnotationIfFileExists("IntegrationTest.java")
+    }
+
+    private void applyPersistenceTestAnnotationIfFileExists(String fileName) {
+        File testFile = basicProject.findOptionalFile(fileName)
+        if (testFile != null) {
+            FileUtils.appendAfterLine(testFile, /@Retention/,
+                                      "@PersistenceTest"
             )
         }
     }
