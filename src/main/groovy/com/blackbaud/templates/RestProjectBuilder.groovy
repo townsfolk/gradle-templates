@@ -5,15 +5,16 @@ import com.blackbaud.templates.tasks.RestProject
 
 class RestProjectBuilder {
 
-    File repoDir;
-    String name;
-    File gradleUserHome;
-    String blackbaudGradleVersion;
-    boolean mybatis = false;
-    boolean postgres = false;
-    boolean kafka = false;
-    boolean clean = false;
-    boolean vsts = false;
+    File repoDir
+    String name
+    File gradleUserHome
+    String blackbaudGradleVersion
+    boolean mybatis = false
+    boolean postgres = false
+    boolean kafka = false
+    boolean clean = false
+    boolean vsts = false
+    boolean disableAuthFilter = false
 
     private RestProjectBuilder() {}
 
@@ -66,10 +67,15 @@ class RestProjectBuilder {
         this
     }
 
+    RestProjectBuilder disableAuthFilter() {
+        this.disableAuthFilter = true
+        this
+    }
+
     public RestProject build() {
         BasicProject basicProject = createBasicProject()
         RestProject restProject = new RestProject(basicProject)
-        restProject.initRestProject()
+        restProject.initRestProject(disableAuthFilter)
         if (mybatis) {
             restProject.initPostgres()
             restProject.initMybatis()

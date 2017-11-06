@@ -11,6 +11,10 @@ class FileUtils {
 """)
     }
 
+    static void addImport(File file, String importToAdd) {
+        appendBeforeLine(file, /import .*/, importToAdd)
+    }
+    
     static void appendBeforeLine(File file, String match, String lineToAdd) {
         List<String> lines = file.readLines()
 

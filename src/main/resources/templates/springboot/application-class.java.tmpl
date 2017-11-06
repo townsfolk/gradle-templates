@@ -7,11 +7,11 @@ import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoC
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan("${servicePackage}")
-@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class})
 public class ${serviceName} extends CommonSpringConfig {
 
     public static void main(String[] args) {

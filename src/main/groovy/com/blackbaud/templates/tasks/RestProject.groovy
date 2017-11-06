@@ -39,9 +39,38 @@ class RestProject {
         basicProject
     }
 
-    void initRestProject() {
+    void initRestProject(boolean shouldDisableAuthFilter) {
         basicProject.initGradleProject()
         createRestBase()
+
+        if (shouldDisableAuthFilter) {
+            disableAuthFilter()
+        } else {
+            enableAuthFilter()
+        }
+    }
+
+    private void enableAuthFilter() {
+        FileUtils.appendBeforeLine(basicProject.getBuildFile(), /compile "com.blackbaud:common-spring-boot-rest.*/,
+                '    compile "com.blackbaud:tokens-client:2.+"')
+
+        File applicationClassFile = basicProject.findFile("${serviceName}.java")
+        FileUtils.addImport(applicationClassFile, "import com.blackbaud.security.CoreSecurityEcosystemParticipantRequirementsProvider;")
+        FileUtils.appendAfterLine(applicationClassFile, /public class .*/, """
+    @Bean
+    public CoreSecurityEcosystemParticipantRequirementsProvider coreSecurityEcosystemParticipantRequirementsProvider() {
+        return new CoreSecurityEcosystemParticipantRequirementsProvider();
+    }""")
+
+        basicProject.commitProjectFiles("enable auth filter")
+    }
+
+    private void disableAuthFilter() {
+        File applicationProperties = basicProject.getProjectFileOrFail("src/main/resources/application.properties")
+        applicationProperties << """
+authorization.filter.enable=false
+"""
+        basicProject.commitProjectFiles("disable auth filter")
     }
 
     void initPostgres() {
