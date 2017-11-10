@@ -2,7 +2,11 @@ package com.blackbaud.templates
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.StoredConfig
+import org.eclipse.jgit.transport.PushResult
+import org.eclipse.jgit.transport.RemoteRefUpdate
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
+
+import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.*;
 
 class GitRepo {
 
@@ -33,7 +37,36 @@ class GitRepo {
     }
 
     void pushProject(String username, String password) {
-       git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password)).setPushAll().call()
+        Iterable<PushResult> results = git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password)).setPushAll().call()
+        for (PushResult result : results) {
+            parsePushResult(result)
+        }
+    }
+
+    private static void parsePushResult(PushResult result) {
+        for (RemoteRefUpdate remoteRefUpdate : result.remoteUpdates) {
+            if(isRemoteRefUpdateStatusFailed(remoteRefUpdate.status)) {
+               throw new GitPushFailedException(remoteRefUpdate.message)
+            }
+        }
+    }
+
+    private static boolean isRemoteRefUpdateStatusFailed(RemoteRefUpdate.Status status) {
+        switch (status) {
+            case OK:
+            case UP_TO_DATE:
+            case NON_EXISTING:
+                return false;
+            case NOT_ATTEMPTED:
+            case AWAITING_REPORT:
+            case REJECTED_NODELETE:
+            case REJECTED_NONFASTFORWARD:
+            case REJECTED_REMOTE_CHANGED:
+            case REJECTED_OTHER_REASON:
+                return true;
+            default:
+                return true;
+        }
     }
 
     static GitRepo init(File repoDir) {
@@ -73,4 +106,11 @@ class GitRepo {
         git.setRemoteUrl("origin", VSTS_GIT_BASE_URL + "${name}")
         git
     }
+
+    public static class GitPushFailedException extends RuntimeException {
+        GitPushFailedException(String message) {
+            super(message);
+        }
+    }
+
 }
