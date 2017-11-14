@@ -54,12 +54,20 @@ class BasicProject {
 
     String getServiceName() {
         String defaultServiceName = LOWER_HYPHEN.to(UPPER_CAMEL, repoName).capitalize()
-        projectProps.getOptionalProjectPropertyOrDefault("serviceName", defaultServiceName)
+        if (projectProps != null) {
+            projectProps.getOptionalProjectPropertyOrDefault("serviceName", defaultServiceName)
+        } else {
+            defaultServiceName
+        }
     }
 
     String getServicePackage() {
         String defaultPackageName = "com.blackbaud.${serviceName.toLowerCase()}"
-        projectProps.getOptionalProjectPropertyOrDefault("servicePackageName", defaultPackageName)
+        if (projectProps != null) {
+            projectProps.getOptionalProjectPropertyOrDefault("servicePackageName", defaultPackageName)
+        } else {
+            defaultPackageName
+        }
     }
 
     String getServicePackagePath() {
