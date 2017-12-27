@@ -135,7 +135,8 @@ authorization.filter.enable=false
             'src' {
                 'main' {
                     'resources' {
-                        'application.properties' template: "/templates/springboot/rest/application.properties.tmpl"
+                        'application.properties' template: "/templates/springboot/rest/application.properties.tmpl",
+                                                 resourcePackageName: "${servicePackage}.resources"
                         'logback.xml' template: "/templates/logback/logback.tmpl"
                     }
                 }

@@ -71,6 +71,7 @@ will be ignored.
 #### createRestResource
 
 Creates a resource in an existing SpringBoot REST project (includes the Resource, ResourceSpec, ResourceWireSpec, etc)
+* You may need to update the package for application.properties swagger.resource.package if your resource does not live in com.blackbaud.<servicePackageName>.resources
 
 #### addPostgresContainer
 
