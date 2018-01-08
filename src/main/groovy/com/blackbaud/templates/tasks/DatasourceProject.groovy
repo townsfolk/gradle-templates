@@ -36,7 +36,6 @@ class DatasourceProject {
     }
 
     void initPostgres() {
-        basicProject.addDockerPlugin()
         basicProject.applyPlugin("postgres")
 
         applyEntityScan()
@@ -49,7 +48,7 @@ class DatasourceProject {
     private void applyTestCleanupSql() {
         basicProject.getProjectFile("src/sharedTest/resources/db/test_cleanup.sql") << ""
 
-        basicProject.applyTemplate("src/sharedTest/java/${servicePackagePath}") {
+        basicProject.applyTemplate("src/sharedTest/groovy/${servicePackagePath}") {
             "PersistenceTest.java" template: "/templates/springboot/rest/persistence-test-annotation.java.tmpl",
                                    packageName: servicePackage
         }
@@ -68,7 +67,7 @@ class DatasourceProject {
     }
 
     private void applyApplicationProperties() {
-        File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
+        File componentTestPropertiesFile = basicProject.getProjectFile("src/sharedTest/resources/application-test.properties")
         componentTestPropertiesFile.append("""
 spring.datasource.url=jdbc:postgresql://docker.localhost:5432/\${spring.application.name}-test
 """)
@@ -85,8 +84,7 @@ spring.datasource.validation-query=SELECT 1;
     }
 
     private applyPostgresCompileDependencies() {
-        FileUtils.appendAfterLine(basicProject.getProjectFile("build.gradle"), '$dependencies \\{.*',
-                                  """\
+        FileUtils.appendAfterLine(basicProject.getProjectFile("build.gradle"), 'compile "com.blackbaud:common-spring-boot-rest:', """\
     compile "com.blackbaud:common-spring-boot-persistence:\${commonSpringBootVersion}"
     compile "postgresql:postgresql:9.0-801.jdbc4"
     compile "org.liquibase:liquibase-core\""""

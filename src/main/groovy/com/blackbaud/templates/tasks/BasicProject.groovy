@@ -105,14 +105,6 @@ class BasicProject {
         getProjectFileOrFail("build.gradle")
     }
 
-    void addDockerPlugin() {
-        File buildFile = getBuildFile()
-
-        if ((buildFile.text =~ /(?ms).*classpath.*gradle-docker.*/).matches() == false) {
-            FileUtils.appendAfterLine(buildFile, "com.blackbaud:gradle-internal:", '        classpath "com.blackbaud:gradle-docker:1.+"')
-        }
-    }
-
     void applyPlugin(String pluginName) {
         FileUtils.appendAfterLine(getBuildFile(), /apply\s+plugin:\s+"blackbaud-internal/, /apply plugin: "${pluginName}"/)
     }
@@ -245,7 +237,7 @@ class BasicProject {
         }
     }
 
-    void addApiObject(String type, String resourceName, String servicePackage, boolean upperCamel) {
+    void addApiObject(String type, String resourceName, boolean upperCamel) {
         addClientSubmodule(type)
 
         String apiPackage = "${servicePackage}.api"

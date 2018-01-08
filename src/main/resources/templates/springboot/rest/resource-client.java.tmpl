@@ -1,0 +1,16 @@
+package ${servicePackage}.client;
+
+import ${servicePackage}.api.ResourcePaths;
+import ${servicePackage}.api.${resourceName};
+import feign.Headers;
+import feign.Param;
+import feign.RequestLine;
+import java.util.UUID;
+
+@Headers({
+        "Content-Type: application/json",
+        "Accept: application/json",
+})
+public interface ${resourceName}Client {
+
+}

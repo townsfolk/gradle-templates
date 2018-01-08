@@ -75,7 +75,7 @@ class RestProjectBuilder {
     public RestProject build() {
         BasicProject basicProject = createBasicProject()
         RestProject restProject = new RestProject(basicProject)
-        restProject.initRestProject(disableAuthFilter)
+        restProject.initRestProject(disableAuthFilter, vsts)
         if (mybatis) {
             restProject.initPostgres()
             restProject.initMybatis()

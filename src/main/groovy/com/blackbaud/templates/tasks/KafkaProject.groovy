@@ -22,7 +22,6 @@ class KafkaProject {
     }
 
     void initKafka() {
-        basicProject.addDockerPlugin()
         basicProject.applyPlugin("kafka")
 
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /ext \{/,
@@ -60,7 +59,7 @@ kafka.consumer.sessionTimeout=10000
     }
 
     void addApiObject(String resourceName) {
-        basicProject.addApiObject("kafka", resourceName, servicePackage, false)
+        basicProject.addApiObject("kafka", resourceName, false)
     }
 
 }

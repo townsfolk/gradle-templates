@@ -31,7 +31,7 @@ class RestProjectSpec extends AbstractProjectSpecification {
 
     def "initRestProject should successfully build"() {
         given:
-        restProject.initRestProject()
+        restProject.initRestProject(false, true)
         restProject.initPostgres()
         restProject.initKafka()
         testGradleBuild.initBuildscriptPluginPathString()
@@ -45,7 +45,7 @@ class RestProjectSpec extends AbstractProjectSpecification {
 
     def "createRestResource should successfully build"() {
         given:
-        restProject.initRestProject()
+        restProject.initRestProject(false, true)
         restProject.initPostgres()
         restProject.initKafka()
         restProject.createCrudResource("Fubar", true, false)
