@@ -57,7 +57,7 @@ class RestProject {
         if (vsts) {
             File applicationProperties = basicProject.getProjectFileOrFail("src/main/resources/application.properties")
             applicationProperties << """\
-
+bbauth.enabled=true
 long.token.enabled=false
 """
         } else {
