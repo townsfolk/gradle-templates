@@ -127,6 +127,10 @@ authorization.filter.enable=false
             "ComponentTestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
                     className: "ComponentTestConfig", serviceName: serviceName, packageName: servicePackage
         }
+        basicProject.applyTemplate("src/componentTest/groovy/com/blackbaud/swagger") {
+            "GenerateSwaggerDocsSpec.groovy" template: "/templates/springboot/rest/generate-swagger-docs-spec.groovy.tmpl",
+                     servicePackage: servicePackage
+        }
 
         basicProject.applyTemplate("src/sharedTest/groovy/${servicePackagePath}/core") {
             "CoreARandom.java" template: "/templates/test/core-arandom.java.tmpl",

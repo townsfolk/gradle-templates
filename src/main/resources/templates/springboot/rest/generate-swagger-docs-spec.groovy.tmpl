@@ -1,0 +1,18 @@
+package com.blackbaud.swagger
+
+import ${servicePackage}.ComponentTest
+import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.Specification
+
+@ComponentTest
+class GenerateSwaggerDocsSpec extends Specification {
+
+    @Autowired
+    SwaggerWriter swaggerWriter
+
+    def "should write swagger.json file"() {
+        expect:
+        swaggerWriter.writeSwaggerJson()
+    }
+
+}
