@@ -25,7 +25,7 @@ class KafkaProject {
         basicProject.applyPlugin("kafka")
 
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /ext \{/,
-                '        commonKafkaVersion = "3.+"')
+                '        commonKafkaVersion = "4.+"')
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /compile.*common-spring-boot/,
                 '    compile "com.blackbaud:common-kafka:${commonKafkaVersion}"')
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /sharedTestCompile/,
@@ -36,6 +36,7 @@ class KafkaProject {
         File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         componentTestPropertiesFile.append("""
 kafka.consumer.groupId=\${spring.application.name}-test
+kafka.consumer.pauseOnStartupEnabled=true
 """)
 
         File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
