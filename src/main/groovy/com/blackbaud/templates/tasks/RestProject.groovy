@@ -257,17 +257,28 @@ import ${servicePackage}.client.${resourceName}Client;
                                          resourceName: resourceName, packageName: "${servicePackage}.core.domain", tableName: resourcePath
         }
 
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
+            "${resourceName}Repository.java" template: "/templates/springboot/rest/resource-repository.java.tmpl",
+                                             resourceName: resourceName, packageName: "${servicePackage}.core.domain"
+        }
+
         basicProject.applyTemplate("src/sharedTest/groovy/${servicePackagePath}/core/domain") {
             "Random${resourceName}EntityBuilder.groovy" template: "/templates/test/random-core-builder.groovy.tmpl",
-                                                        targetClass: "${resourceName}Entity", servicePackageName: servicePackage
+                                                        resourceName: resourceName,
+                                                        resourceNameLowerCamel: resourceNameLowerCamel,
+                                                        servicePackageName: servicePackage
         }
 
         File randomCoreBuilderSupport = basicProject.findFile("CoreRandomBuilderSupport.java")
+        FileUtils.appendAfterLine(randomCoreBuilderSupport, "package", "import ${servicePackage}.core.domain.${resourceName}Repository;")
         FileUtils.appendAfterLine(randomCoreBuilderSupport, "package", "import ${servicePackage}.core.domain.Random${resourceName}EntityBuilder;")
         FileUtils.appendToClass(randomCoreBuilderSupport, """
 
+    @Autowired
+    private ${resourceName}Repository ${resourceNameLowerCamel}Repository;
+
     public Random${resourceName}EntityBuilder ${resourceNameLowerCamel}Entity() {
-        return new Random${resourceName}EntityBuilder();
+        return new Random${resourceName}EntityBuilder(${resourceNameLowerCamel}Repository);
     }
 """)
 

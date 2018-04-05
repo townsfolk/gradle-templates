@@ -14,10 +14,11 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@ActiveProfiles(profiles = {"integrationTest"})
+@ActiveProfiles(profiles = {"local", "integrationTest"})
 @SpringBootTest(
         classes = {IntegrationTestConfig.class},
-        webEnvironment = SpringBootTest.WebEnvironment.NONE
+        properties = {"server.port=10000", "management.port=10001"},
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT
 )
 public @interface IntegrationTest {
 }

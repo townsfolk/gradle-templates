@@ -2,10 +2,17 @@ package ${servicePackageName}.core.domain;
 
 import static ${servicePackageName}.core.CoreARandom.aRandom
 
-class Random${targetClass}Builder extends ${targetClass}.${targetClass}Builder {
+class Random${resourceName}EntityBuilder extends ${resourceName}Entity.${resourceName}EntityBuilder {
 
-    public Random${targetClass}Builder() {
+    private ${resourceName}Repository ${resourceNameLowerCamel}Repository
+
+    Random${resourceName}EntityBuilder(${resourceName}Repository ${resourceNameLowerCamel}Repository) {
+        this.${resourceNameLowerCamel}Repository = ${resourceNameLowerCamel}Repository
         throw new RuntimeException("add some stuff")
+    }
+
+    ${resourceName}Entity save() {
+        ${resourceNameLowerCamel}Repository.save(build())
     }
 
 }

@@ -124,6 +124,8 @@ spring.datasource.validation-query=SELECT 1;
   - include:
       file: db/create_${tableName}.sql
 """)
+
+        basicProject.findFile("test_cleanup.sql").append("truncate table ${tableName};\n")
     }
 
 }
