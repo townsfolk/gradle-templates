@@ -165,7 +165,7 @@ authorization.filter.enable=false
         basicProject.commitProjectFiles("springboot rest bootstrap")
     }
 
-    void createCrudResource(String resourceName, boolean addEntity, boolean addWireSpec) {
+    void createResource(String resourceName, boolean addEntity, boolean addWireSpec) {
         addResourceAndSupportingClasses(resourceName, addWireSpec)
 
         File resourceFile = basicProject.findFile("${resourceName}Resource.java")
@@ -288,10 +288,6 @@ import ${servicePackage}.client.${resourceName}Client;
 
     void addApiObject(String resourceName, boolean upperCamel = false) {
         basicProject.addApiObject("rest", resourceName, upperCamel)
-    }
-
-    void createBasicResource(String resourceName, boolean addWireSpec) {
-        addResourceAndSupportingClasses(resourceName, addWireSpec)
     }
 
 }

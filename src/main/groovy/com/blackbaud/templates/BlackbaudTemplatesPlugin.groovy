@@ -19,7 +19,6 @@ package com.blackbaud.templates
 import com.blackbaud.templates.tasks.AddKafkaMessageTask
 import com.blackbaud.templates.tasks.AddRestApiObjectTask
 import com.blackbaud.templates.tasks.AddJpaObjectTask
-import com.blackbaud.templates.tasks.CreateBasicResourceTask
 import com.blackbaud.templates.tasks.CreateIntegrationTestProjectTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -27,7 +26,7 @@ import com.blackbaud.templates.tasks.AddKafkaContainerTask
 import com.blackbaud.templates.tasks.AddPostgresContainerTask
 import com.blackbaud.templates.tasks.CreateLibraryProjectTask
 import com.blackbaud.templates.tasks.CreateDeployableProjectTask
-import com.blackbaud.templates.tasks.CreateCrudResourceTask
+import com.blackbaud.templates.tasks.CreateResourceTask
 
 /**
  * The core of the templates plugin.
@@ -47,8 +46,7 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
             project.task 'createIntegrationTestProject', type: CreateIntegrationTestProjectTask
         }
 
-        project.task 'createCrudResource', type: CreateCrudResourceTask
-        project.task 'createBasicResource', type: CreateBasicResourceTask
+        project.task 'createResource', type: CreateResourceTask
         project.task 'addPostgresContainer', type: AddPostgresContainerTask
         project.task 'addKafkaContainer', type: AddKafkaContainerTask
         project.task 'addKafkaMessage', type: AddKafkaMessageTask

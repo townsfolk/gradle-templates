@@ -268,7 +268,7 @@ class BasicProject {
 
             File coreARandom = findFile("CoreARandom.java")
             FileUtils.appendAfterLine(coreARandom, "import", "import ${apiPackage}.${typeUpperCase}ClientRandomBuilderSupport;")
-            FileUtils.appendAfterLine(coreARandom, /\s+private CoreRandomBuilderSupport.*/, """\
+            FileUtils.appendAfterLine(coreARandom, /\s+.*CoreRandomBuilderSupport coreRandomBuilderSupport.*/, """\
     @Delegate
     private ${typeUpperCase}ClientRandomBuilderSupport ${type}ClientRandomBuilderSupport = new ${typeUpperCase}ClientRandomBuilderSupport();"""
             )

@@ -54,7 +54,6 @@ Supported task options:
 
 The project augmentation tasks are available when run from this project but also when the `blackbaud-templates` plugin
 is applied to another project like so...  
-
 ```
 buildscript {
     dependencies {
@@ -68,11 +67,61 @@ apply plugin: "blackbaud-templates"
 In this case, the target directory will be the project which applies the plugin and the project property `repoName` 
 will be ignored.
 
-#### createRestResource
+NOTE: new projects will generate the following block...
+```
+  ext {
+        // used by the various gradle-templates task to determine the base service package
+        servicePackageName="com.blackbaud.reponame"
+  }
+```
+This property is used by gradle-templates to determine the name of the base package in which to place the generated files.
+If the target project is old and does not have this line, you may need to add it if your package name
+does not correspond to your repo name.
 
-Creates a resource in an existing SpringBoot REST project (includes the Resource, ResourceSpec, ResourceWireSpec, etc)
-* You may need to update the package for application.properties swagger.resource.package if your resource does not live in com.blackbaud.<servicePackageName>.resources
+
+#### addKafkaContainer
+
+Add a Kafka docker container, dependencies and default configuration to an existing project
 
 #### addPostgresContainer
 
-Adds a Postgres docker container configuration to an existing project
+Adds a Postgres docker container, dependencies and default configuration to an existing project
+
+#### createResource
+
+Creates a resource in an existing SpringBoot REST project (includes the Resource, ResourceSpec, ResourceWireSpec, optional JPA objects, etc).
+* You may need to update the package for application.properties swagger.resource.package if your resource does not live in com.blackbaud.<servicePackageName>.resources
+
+Required task options:
+* resourceName - name of the resource to create (excluding the trailing Resource as this will be appended automatically)
+
+Optional task options:
+* suppressEntity - do not create a corresponding JPA objects and supporting classes
+* addWireSpec - generate a stub ResourceWireSpec in addition to the standard ResourceSpec class
+
+#### addRestApiObject
+
+Creates a REST Api object and corresponding random builder.  Will also create the rest-client submodule and random 
+builder supporting classes if not already created.
+
+Required task options:
+* name - name of the api object to create
+
+Optional task options:
+* upperCamel - use UpperCamelCaseStrategy when reading/writing the JSON properties
+
+#### addJpaObject
+
+Creates a Jpa Entity, Repository, random builder, initial liquibase create table script, and adds the table to the test_cleanup.sql file.
+
+Required task options:
+* name - name of the resource to create (excluding the trailing Entity as this will be appended automatically)
+
+#### addKafkaMessage
+
+Creates a Kafka message and corresponding random builder.  Will also create the kafka-client submodule and random
+builder supporting classes if not already created.
+
+Required task options:
+* name - name of the message to create (excluding the trailing Message as this will be appended automatically)
+
