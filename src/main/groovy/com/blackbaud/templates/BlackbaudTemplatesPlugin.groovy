@@ -20,6 +20,7 @@ import com.blackbaud.templates.tasks.AddKafkaMessageTask
 import com.blackbaud.templates.tasks.AddRestApiObjectTask
 import com.blackbaud.templates.tasks.AddJpaObjectTask
 import com.blackbaud.templates.tasks.CreateIntegrationTestProjectTask
+import com.blackbaud.templates.tasks.CreateScsProject
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import com.blackbaud.templates.tasks.AddKafkaContainerTask
@@ -43,6 +44,7 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
 
             project.task 'createLibraryProject', type: CreateLibraryProjectTask
             project.task 'createDeployableProject', type: CreateDeployableProjectTask
+            project.task 'createScsProject', type: CreateScsProject
             project.task 'createIntegrationTestProject', type: CreateIntegrationTestProjectTask
         }
 

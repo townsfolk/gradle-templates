@@ -1,14 +1,11 @@
 package com.blackbaud.templates.tasks
 
-import com.blackbaud.templates.BlackbaudTemplatesPlugin
 import org.gradle.api.tasks.TaskAction
-
 
 class CreateIntegrationTestProjectTask extends AbstractTemplateTask {
 
     CreateIntegrationTestProjectTask() {
         super("Create an integration test project (options: -PrepoName=?, [-Pclean])")
-        group = BlackbaudTemplatesPlugin.GROUP
     }
 
     @TaskAction
