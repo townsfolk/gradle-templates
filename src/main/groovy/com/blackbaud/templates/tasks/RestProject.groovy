@@ -62,7 +62,7 @@ long.token.enabled=false
 """
         } else {
             File applicationClassFile = basicProject.findFile("${serviceName}.java")
-            FileUtils.addImport(applicationClassFile, "import com.blackbaud.security.CoreSecurityEcosystemParticipantRequirementsProvider;")
+            FileUtils.addImport(applicationClassFile, "com.blackbaud.security.CoreSecurityEcosystemParticipantRequirementsProvider")
             FileUtils.appendAfterLine(applicationClassFile, /public class .*/, """
     @Bean
     public CoreSecurityEcosystemParticipantRequirementsProvider coreSecurityEcosystemParticipantRequirementsProvider() {
@@ -287,7 +287,7 @@ import ${servicePackage}.client.${resourceName}Client;
     }
 
     void addApiObject(String resourceName, boolean upperCamel = false) {
-        basicProject.addApiObject("rest", resourceName, upperCamel)
+        basicProject.addExternalApiObject("rest", resourceName, upperCamel)
     }
 
 }

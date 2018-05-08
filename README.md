@@ -125,3 +125,22 @@ builder supporting classes if not already created.
 Required task options:
 * name - name of the message to create (excluding the trailing Message as this will be appended automatically)
 
+#### addServiceBusTopicConfig
+
+Creates a Service Bus topic configuration, payload, and random builder skeleton.  Will also create the random
+builder supporting classes if not already created.
+
+Required task options:
+* name - name of the message to create (excluding the trailing Message as this will be appended automatically)
+
+Mutually exclusive options (exactly one must be provided):
+* internal - for services which both produce to and consume from their private topic, this task will create the 
+topic configuration along with a publisher and consumer, placing the code in the root project.
+* consumer - creates the topic configuration which includes a skeleton consumer.
+* publisher - creates the topic configuration which includes a generic producer, along with a validating consumer 
+as part of the test configuration.  A payload object will be created along with random builders in the service-bus-client
+submodule.  If the submodule does not yet exist, it will be created along with random builder supporting classes.
+
+
+Optional task options
+* sessionEnabled - indicates whether sessions are enabled for this topic

@@ -1,0 +1,15 @@
+package ${servicePackageName};
+
+import com.blackbaud.azure.servicebus.consumer.ServiceBusMessage;
+import com.blackbaud.azure.servicebus.consumer.handlers.MessageHandler;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ${className} implements MessageHandler<${payloadClassName}> {
+
+    @Override
+    public void process(ServiceBusMessage<${payloadClassName}> message) {
+        ${payloadClassName} payload = message.getPayload();
+    }
+
+}

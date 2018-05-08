@@ -19,6 +19,7 @@ package com.blackbaud.templates
 import com.blackbaud.templates.tasks.AddKafkaMessageTask
 import com.blackbaud.templates.tasks.AddRestApiObjectTask
 import com.blackbaud.templates.tasks.AddJpaObjectTask
+import com.blackbaud.templates.tasks.AddServiceBusTopicConfigTask
 import com.blackbaud.templates.tasks.CreateIntegrationTestProjectTask
 import com.blackbaud.templates.tasks.CreateScsProject
 import org.gradle.api.Plugin
@@ -54,6 +55,7 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
         project.task 'addKafkaMessage', type: AddKafkaMessageTask
         project.task 'addRestApiObject', type: AddRestApiObjectTask
         project.task 'addJpaObject', type: AddJpaObjectTask
+        project.task 'addServiceBusTopicConfig', type: AddServiceBusTopicConfigTask
     }
 
 }

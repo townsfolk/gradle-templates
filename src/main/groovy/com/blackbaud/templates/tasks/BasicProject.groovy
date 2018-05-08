@@ -197,6 +197,14 @@ class BasicProject {
         matchingFile
     }
 
+    File findComponentTestConfig() {
+        File configFile = findOptionalFile("ComponentTestConfig.java")
+        if (configFile == null) {
+            configFile = findFile("TestConfig.java")
+        }
+        configFile
+    }
+
     void appendServiceToAppDescriptor(String service) {
         File appDescriptor = getProjectFileOrFail("src/deploy/cloudfoundry/app-descriptor.yml")
         if (appDescriptor.text.contains("services:")) {
@@ -237,40 +245,48 @@ class BasicProject {
         }
     }
 
-    void addApiObject(String type, String resourceName, boolean upperCamel) {
+    void addInternalApiObject(String type, String resourceName, boolean upperCamel) {
+        String apiPackage = "${servicePackage}.${type.replaceAll("-", "")}"
+        addApiObject(type, resourceName, "src", apiPackage, upperCamel)
+    }
+
+    void addExternalApiObject(String type, String resourceName, boolean upperCamel) {
         addClientSubmodule(type)
+        addApiObject(type, resourceName, "${type}-client/src", "${servicePackage}.api", upperCamel)
+    }
 
-        String apiPackage = "${servicePackage}.api"
+    private void addApiObject(String type, String resourceName, String srcDir, String apiPackage, boolean upperCamel) {
         String apiPackagePath = packageToPath(apiPackage)
-        String typeUpperCase = type.capitalize()
-
+        String typeUpperCamelCase = LOWER_HYPHEN.to(UPPER_CAMEL, type)
+        String typeLowerCamelCase = LOWER_HYPHEN.to(LOWER_CAMEL, type)
         String resourceNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, resourceName)
+        String randomBuilderSupportClassName = "${typeUpperCamelCase}ClientRandomBuilderSupport"
 
-        applyTemplate("${type}-client/src/main/java/${apiPackagePath}") {
+        applyTemplate("${srcDir}/main/java/${apiPackagePath}") {
             "${resourceName}.java" template: "/templates/springboot/${type}/resource-api.java.tmpl",
                                    resourceName: resourceName, packageName: apiPackage,
                                    upperCamel: upperCamel
         }
-        applyTemplate("${type}-client/src/mainTest/groovy/${apiPackagePath}") {
+        applyTemplate("${srcDir}/mainTest/groovy/${apiPackagePath}") {
             "Random${resourceName}Builder.groovy" template: "/templates/test/random-client-builder.groovy.tmpl",
                                                   targetClass: resourceName, packageName: apiPackage,
-                                                  qualifier: "${typeUpperCase}Client"
+                                                  qualifier: "${typeUpperCamelCase}Client"
         }
 
-        File randomClientBuilderSupport = getProjectFile("${type}-client/src/mainTest/groovy/${apiPackagePath}/${typeUpperCase}ClientRandomBuilderSupport.java")
+        File randomClientBuilderSupport = getProjectFile("${srcDir}/mainTest/groovy/${apiPackagePath}/${randomBuilderSupportClassName}.java")
         if (randomClientBuilderSupport.exists() == false) {
-            applyTemplate("${type}-client/src/mainTest/groovy/${apiPackagePath}") {
-                "${typeUpperCase}ClientARandom.java" template: "/templates/test/client-arandom.java.tmpl",
-                        packageName: apiPackage, qualifier: "${typeUpperCase}Client"
-                "${typeUpperCase}ClientRandomBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
-                        packageName: apiPackage, qualifier: "${typeUpperCase}Client"
+            applyTemplate("${srcDir}/mainTest/groovy/${apiPackagePath}") {
+                "${typeUpperCamelCase}ClientARandom.java" template: "/templates/test/client-arandom.java.tmpl",
+                        packageName: apiPackage, qualifier: "${typeUpperCamelCase}Client"
+                "${typeUpperCamelCase}ClientRandomBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",
+                        packageName: apiPackage, qualifier: "${typeUpperCamelCase}Client"
             }
 
             File coreARandom = findFile("CoreARandom.java")
-            FileUtils.appendAfterLine(coreARandom, "import", "import ${apiPackage}.${typeUpperCase}ClientRandomBuilderSupport;")
+            FileUtils.appendAfterLine(coreARandom, "import", "import ${apiPackage}.${randomBuilderSupportClassName};")
             FileUtils.appendAfterLine(coreARandom, /\s+.*CoreRandomBuilderSupport coreRandomBuilderSupport.*/, """\
     @Delegate
-    private ${typeUpperCase}ClientRandomBuilderSupport ${type}ClientRandomBuilderSupport = new ${typeUpperCase}ClientRandomBuilderSupport();"""
+    private ${randomBuilderSupportClassName} ${typeLowerCamelCase}ClientRandomBuilderSupport = new ${randomBuilderSupportClassName}();"""
             )
         }
         FileUtils.appendToClass(randomClientBuilderSupport, """

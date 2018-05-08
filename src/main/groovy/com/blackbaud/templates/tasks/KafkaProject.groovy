@@ -60,7 +60,7 @@ kafka.consumer.sessionTimeout=10000
     }
 
     void addApiObject(String resourceName) {
-        basicProject.addApiObject("kafka", resourceName, false)
+        basicProject.addExternalApiObject("kafka", resourceName, false)
     }
 
 }

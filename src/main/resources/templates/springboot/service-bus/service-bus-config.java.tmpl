@@ -1,0 +1,20 @@
+package ${servicePackageName};
+
+import com.blackbaud.azure.servicebus.adapter.ServiceBusProperties;
+import com.blackbaud.azure.servicebus.config.ServiceBusConsumerConfig;
+import com.blackbaud.azure.servicebus.config.ServiceBusPublisherConfig;
+import com.blackbaud.azure.servicebus.consumer.ServiceBusConsumer;
+import com.blackbaud.azure.servicebus.consumer.ServiceBusConsumerBuilder;
+import com.blackbaud.azure.servicebus.publisher.JsonMessagePublisher;
+import com.blackbaud.azure.servicebus.publisher.ServiceBusPublisherFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+@Configuration
+@Import({ServiceBusConsumerConfig.class, ServiceBusPublisherConfig.class})
+public class ServiceBusConfig {
+
+}

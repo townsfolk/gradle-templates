@@ -6,13 +6,15 @@ class FileUtils {
     public static final String LINE_SEPARATOR = System.getProperty("line.separator")
 
     static void appendToClass(File classFile, String textToAppend) {
-        classFile.text = classFile.text.replaceFirst(/(?ms)\s*}\s*(?!.*?\s*}\s*)/, """${textToAppend}
-}
-""")
+        StringBuilder builder = new StringBuilder(classFile.text)
+        builder.insert(classFile.text.lastIndexOf("}") - 1, textToAppend)
+        classFile.text = builder.toString()
     }
 
     static void addImport(File file, String importToAdd) {
-        appendBeforeLine(file, /import .*/, importToAdd)
+        if (file.text.contains("import ${importToAdd}") == false) {
+            appendBeforeLine(file, /import .*/, "import ${importToAdd};")
+        }
     }
     
     static void appendBeforeLine(File file, String match, String lineToAdd) {
@@ -36,6 +38,20 @@ class FileUtils {
                 break
             }
         }
+        file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
+    }
+
+    static void appendAfterLastLine(File file, String match, String lineToAdd) {
+        List<String> lines = file.readLines()
+        int index = 0
+
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines[i] =~ /${match}/) {
+                index = i
+            }
+        }
+        lines.add(index + 1, lineToAdd)
+
         file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
     }
 
