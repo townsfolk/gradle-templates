@@ -19,7 +19,7 @@ dependencies {
     compile "org.gradle:gradle-tooling-api:${gradleVersion}"
 
     testCompile gradleTestKit()
-    testCompile ('com.blackbaud:gradle-internal-test:3.+') {
+    testCompile ('com.blackbaud:gradle-internal-test:4.+') {
         exclude group: 'org.spockframework'
     }
     testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
