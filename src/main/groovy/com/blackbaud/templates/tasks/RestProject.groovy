@@ -196,13 +196,15 @@ authorization.filter.enable=false
         String resourceVarName = "${resourcePath.toUpperCase()}_PATH"
         String resourceNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, resourceName)
 
+        basicProject.addClientSubmodule("rest")
+
         addResourcePathConstant(resourcePath, resourceVarName)
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/resources") {
             "${resourceName}Resource.java" template: "/templates/springboot/rest/resource.java.tmpl",
                                            resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
         }
-        basicProject.applyTemplate("src/main/java/${servicePackagePath}/client") {
+        basicProject.applyTemplate("rest-client/src/main/java/${servicePackagePath}/client") {
             "${resourceName}Client.java" template: "/templates/springboot/rest/resource-client.java.tmpl",
                                          resourceName: resourceName, servicePackage: "${servicePackage}", resourcePathVar: resourceVarName
         }
@@ -235,9 +237,9 @@ import ${servicePackage}.client.${resourceName}Client;
     }
 
     private void addResourcePathConstant(String resourcePath, String resourceVarName) {
-        File resourcePathsFile = basicProject.getProjectFile("src/main/java/${servicePackagePath}/api/ResourcePaths.java")
+        File resourcePathsFile = basicProject.getProjectFile("rest-client/src/main/java/${servicePackagePath}/api/ResourcePaths.java")
         if (resourcePathsFile.exists() == false) {
-            basicProject.applyTemplate("src/main/java/${servicePackagePath}/api") {
+            basicProject.applyTemplate("rest-client/src/main/java/${servicePackagePath}/api") {
                 'ResourcePaths.java' template: "/templates/springboot/rest/resource-paths.java.tmpl",
                         packageName: "${servicePackage}.api"
             }
