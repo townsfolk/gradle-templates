@@ -22,10 +22,12 @@ class EventHubsProject {
     }
 
     void initEventHubs(String name) {
+        FileUtils.appendAfterLine(basicProject.getBuildFile(), /commonSpringBootVersion\s*=\s*"\$\{springBootVersion}/,
+                                      '        commonEventHubsVersion = "2.+"')
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /compile.*common-spring-boot/,
-                '    compile "com.blackbaud:common-eventhubs:${commonEventHubsVersion}"')
+                '    compile "com.blackbaud:common-async-event-hubs:${commonEventHubsVersion}"')
         FileUtils.appendAfterLine(basicProject.getBuildFile(), /sharedTestCompile/,
-                '    sharedTestCompile "com.blackbaud:common-eventhubs-test:${commonEventHubsVersion}"')
+                '    sharedTestCompile "com.blackbaud:common-async-event-hubs-test:${commonEventHubsVersion}"')
 
         File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         componentTestPropertiesFile.append("""
