@@ -1,6 +1,8 @@
 package ${packageName};
 
-<%if (upperCamel) out.println 'import com.fasterxml.jackson.databind.PropertyNamingStrategy;\nimport com.fasterxml.jackson.databind.annotation.JsonNaming;'%>import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor<% if (upperCamel) out.print '\n@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)'%>
+@NoArgsConstructor
+<% if (upperCamel) { %>@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)<% } else { %>@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)<% } %>
 public class ${resourceName} {
 
     String replaceme;
