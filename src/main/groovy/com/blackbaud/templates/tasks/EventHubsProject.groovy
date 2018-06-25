@@ -33,14 +33,14 @@ class EventHubsProject {
         componentTestPropertiesFile.append("""
 eventhubs.${name}.name=test${name}hub
 eventhubs.${name}.namespace=test${name}namespace
-
-eventhubs.consumer.hostName=local.docker
-eventhubs.consumer.storageAccountKey=testkey
-eventhubs.${name}.consumer.storageAccountContainer=testcontainer
-eventhubs.consumer.consumerGroupName=testgroup
-eventhubs.consumer.storageAccountName=testaccname
 eventhubs.${name}.sasKey=testsaskey
 eventhubs.${name}.sasKeyName=testsaskeyname
+eventhubs.${name}.storageAccountContainer=testcontainer
+
+eventhubs.consumer.defaults.maxBatchSize=100
+eventhubs.consumer.defaults.consumerGroupName=$Default
+eventhubs.consumer.defaults.storageAccountName=eventhubcommits
+eventhubs.consumer.defaults.storageAccountKey=anotherFakeKey
 
 eventhubs.stub=true
 """)
@@ -49,16 +49,14 @@ eventhubs.stub=true
         applicationPropertiesFile.append("""
 eventhubs.${name}.name=${name}
 eventhubs.${name}.namespace=
-
 eventhubs.${name}.sasKey=fakeKey
 eventhubs.${name}.sasKeyName=RootManageSharedAccessKey
+eventhubs.${name}.storageAccountContainer=testcontainer
 
-eventhubs.consumer.hostName=eventhubcommits
-eventhubs.consumer.maxBatchSize=100
-eventhubs.consumer.consumerGroupName=\$Default
-eventhubs.consumer.storageAccountName=eventhubcommits
-eventhubs.consumer.storageAccountKey=anotherFakeKey
-eventhubs.consumer.storageAccountContainer=testhub-checkpoints
+eventhubs.consumer.defaults.maxBatchSize=100
+eventhubs.consumer.defaults.consumerGroupName=$Default
+eventhubs.consumer.defaults.storageAccountName=eventhubcommits
+eventhubs.consumer.defaults.storageAccountKey=anotherFakeKey
 
 eventhubs.stub=true
 """)
