@@ -90,6 +90,21 @@ class BasicProject {
         }
     }
 
+    void initPerformanceTestProject() {
+        File performanceTestsBuildFile = getProjectFile("performance-tests/build.gradle")
+        if (performanceTestsBuildFile.exists() == false) {
+            addPerformanceTestsSubmodule()
+            new File("${repoDir}/performance-tests", "src/main/scala").mkdirs()
+
+            applyTemplate("performance-tests/src/main/scala/${servicePackage}") {
+                "${LOWER_HYPHEN.to(UPPER_CAMEL, repoName)}Test.scala" template: "/templates/springboot/performancetest/performance-test.scala.tmpl",
+                        lowerCamelName: LOWER_HYPHEN.to(LOWER_CAMEL, repoName),
+                        upperCamelName: LOWER_HYPHEN.to(UPPER_CAMEL, repoName),
+                        lowerCaseName: repoName.toLowerCase().replace("-", "")
+            }
+        }
+    }
+
     void initBlackbaudGradleWrapper() {
         if (new File(repoDir, "gradle/wrapper/gradle-wrapper.properties").exists() == false) {
             initGradleWrapper()
@@ -242,6 +257,20 @@ class BasicProject {
             File buildFile = getProjectFileOrFail("build.gradle")
             FileUtils.appendAfterLine(buildFile, /^dependencies \{/, "    compile project(\"${type}-client\")")
             FileUtils.appendBeforeLine(buildFile, /sharedTest/, "    sharedTestCompile project(path: \"${type}-client\", configuration: \"mainTestRuntime\")")
+        }
+    }
+
+    void addPerformanceTestsSubmodule() {
+        File performanceTestsBuildFile = getProjectFile("performance-tests/build.gradle")
+        if (!performanceTestsBuildFile.exists()) {
+            applyTemplate("performance-tests") {
+                "build.gradle" template: "/templates/springboot/performancetest/build.gradle.tmpl",
+                        lowerCamelName: LOWER_HYPHEN.to(LOWER_CAMEL, repoName),
+                        upperCamelName: LOWER_HYPHEN.to(UPPER_CAMEL, repoName),
+                        lowerCaseName: repoName.toLowerCase().replace("-", "")
+            }
+
+            includeGradleSubmodule("performance-tests")
         }
     }
 

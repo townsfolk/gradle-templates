@@ -19,6 +19,7 @@ package com.blackbaud.templates
 import com.blackbaud.templates.tasks.AddEventHubsTask
 import com.blackbaud.templates.tasks.AddEventHubsMessageTask
 import com.blackbaud.templates.tasks.AddKafkaMessageTask
+import com.blackbaud.templates.tasks.AddPerformanceTestsTask
 import com.blackbaud.templates.tasks.AddRestApiObjectTask
 import com.blackbaud.templates.tasks.AddJpaObjectTask
 import com.blackbaud.templates.tasks.AddServiceBusTopicConfigTask
@@ -60,6 +61,7 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
         project.task 'addRestApiObject', type: AddRestApiObjectTask
         project.task 'addJpaObject', type: AddJpaObjectTask
         project.task 'addServiceBusTopicConfig', type: AddServiceBusTopicConfigTask
+        project.task 'addPerformanceTests', type: AddPerformanceTestsTask
     }
 
 }
