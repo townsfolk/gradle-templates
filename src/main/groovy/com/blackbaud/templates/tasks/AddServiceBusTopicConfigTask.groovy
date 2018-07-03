@@ -13,7 +13,7 @@ class AddServiceBusTopicConfigTask extends AbstractTemplateTask {
 
     @TaskAction
     void addTopic() {
-        String name = projectProps.getRequiredProjectProperty("name")
+        String name = projectProps.getRequiredProjectProperty("topic")
         boolean internal = projectProps.isPropertyDefined("internal")
         boolean consumer = projectProps.isPropertyDefined("consumer")
         boolean publisher = projectProps.isPropertyDefined("publisher")

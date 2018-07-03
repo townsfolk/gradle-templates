@@ -44,7 +44,7 @@ servicebus.stub=true
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/servicebus") {
             "ServiceBusConfig.java" template: "/templates/springboot/service-bus/service-bus-config.java.tmpl",
-                                    servicePackageName: "${servicePackage}.servicebus"
+                                    packageName: "${servicePackage}.servicebus"
         }
     }
 
@@ -79,27 +79,15 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
 """)
         }
 
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/servicebus") {
+            "${formatter.propertiesClassName}.java" template: "/templates/springboot/service-bus/service-bus-properties.java.tmpl",
+                                                    packageName: "${servicePackage}.servicebus",
+                                                    className: formatter.propertiesClassName,
+                                                    topicPrefix: formatter.topicNameCamelCase
+        }
+
         File serviceBusConfigFile = basicProject.findFile("ServiceBusConfig.java")
-        FileUtils.appendToClass(serviceBusConfigFile, """
-    @Bean
-    public ServiceBusProperties ${formatter.topicNameCamelCase}ServiceBusProperties(
-            @Value("\${servicebus.namespace}") String namespace,
-            @Value("\${servicebus.${formatter.topicNameSnakeCase}.entity_path}") String entityPath,
-            @Value("\${servicebus.${formatter.topicNameSnakeCase}.subscription}") String subscription,
-            @Value("\${servicebus.${formatter.topicNameSnakeCase}.shared_access_key_name}") String sasKeyName,
-            @Value("\${servicebus.${formatter.topicNameSnakeCase}.shared_access_key}") String sasKey) {
-        return ServiceBusProperties.builder()
-                .namespace(namespace)
-                .entityPath(entityPath)
-                .subscription(subscription)
-                .sharedAccessKey(sasKey)
-                .sharedAccessKeyName(sasKeyName)
-                .build();
-    }
-""")
-
         File publisherConfigFile
-
         if (publisher) {
             publisherConfigFile = serviceBusConfigFile
             if (internal) {
@@ -109,25 +97,27 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
             }
         } else {
             publisherConfigFile = componentTestConfigFile
+            FileUtils.addImport(publisherConfigFile, "${servicePackage}.servicebus.${formatter.propertiesClassName}")
         }
 
         FileUtils.addImport(publisherConfigFile, "org.springframework.beans.factory.annotation.Qualifier")
         FileUtils.addImport(publisherConfigFile, "com.blackbaud.azure.servicebus.publisher.JsonMessagePublisher")
-        FileUtils.addImport(publisherConfigFile, "com.blackbaud.azure.servicebus.adapter.ServiceBusProperties")
-        FileUtils.addImport(publisherConfigFile, "com.blackbaud.azure.servicebus.publisher.ServiceBusPublisherFactory")
+        FileUtils.addImport(publisherConfigFile, "com.blackbaud.azure.servicebus.config.ServiceBusProperties")
+        FileUtils.addImport(publisherConfigFile, "com.blackbaud.azure.servicebus.publisher.ServiceBusPublisherBuilder")
         FileUtils.appendToClass(publisherConfigFile, """
     @Bean
     public JsonMessagePublisher ${formatter.topicNameCamelCase}Publisher(
-            ServiceBusPublisherFactory serviceBusPublisherFactory,
+            ServiceBusPublisherBuilder.Factory serviceBusPublisherFactory,
             @Qualifier("${formatter.topicNameCamelCase}ServiceBusProperties") ServiceBusProperties serviceBusProperties) {
-        return serviceBusPublisherFactory.createJsonPublisher(serviceBusProperties);
+        return serviceBusPublisherFactory.create()
+                .buildJsonPublisher(serviceBusProperties);
     }
 """)
 
         if (consumer) {
             basicProject.applyTemplate("src/main/java/${servicePackagePath}/servicebus") {
                 "${formatter.messageHandlerClassName}.java" template: "/templates/springboot/service-bus/message-handler.java.tmpl",
-                                                            servicePackageName: "${servicePackage}.servicebus",
+                                                            packageName: "${servicePackage}.servicebus",
                                                             className: formatter.messageHandlerClassName,
                                                             payloadClassName: formatter.payloadClassName
             }
@@ -143,7 +133,7 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
     public ServiceBusConsumer ${formatter.topicNameCamelCase}Consumer(
             ServiceBusConsumerBuilder.Factory serviceBusConsumerFactory,
             ${formatter.messageHandlerClassName} ${formatter.topicNameCamelCase}MessageHandler,
-            @Qualifier("${formatter.topicNameCamelCase}ServiceBusProperties") ServiceBusProperties serviceBusProperties) {
+            ${formatter.propertiesClassName} serviceBusProperties) {
         return serviceBusConsumerFactory.create()
                 .serviceBus(serviceBusProperties)
                 .jsonMessageHandler(${formatter.topicNameCamelCase}MessageHandler, ${formatter.payloadClassName}.class, ${sessionEnabled})
@@ -162,8 +152,8 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
     @Bean
     public ServiceBusConsumer sessionConsumer(
             ServiceBusConsumerBuilder.Factory serviceBusConsumerFactory,
-            @Qualifier("${formatter.topicNameCamelCase}MessageHandler") ValidatingServiceBusMessageHandler<${formatter.payloadClassName}> messageHandler,
-            @Qualifier("${formatter.topicNameCamelCase}ServiceBusProperties") ServiceBusProperties serviceBusProperties) {
+            ${formatter.propertiesClassName} serviceBusProperties,
+            @Qualifier("${formatter.topicNameCamelCase}MessageHandler") ValidatingServiceBusMessageHandler<${formatter.payloadClassName}> messageHandler) {
         return serviceBusConsumerFactory.create()
                 .serviceBus(serviceBusProperties)
                 .jsonMessageHandler(messageHandler, ${formatter.payloadClassName}.class, ${sessionEnabled})
@@ -175,7 +165,7 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
 
     private void addConsumerImports(File configFile) {
         FileUtils.addImport(configFile, "org.springframework.beans.factory.annotation.Qualifier")
-        FileUtils.addImport(configFile, "com.blackbaud.azure.servicebus.adapter.ServiceBusProperties")
+        FileUtils.addImport(configFile, "com.blackbaud.azure.servicebus.config.ServiceBusProperties")
         FileUtils.addImport(configFile, "com.blackbaud.azure.servicebus.consumer.ServiceBusConsumer")
         FileUtils.addImport(configFile, "com.blackbaud.azure.servicebus.consumer.ServiceBusConsumerBuilder")
     }
@@ -205,6 +195,10 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
 
         String getPayloadClassName() {
             "${topicNameCamelCase.capitalize()}Payload"
+        }
+
+        String getPropertiesClassName() {
+            "${topicNameCamelCase.capitalize()}ServiceBusProperties"
         }
 
     }

@@ -1,0 +1,8 @@
+package ${packageName};
+
+import com.blackbaud.azure.servicebus.config.ServiceBusProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(prefix = "${topicPrefix}")
+public class ${className} extends ServiceBusProperties {
+}
