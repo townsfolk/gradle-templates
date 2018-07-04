@@ -16,7 +16,11 @@ class FileUtils {
             appendBeforeLine(file, /import .*/, "import ${importToAdd};")
         }
     }
-    
+
+    static def addConfigurationImport(File file, String importToAdd) {
+        appendBeforeLine(file, /class\s+/, "@Import(${importToAdd})")
+    }
+
     static void appendBeforeLine(File file, String match, String lineToAdd) {
         List<String> lines = file.readLines()
 

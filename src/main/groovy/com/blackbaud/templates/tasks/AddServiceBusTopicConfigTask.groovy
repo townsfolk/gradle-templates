@@ -8,12 +8,14 @@ class AddServiceBusTopicConfigTask extends AbstractTemplateTask {
 
     AddServiceBusTopicConfigTask() {
         super("Adds a Service Bus topic configuration, message, and random builder skeleton " +
-                      "(options: -Ptopic=?, one of [-Pinternal -Pconsumer -Ppublisher], [-PsessionEnabled])")
+                      "(options: -Ptopic=?, -PtopicType=[datasync, schedule] one of [-Pinternal -Pconsumer -Ppublisher], [-PsessionEnabled])")
     }
 
     @TaskAction
     void addTopic() {
         String name = projectProps.getRequiredProjectProperty("topic")
+        String topicTypeString = projectProps.getRequiredProjectProperty("topicType")
+        AsyncProject.TopicType topicType = AsyncProject.TopicType.resolveFromString(topicTypeString)
         boolean internal = projectProps.isPropertyDefined("internal")
         boolean consumer = projectProps.isPropertyDefined("consumer")
         boolean publisher = projectProps.isPropertyDefined("publisher")
@@ -22,9 +24,9 @@ class AddServiceBusTopicConfigTask extends AbstractTemplateTask {
         BasicProject basicProject = openBasicProject()
         AsyncProject asyncProject = new AsyncProject(basicProject)
         if (internal) {
-            asyncProject.addInternalTopic(name, sessionEnabled)
+            asyncProject.addInternalTopic(name, topicType, sessionEnabled)
         } else {
-            asyncProject.addExternalTopic(name, consumer, publisher, sessionEnabled)
+            asyncProject.addExternalTopic(name, topicType, consumer, publisher, sessionEnabled)
         }
     }
 

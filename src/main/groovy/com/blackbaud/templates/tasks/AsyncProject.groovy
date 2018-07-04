@@ -48,45 +48,53 @@ servicebus.stub=true
         }
     }
 
-    void addInternalTopic(String topicName, boolean sessionEnabled) {
-        addTopic(topicName, true, true, true, sessionEnabled)
+    void addInternalTopic(String topicName, TopicType topicType, boolean sessionEnabled) {
+        addTopic(topicName, topicType, true, true, true, sessionEnabled)
     }
 
-    void addExternalTopic(String topicName, boolean consumer, boolean publisher, boolean sessionEnabled) {
-        addTopic(topicName, false, consumer, publisher, sessionEnabled)
+    void addExternalTopic(String topicName, TopicType topicType, boolean consumer, boolean publisher, boolean sessionEnabled) {
+        addTopic(topicName, topicType, false, consumer, publisher, sessionEnabled)
     }
 
-    private void addTopic(String topicName, boolean internal, boolean consumer, boolean publisher, boolean sessionEnabled) {
+    private void addTopic(String topicName, TopicType topicType, boolean internal, boolean consumer, boolean publisher, boolean sessionEnabled) {
         initServiceBusIfNotAlreadyInitialized()
 
         ServiceBusNameResolver formatter = new ServiceBusNameResolver(topicName)
         File componentTestConfigFile = basicProject.findComponentTestConfig()
 
-        File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
-        if (applicationPropertiesFile.text.contains("servicebus.namespace") == false) {
-            applicationPropertiesFile.append("""
-servicebus.namespace=namespace
-""")
-        }
+        File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")
         applicationPropertiesFile.append("""\
 servicebus.${formatter.topicNameSnakeCase}.entity_path=${formatter.topicNameSnakeCase}
 servicebus.${formatter.topicNameSnakeCase}.shared_access_key_name=keyName
-servicebus.${formatter.topicNameSnakeCase}.shared_access_key=key
+servicebus.${formatter.topicNameSnakeCase}.session_enabled=${sessionEnabled}
 """)
         if (consumer) {
             applicationPropertiesFile.append("""\
 servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
 """)
         }
+        
+        File applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
+        applicationLocalPropertiesFile.append("""\
+servicebus.${formatter.topicNameSnakeCase}.namespace=namespace
+servicebus.${formatter.topicNameSnakeCase}.shared_access_key=key
+""")
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/servicebus") {
             "${formatter.propertiesClassName}.java" template: "/templates/springboot/service-bus/service-bus-properties.java.tmpl",
                                                     packageName: "${servicePackage}.servicebus",
                                                     className: formatter.propertiesClassName,
-                                                    topicPrefix: formatter.topicNameCamelCase
+                                                    topicPrefix: "servicebus.${formatter.topicNameSnakeCase}"
         }
 
         File serviceBusConfigFile = basicProject.findFile("ServiceBusConfig.java")
+        FileUtils.appendBeforeLine(serviceBusConfigFile, "public class", "@EnableConfigurationProperties(${formatter.propertiesClassName}.class)")
+
+        File applicationClass = basicProject.findFile("${basicProject.serviceName}.java")
+        FileUtils.addImport(applicationClass, "${servicePackage}.servicebus.ServiceBusConfig")
+        FileUtils.addImport(applicationClass, "org.springframework.context.annotation.Import")
+        FileUtils.addConfigurationImport(applicationClass, "ServiceBusConfig.class")
+
         File publisherConfigFile
         if (publisher) {
             publisherConfigFile = serviceBusConfigFile
@@ -108,7 +116,7 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
     @Bean
     public JsonMessagePublisher ${formatter.topicNameCamelCase}Publisher(
             ServiceBusPublisherBuilder.Factory serviceBusPublisherFactory,
-            @Qualifier("${formatter.topicNameCamelCase}ServiceBusProperties") ServiceBusProperties serviceBusProperties) {
+            ${formatter.propertiesClassName} serviceBusProperties) {
         return serviceBusPublisherFactory.create()
                 .buildJsonPublisher(serviceBusProperties);
     }
@@ -135,8 +143,8 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
             ${formatter.messageHandlerClassName} ${formatter.topicNameCamelCase}MessageHandler,
             ${formatter.propertiesClassName} serviceBusProperties) {
         return serviceBusConsumerFactory.create()
-                .serviceBus(serviceBusProperties)
-                .jsonMessageHandler(${formatter.topicNameCamelCase}MessageHandler, ${formatter.payloadClassName}.class, ${sessionEnabled})
+                .${topicType.consumerBuilderMethodName}(serviceBusProperties)
+                .jsonMessageHandler(${formatter.topicNameCamelCase}MessageHandler, ${formatter.payloadClassName}.class)
                 .build();
     }
 """)
@@ -201,6 +209,32 @@ servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
             "${topicNameCamelCase.capitalize()}ServiceBusProperties"
         }
 
+    }
+
+
+    enum TopicType {
+        SCHEDULE("schedulingTopicServiceBus"), DATASYNC("dataSyncTopicServiceBus")
+
+        private String consumerBuilderMethodName
+
+        private TopicType(String consumerBuilderMethodName) {
+            this.consumerBuilderMethodName = consumerBuilderMethodName
+        }
+
+        String getConsumerBuilderMethodName() {
+            return consumerBuilderMethodName
+        }
+
+        static TopicType resolveFromString(String name) {
+            TopicType topicType = values().find {
+                name.equalsIgnoreCase(it.name())
+            }
+            if (topicType == null) {
+                List<String> types = values().collect{it.name().toLowerCase()}
+                throw new RuntimeException("No type matching '${name}', available types=${types}")
+            }
+            topicType
+        }
     }
 
 }
