@@ -17,32 +17,57 @@ class FileUtils {
         }
     }
 
-    static def addConfigurationImport(File file, String importToAdd) {
-        appendBeforeLine(file, /class\s+/, "@Import(${importToAdd})")
+    static void addConfigurationImport(File file, String importToAdd) {
+        List<String> lines = file.readLines()
+        int index = indexOf(lines, /@Import/)
+
+        if (index >= 0) {
+            String importLine = lines[index]
+            String imports = (importLine =~ /@Import\(\{?([^}]+)\}?\)/)[0][1]
+            lines[index] = "@Import({${imports}, ${importToAdd}})".toString()
+            file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
+        } else {
+            appendBeforeLine(file, /class\s+/, "@Import(${importToAdd})")
+        }
+    }
+
+    private static int indexOf(List<String> lines, String match) {
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines[i] =~ /${match}/) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    static void replaceLine(File file, String match, String lineToReplace) {
+        List<String> lines = file.readLines()
+        int index = indexOf(lines, match)
+
+        if (index >= 0) {
+            lines[index] = lineToReplace
+            file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
+        }
     }
 
     static void appendBeforeLine(File file, String match, String lineToAdd) {
         List<String> lines = file.readLines()
+        int index = indexOf(lines, match)
 
-        for (int i = 0; i < lines.size(); i++) {
-            if (lines[i] =~ /${match}/) {
-                lines.add(i, lineToAdd)
-                break
-            }
+        if (index >= 0) {
+            lines.add(index, lineToAdd)
+            file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
         }
-        file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
     }
 
     static void appendAfterLine(File file, String match, String lineToAdd) {
         List<String> lines = file.readLines()
+        int index = indexOf(lines, match)
 
-        for (int i = 0; i < lines.size(); i++) {
-            if (lines[i] =~ /${match}/) {
-                lines.add(i + 1, lineToAdd)
-                break
-            }
+        if (index >= 0) {
+            lines.add(index + 1, lineToAdd)
+            file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
         }
-        file.text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
     }
 
     static void appendAfterLastLine(File file, String match, String lineToAdd) {
