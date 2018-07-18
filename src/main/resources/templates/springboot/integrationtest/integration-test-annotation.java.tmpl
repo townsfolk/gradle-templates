@@ -15,10 +15,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ActiveProfiles(profiles = {"local", "integrationTest"})
-@SpringBootTest(
-        classes = {IntegrationTestConfig.class},
-        properties = {"server.port=10000", "management.port=10001"},
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT
-)
+@SpringBootTest(classes = {IntegrationTestConfig.class})
 public @interface IntegrationTest {
 }

@@ -56,7 +56,7 @@ class IntegrationTestProject {
             "IntegrationTest.java" template: "/templates/springboot/integrationtest/integration-test-annotation.java.tmpl",
                     serviceName: serviceName, packageName: servicePackage
 
-            "IntegrationTestConfig.java" template: "/templates/springboot/rest/application-test-config.java.tmpl",
+            "IntegrationTestConfig.java" template: "/templates/springboot/integrationtest/integration-test-config.java.tmpl",
                     className: "IntegrationTestConfig", serviceName: serviceName, packageName: servicePackage
         }
 

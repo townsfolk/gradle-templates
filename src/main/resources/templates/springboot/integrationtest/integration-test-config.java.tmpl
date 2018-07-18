@@ -1,0 +1,17 @@
+package ${packageName};
+
+import ${packageName}.core.CoreRandomBuilderSupport;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import static ${packageName}.core.CoreARandom.aRandom;
+
+@Configuration
+class IntegrationTestConfig {
+
+    @Bean
+    CoreRandomBuilderSupport coreRandomBuilderSupport() {
+        return aRandom.coreRandomBuilderSupport;
+    }
+
+}
