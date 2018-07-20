@@ -29,12 +29,12 @@ class IntegrationTestProject {
         basicProject.servicePackagePath
     }
 
-    void initIntegrationTestProject(boolean vsts) {
+    void initIntegrationTestProject(boolean vsts, boolean includeGeb) {
         basicProject.initBlackbaudGradleWrapper()
 
         basicProject.applyTemplate {
             'build.gradle' template: "/templates/springboot/integrationtest/build.gradle.tmpl",
-                           artifactId: repoName
+                           artifactId: repoName, includeGeb: includeGeb
             'gradle.properties' template: "/templates/basic/gradle.properties.tmpl",
                                 artifactId: repoName
             'src' {

@@ -6,6 +6,7 @@ buildscript {
 
 apply plugin: "blackbaud-internal"
 apply plugin: 'integration-test'
+<% if (includeGeb) { %>apply plugin: 'blackbaud-internal-ui' <% } else { %><% } %>
 
 ext {
     springBootVersion = "1.4.1.RELEASE"
@@ -15,6 +16,7 @@ dependencies {
     integrationTestCompile "com.google.guava:guava:23.0"
     integrationTestCompile "com.blackbaud:common-spring-boot-rest-test:\${springBootVersion}-3.+"
     integrationTestCompile "org.springframework.boot:spring-boot-starter-test:\${springBootVersion}"
+    <% if (includeGeb) { %>integrationTestCompile "com.blackbaud:common-geb:3.+" <% } else { %><% } %>
     integrationTestCompile "com.blackbaud:common-test:4.+"
     integrationTestCompile "org.codehaus.groovy:groovy-all:2.4.3"
     integrationTestCompile ("org.spockframework:spock-spring:1.1-groovy-2.4") {
