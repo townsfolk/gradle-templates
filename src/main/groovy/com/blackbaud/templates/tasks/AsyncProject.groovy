@@ -64,21 +64,26 @@ servicebus.stub=true
 
         File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")
         applicationPropertiesFile.append("""\
-servicebus.${formatter.topicNameSnakeCase}.entity_path=${formatter.topicNameSnakeCase}
-servicebus.${formatter.topicNameSnakeCase}.shared_access_key_name=keyName
 servicebus.${formatter.topicNameSnakeCase}.session_enabled=${sessionEnabled}
 """)
-        if (consumer) {
+
+        File applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
+        if (publisher) {
+            applicationLocalPropertiesFile.append("""\
+servicebus.${formatter.topicNameSnakeCase}.producer_connection_url=Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2Ftest&sig=test
+""")
             applicationPropertiesFile.append("""\
-servicebus.${formatter.topicNameSnakeCase}.subscription=consumer
+servicebus.${formatter.topicNameSnakeCase}.producer_connection_url=\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Send}
 """)
         }
-        
-        File applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
-        applicationLocalPropertiesFile.append("""\
-servicebus.${formatter.topicNameSnakeCase}.namespace=namespace
-servicebus.${formatter.topicNameSnakeCase}.shared_access_key=key
+        if (consumer) {
+            applicationLocalPropertiesFile.append("""\
+servicebus.${formatter.topicNameSnakeCase}.consumer_connection_url=Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2Ftest&sig=test
 """)
+            applicationPropertiesFile.append("""\
+servicebus.${formatter.topicNameSnakeCase}.consumer_connection_url=\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Listen}
+""")
+        }
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/servicebus") {
             "${formatter.propertiesClassName}.java" template: "/templates/springboot/service-bus/service-bus-properties.java.tmpl",
