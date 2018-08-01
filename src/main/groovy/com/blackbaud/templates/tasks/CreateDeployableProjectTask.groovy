@@ -5,7 +5,8 @@ import org.gradle.api.tasks.TaskAction
 class CreateDeployableProjectTask extends AbstractTemplateTask {
 
     CreateDeployableProjectTask() {
-        super("Create a SpringBoot REST project (options: -PrepoName=?, [-Pclean, -Ppostgres, -Pmybatis, -Pkafka, -PdisableAuthFilter -Pvsts -PserviceName=<app name>, -PservicePackageName=<package name>])")
+        super("Create a SpringBoot REST project (options: -PrepoName=?, [-Pclean, -Ppostgres, -Pmybatis, -Pcosmos, " +
+                      "-Pkafka, -PdisableAuthFilter -Pvsts -PserviceName=<app name>, -PservicePackageName=<package name>])")
     }
 
     @TaskAction
@@ -21,6 +22,9 @@ class CreateDeployableProjectTask extends AbstractTemplateTask {
             restProject.initMybatis()
         } else if (projectProps.isPropertyDefined("postgres")) {
             restProject.initPostgres()
+        }
+        if (projectProps.isPropertyDefined("cosmos")) {
+            restProject.initCosmos()
         }
         if (projectProps.isPropertyDefined("kafka")) {
             restProject.initKafka()

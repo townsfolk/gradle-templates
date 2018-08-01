@@ -16,6 +16,8 @@
  */
 package com.blackbaud.templates
 
+import com.blackbaud.templates.tasks.AddCosmosContainerTask
+import com.blackbaud.templates.tasks.AddCosmosObjectTask
 import com.blackbaud.templates.tasks.AddEventHubsTask
 import com.blackbaud.templates.tasks.AddEventHubsMessageTask
 import com.blackbaud.templates.tasks.AddKafkaMessageTask
@@ -54,12 +56,14 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
 
         project.task 'createResource', type: CreateResourceTask
         project.task 'addPostgresContainer', type: AddPostgresContainerTask
+        project.task 'addCosmosContainer', type: AddCosmosContainerTask
         project.task 'addKafkaContainer', type: AddKafkaContainerTask
         project.task 'addKafkaMessage', type: AddKafkaMessageTask
         project.task 'addEventHubsContainer', type: AddEventHubsTask
         project.task 'addEventHubsMessage', type: AddEventHubsMessageTask
         project.task 'addRestApiObject', type: AddRestApiObjectTask
         project.task 'addJpaObject', type: AddJpaObjectTask
+        project.task 'addCosmosObject', type: AddCosmosObjectTask
         project.task 'addServiceBusTopicConfig', type: AddServiceBusTopicConfigTask
         project.task 'addPerformanceTests', type: AddPerformanceTestsTask
     }

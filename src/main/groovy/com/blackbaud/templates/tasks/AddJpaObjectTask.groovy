@@ -13,7 +13,7 @@ class AddJpaObjectTask extends AbstractTemplateTask {
     void addEntityObject() {
         String name = projectProps.getRequiredProjectProperty("name")
         RestProject restProject = openRestProject()
-        restProject.addEntityObject(name)
+        restProject.addJpaEntityObject(name)
     }
 
 }

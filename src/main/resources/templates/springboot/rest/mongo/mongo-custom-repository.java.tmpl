@@ -1,0 +1,8 @@
+package ${packageName};
+
+import com.blackbaud.cosmos.sharded.ShardedMongoRepository;
+import org.springframework.data.repository.NoRepositoryBean;
+
+@NoRepositoryBean
+public interface ${entityName}CustomRepository extends ShardedMongoRepository<${entityName}Entity> {
+}

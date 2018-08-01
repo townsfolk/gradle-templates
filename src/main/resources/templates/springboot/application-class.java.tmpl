@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("${servicePackage}.core, ${servicePackage}.resources")
+@ComponentScan({"${servicePackage}.core", "${servicePackage}.resources"})
 public class ${serviceName} extends CommonSpringConfig {
 
     public static void main(String[] args) {

@@ -95,6 +95,13 @@ authorization.filter.enable=false
         basicProject.commitProjectFiles("initialize mybatis")
     }
 
+    void initCosmos() {
+        DatasourceProject datasourceProject = new DatasourceProject(this)
+        datasourceProject.initCosmos()
+
+        basicProject.commitProjectFiles("initialize cosmos container")
+    }
+
     void initKafka() {
         KafkaProject kafkaProject = new KafkaProject(basicProject)
         kafkaProject.initKafka()
@@ -187,7 +194,7 @@ authorization.filter.enable=false
         addApiObject(resourceName)
 
         if (addEntity) {
-            addEntityObject(resourceName)
+            addJpaEntityObject(resourceName)
         }
     }
 
@@ -250,46 +257,90 @@ import ${servicePackage}.client.${resourceName}Client;
 """)
     }
 
-    void addEntityObject(String resourceName) {
+    void addJpaEntityObject(String resourceName) {
         String resourcePath = "${UPPER_CAMEL.to(LOWER_UNDERSCORE, resourceName)}"
-        String resourceNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, resourceName)
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
-            "${resourceName}Entity.java" template: "/templates/springboot/rest/resource-entity.java.tmpl",
+            "${resourceName}Entity.java" template: "/templates/springboot/rest/jpa/jpa-entity.java.tmpl",
                                          resourceName: resourceName, packageName: "${servicePackage}.core.domain", tableName: resourcePath
         }
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
-            "${resourceName}Repository.java" template: "/templates/springboot/rest/resource-repository.java.tmpl",
+            "${resourceName}Repository.java" template: "/templates/springboot/rest/jpa/jpa-repository.java.tmpl",
                                              resourceName: resourceName, packageName: "${servicePackage}.core.domain"
         }
 
-        basicProject.applyTemplate("src/sharedTest/groovy/${servicePackagePath}/core/domain") {
-            "Random${resourceName}EntityBuilder.groovy" template: "/templates/test/random-core-builder.groovy.tmpl",
-                                                        resourceName: resourceName,
-                                                        resourceNameLowerCamel: resourceNameLowerCamel,
-                                                        servicePackageName: servicePackage
-        }
-
-        File randomCoreBuilderSupport = basicProject.findFile("CoreRandomBuilderSupport.java")
-        FileUtils.appendAfterLine(randomCoreBuilderSupport, "package", "import ${servicePackage}.core.domain.${resourceName}Repository;")
-        FileUtils.appendAfterLine(randomCoreBuilderSupport, "package", "import ${servicePackage}.core.domain.Random${resourceName}EntityBuilder;")
-        FileUtils.appendToClass(randomCoreBuilderSupport, """
-
-    @Autowired
-    private ${resourceName}Repository ${resourceNameLowerCamel}Repository;
-
-    public Random${resourceName}EntityBuilder ${resourceNameLowerCamel}Entity() {
-        return new Random${resourceName}EntityBuilder(${resourceNameLowerCamel}Repository);
-    }
-""")
+        addRandomBuilder(resourceName)
 
         DatasourceProject datasourceProject = new DatasourceProject(this)
         datasourceProject.addCreateTableScript(resourcePath)
     }
 
+    private void addRandomBuilder(String entityName) {
+        String entityNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, entityName)
+
+        basicProject.applyTemplate("src/sharedTest/groovy/${servicePackagePath}/core/domain") {
+            "Random${entityName}EntityBuilder.groovy" template: "/templates/test/random-core-builder.groovy.tmpl",
+                                                      resourceName: entityName,
+                                                      resourceNameLowerCamel: entityNameLowerCamel,
+                                                      servicePackageName: servicePackage
+        }
+
+        File randomCoreBuilderSupport = basicProject.findFile("CoreRandomBuilderSupport.java")
+        FileUtils.appendAfterLine(randomCoreBuilderSupport, "package", "import ${servicePackage}.core.domain.${entityName}Repository;")
+        FileUtils.appendAfterLine(randomCoreBuilderSupport, "package", "import ${servicePackage}.core.domain.Random${entityName}EntityBuilder;")
+        FileUtils.appendToClass(randomCoreBuilderSupport, """
+
+    @Autowired
+    private ${entityName}Repository ${entityNameLowerCamel}Repository;
+
+    public Random${entityName}EntityBuilder ${entityNameLowerCamel}Entity() {
+        return new Random${entityName}EntityBuilder(${entityNameLowerCamel}Repository);
+    }
+""")
+    }
+
     void addApiObject(String resourceName, boolean upperCamel = false) {
         basicProject.addExternalApiObject("rest", resourceName, upperCamel)
+    }
+
+    void addCosmosEntityObject(String entityName, boolean auditable) {
+        String entityNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, entityName)
+
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
+            String entityNameLowerUnderscore = UPPER_CAMEL.to(LOWER_UNDERSCORE, entityName)
+            "${entityName}Entity.java" template: "/templates/springboot/rest/mongo/mongo-entity.java.tmpl",
+                                         resourceName: entityName, packageName: "${servicePackage}.core.domain",
+                                         collectionName: "${entityNameLowerUnderscore}s", auditable: auditable
+        }
+
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
+            "${entityName}Repository.java" template: "/templates/springboot/rest/mongo/mongo-repository.java.tmpl",
+                                             entityName: entityName, packageName: "${servicePackage}.core.domain"
+        }
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
+            "${entityName}TransactionalRepository.java" template: "/templates/springboot/rest/mongo/mongo-transactional-repository.java.tmpl",
+                                             entityName: entityName, packageName: "${servicePackage}.core.domain"
+        }
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
+            "${entityName}TransactionalRepositoryImpl.java" template: "/templates/springboot/rest/mongo/mongo-transactional-repository-impl.java.tmpl",
+                                                            entityName: entityName, entityNameLowerCamel: entityNameLowerCamel,
+                                                            packageName: "${servicePackage}.core.domain"
+        }
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
+            "${entityName}CustomRepository.java" template: "/templates/springboot/rest/mongo/mongo-custom-repository.java.tmpl",
+                                                 entityName: entityName, packageName: "${servicePackage}.core.domain"
+        }
+
+        File cosmosConfig = basicProject.findFile("CosmosConfig.java")
+        FileUtils.appendToClass(cosmosConfig, """
+    @Bean
+    public ${entityName}Repository ${entityNameLowerCamel}Repository(CosmosRetryableRepositoryFactory factory, ${entityName}TransactionalRepository transactionalRepository) {
+        return factory.createRepository(transactionalRepository, ${entityName}Repository.class);
+    }
+""")
+
+        addRandomBuilder(entityName)
     }
 
 }

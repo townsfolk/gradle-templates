@@ -1,5 +1,7 @@
 package com.blackbaud.templates.tasks
 
+import com.blackbaud.templates.CurrentVersions
+
 class DatasourceProject {
 
     private RestProject restProject
@@ -40,7 +42,7 @@ class DatasourceProject {
 
         applyEntityScan()
         applyPostgresCompileDependencies()
-        applyApplicationProperties()
+        applyPostgresApplicationProperties()
         applyTestCleanupSql()
         basicProject.appendServiceToAppDescriptor("postgres-shared")
     }
@@ -66,7 +68,7 @@ class DatasourceProject {
         }
     }
 
-    private void applyApplicationProperties() {
+    private void applyPostgresApplicationProperties() {
         File componentTestPropertiesFile = basicProject.getProjectFile("src/sharedTest/resources/application-test.properties")
         componentTestPropertiesFile.append("""
 spring.datasource.url=jdbc:postgresql://docker.localhost:5432/\${spring.application.name}-test
@@ -97,7 +99,7 @@ spring.datasource.validation-query=SELECT 1;
         File applicationClassFile = basicProject.findFile("${serviceName}.java")
 
         FileUtils.appendAfterLine(applicationClassFile, "@SpringBootApplication", entityScan)
-        FileUtils.appendAfterLine(applicationClassFile, "ManagementWebSecurityAutoConfiguration;", entityScanImport)
+        FileUtils.appendAfterLine(applicationClassFile, "autoconfigure.SpringBootApplication", entityScanImport)
     }
 
     private createLiquibaseChangeLog() {
@@ -130,4 +132,58 @@ spring.datasource.validation-query=SELECT 1;
             cleanupSql.append("truncate table ${tableName};\n")
         }
     }
+
+    void initCosmos() {
+        basicProject.applyPlugin("mongo")
+
+        addCosmosConfig()
+        applyCommonCosmosCompileDependencies()
+        applyCosmosApplicationProperties()
+    }
+
+    private applyCommonCosmosCompileDependencies() {
+        File buildFile = basicProject.getProjectFile("build.gradle")
+
+        if (buildFile.text.contains("commonSpringBootMajorVersion") == false) {
+            FileUtils.appendAfterLine(buildFile, /springBootVersion\s*=/, """\
+        commonSpringBootMajorVersion = "${CurrentVersions.COMMON_SPRING_BOOT_MAJOR_VERSION}\"""")
+            FileUtils.replaceLine(buildFile, /commonSpringBootVersion\s*=/, '''\
+        commonSpringBootVersion = "${springBootVersion}-${commonSpringBootMajorVersion}.+"''')
+        }
+        FileUtils.appendAfterLine(buildFile, /commonSpringBootVersion\s*=/, """\
+        commonCosmosVersion = "\${springBootVersion}-\${commonSpringBootMajorVersion}-${CurrentVersions.COMMON_COSMOS_VERSION}.+\"""")
+
+        // TODO: for some reason, if spring-data-commons and spring-data-mongodb are not included (they are transitive
+        // deps of common-cosmos), the wrong version will be pulled in... this is possibly due to default versions
+        // pulled in by the spring-boot plugin.  need to investigate.
+        FileUtils.appendAfterLine(buildFile, 'compile "com.blackbaud:common-spring-boot-rest:', '''\
+    compile "com.blackbaud:common-cosmos:${commonCosmosVersion}"
+    compile "org.springframework.data:spring-data-commons:1.13.8.RELEASE"
+    compile "org.springframework.data:spring-data-mongodb:1.10.11.RELEASE"''')
+
+        File applicationClass = basicProject.findFile("${basicProject.serviceName}.java")
+        FileUtils.addImport(applicationClass, "${servicePackage}.config.CosmosConfig")
+        FileUtils.addImport(applicationClass, "org.springframework.context.annotation.Import")
+        FileUtils.addConfigurationImport(applicationClass, "CosmosConfig.class")
+    }
+
+    private void addCosmosConfig() {
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/config") {
+            "CosmosConfig.java" template: "/templates/cosmos/cosmos-config.java.tmpl",
+                    servicePackage: "${servicePackage}.config", basePackage: "${servicePackage}.core.domain"
+        }
+    }
+
+    private void applyCosmosApplicationProperties() {
+        File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
+        componentTestPropertiesFile.append("""
+spring.data.mongodb.database=\${spring.application.name}-test
+""")
+
+        File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
+        applicationPropertiesFile.append("""
+spring.data.mongodb.uri=mongodb://docker.localhost:27017
+""")
+    }
+
 }
