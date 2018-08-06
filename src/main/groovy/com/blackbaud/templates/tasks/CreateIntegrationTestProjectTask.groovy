@@ -1,5 +1,7 @@
 package com.blackbaud.templates.tasks
 
+import com.blackbaud.templates.project.BasicProject
+import com.blackbaud.templates.project.IntegrationTestProject
 import org.gradle.api.tasks.TaskAction
 
 class CreateIntegrationTestProjectTask extends AbstractTemplateTask {

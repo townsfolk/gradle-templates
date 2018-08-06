@@ -1,5 +1,7 @@
 package com.blackbaud.templates.tasks
 
+import com.blackbaud.templates.project.DatasourceProject
+import com.blackbaud.templates.project.RestProject
 import org.gradle.api.tasks.TaskAction
 
 

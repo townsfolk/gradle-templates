@@ -16,6 +16,7 @@
  */
 package com.blackbaud.templates
 
+import com.blackbaud.templates.project.ProjectProps
 import com.blackbaud.templates.tasks.AddCosmosContainerTask
 import com.blackbaud.templates.tasks.AddCosmosObjectTask
 import com.blackbaud.templates.tasks.AddEventHubsTask
@@ -26,7 +27,7 @@ import com.blackbaud.templates.tasks.AddRestApiObjectTask
 import com.blackbaud.templates.tasks.AddJpaObjectTask
 import com.blackbaud.templates.tasks.AddServiceBusTopicConfigTask
 import com.blackbaud.templates.tasks.CreateIntegrationTestProjectTask
-import com.blackbaud.templates.tasks.CreateScsProject
+import com.blackbaud.templates.project.CreateScsProject
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import com.blackbaud.templates.tasks.AddKafkaContainerTask

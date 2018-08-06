@@ -1,5 +1,6 @@
 package com.blackbaud.templates
 
+import com.blackbaud.templates.project.ProjectProps
 import org.gradle.api.Project
 
 class TemplatedFileFactory {

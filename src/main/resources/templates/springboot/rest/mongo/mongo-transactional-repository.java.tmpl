@@ -1,23 +1,7 @@
 package ${packageName};
 
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import com.blackbaud.cosmos.sharded.ShardedMongoRepository;
 
-import java.util.List;
-import java.util.UUID;
-
-public interface ${entityName}TransactionalRepository extends ${entityName}CustomRepository, MongoRepository<${entityName}Entity, ObjectId> {
-
-    @Override
-    <S extends ${entityName}Entity> S save(S entity);
-
-    @Override
-    <S extends ${entityName}Entity> List<S> save(Iterable<S> entities);
-
-    @Override
-    void delete(${entityName}Entity entity);
-
-    @Override
-    void delete(Iterable<? extends ${entityName}Entity> entities);
-
+public interface ${entityName}TransactionalRepository extends ShardedMongoRepository<${entityName}Entity, ObjectId> {
 }

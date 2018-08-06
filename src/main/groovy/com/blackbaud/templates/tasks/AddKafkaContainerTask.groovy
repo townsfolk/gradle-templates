@@ -1,5 +1,7 @@
 package com.blackbaud.templates.tasks
 
+import com.blackbaud.templates.project.BasicProject
+import com.blackbaud.templates.project.KafkaProject
 import org.gradle.api.tasks.TaskAction
 
 

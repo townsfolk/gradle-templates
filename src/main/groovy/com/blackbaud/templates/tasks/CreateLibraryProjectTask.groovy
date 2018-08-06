@@ -1,5 +1,6 @@
 package com.blackbaud.templates.tasks
 
+import com.blackbaud.templates.project.BasicProject
 import org.gradle.api.tasks.TaskAction
 
 class CreateLibraryProjectTask extends AbstractTemplateTask {

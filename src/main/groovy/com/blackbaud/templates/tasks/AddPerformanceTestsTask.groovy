@@ -1,5 +1,7 @@
 package com.blackbaud.templates.tasks
 
+import com.blackbaud.templates.project.BasicProject
+import com.blackbaud.templates.project.PerformanceTestsProject
 import org.gradle.api.tasks.TaskAction
 
 class AddPerformanceTestsTask extends AbstractTemplateTask {

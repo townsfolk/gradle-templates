@@ -1,5 +1,7 @@
 package com.blackbaud.templates.tasks
 
+import com.blackbaud.templates.project.AsyncProject
+import com.blackbaud.templates.project.BasicProject
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
 

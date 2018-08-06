@@ -1,8 +1,9 @@
 package com.blackbaud.templates
 
+import com.blackbaud.templates.project.BasicProjectBuilder
+import com.blackbaud.templates.project.RestProjectBuilder
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.util.stream.Collectors

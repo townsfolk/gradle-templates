@@ -30,6 +30,21 @@ dependencies {
 
 check.dependsOn integrationTest
 
+task setGreenwashProperty << {
+    project.ext.greenwash = "true"
+}
+
+task greenwashTemplateTests(
+        description: "greenwash the generated template projects",
+        dependsOn: [setGreenwashProperty, componentTest]) {
+}
+
+componentTest.mustRunAfter setGreenwashProperty
+
+componentTest.doFirst {
+    systemProperties project.ext.getProperties()
+}
+
 def setGradleVersions() {
     def group
     try {

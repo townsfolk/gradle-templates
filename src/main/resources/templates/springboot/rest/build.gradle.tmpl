@@ -1,11 +1,11 @@
 buildscript {
     ext {
-        springBootVersion = "1.4.1.RELEASE"
+        springBootVersion = "${springBootVersion}"
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}"
-        classpath "com.blackbaud:gradle-internal:4.+"
-        classpath "com.blackbaud:gradle-templates:3.+"
+        classpath "com.blackbaud:gradle-internal:${gradleInternalMajorVersion}.+"
+        classpath "com.blackbaud:gradle-templates:${gradleTemplatesMajorVersion}.+"
     }
 }
 
@@ -20,16 +20,16 @@ allprojects {
         // used by the various gradle-templates task to determine the base service package
         servicePackageName="${servicePackageName}"
 
-        groovyVersion = "2.4.7"
-        lombokVersion = "1.16.18"
-        spockVersion = "1.1-groovy-2.4"
-        commonSpringBootVersion = "\${springBootVersion}-3.+"
+        groovyVersion = "${groovyVersion}"
+        lombokVersion = "${lombokVersion}"
+        spockVersion = "${spockVersion}"
+        commonSpringBootVersion = "\${springBootVersion}-${commonSpringBootMajorVersion}.+"
     }
 
     dependencies {
         compileOnly "org.projectlombok:lombok:\${lombokVersion}"
 
-        mainTestCompile "com.blackbaud:common-test:4.+"
+        mainTestCompile "com.blackbaud:common-test:${commonTestMajorVersion}.+"
         mainTestCompileOnly "org.projectlombok:lombok:\${lombokVersion}"
         mainTestCompileOnly "org.codehaus.groovy:groovy-all:\${groovyVersion}"
     }

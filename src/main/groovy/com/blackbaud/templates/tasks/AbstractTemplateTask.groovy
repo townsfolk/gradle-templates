@@ -17,9 +17,11 @@
 
 package com.blackbaud.templates.tasks
 
+import com.blackbaud.templates.project.BasicProject
+import com.blackbaud.templates.project.RestProject
 import org.gradle.api.DefaultTask
 import com.blackbaud.templates.GitRepo
-import com.blackbaud.templates.ProjectProps
+import com.blackbaud.templates.project.ProjectProps
 import com.blackbaud.templates.BlackbaudTemplatesPlugin
 
 /**
