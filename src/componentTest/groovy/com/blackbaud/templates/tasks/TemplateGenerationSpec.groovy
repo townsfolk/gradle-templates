@@ -10,7 +10,9 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import com.blackbaud.templates.GitRepo
 import com.blackbaud.templates.project.ProjectProps
+import spock.lang.Ignore
 
+@Ignore
 class TemplateGenerationSpec extends AbstractProjectSpecification {
 
 
