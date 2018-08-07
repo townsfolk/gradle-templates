@@ -103,9 +103,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         actualPaths.each { String path ->
             File actualFile = new File(actualScenarioDir, path)
             File expectedFile = new File(expectedScenarioDir, path)
-            if (actualFile.isDirectory()) {
-                assert expectedFile.isDirectory()
-            } else {
+            if (actualFile.isDirectory() == false) {
                 assertFileContentsEqual(expectedFile, actualFile)
             }
         }
