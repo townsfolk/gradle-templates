@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="com/blackbaud/boot/logback/common.xml" />
+    <include resource="com/blackbaud/boot/logback/common-vsts.xml" />
 
 	<logger name="com.blackbaud" level="DEBUG"/>
 

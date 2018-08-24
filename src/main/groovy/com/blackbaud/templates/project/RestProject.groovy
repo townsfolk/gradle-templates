@@ -119,12 +119,14 @@ authorization.filter.enable=false
             "bootstrap.properties" template: "/templates/springboot/bootstrap.properties.tmpl", serviceId: "${serviceId}"
         }
 
-        basicProject.applyTemplate("src/main/resources") {
-            "bootstrap-cloud.properties" template: "/templates/springboot/bootstrap-cloud.properties.tmpl"
-        }
+        if (vsts == false) {
+            basicProject.applyTemplate("src/main/resources") {
+                "bootstrap-cloud.properties" template: "/templates/springboot/bootstrap-cloud.properties.tmpl"
+            }
 
-        basicProject.applyTemplate("src/deploy/cloudfoundry") {
-            "app-descriptor.yml" template: "/templates/deploy/app-descriptor.yml.tmpl"
+            basicProject.applyTemplate("src/deploy/cloudfoundry") {
+                "app-descriptor.yml" template: "/templates/deploy/app-descriptor.yml.tmpl"
+            }
         }
 
         basicProject.applyTemplate("src/componentTest/groovy/${servicePackagePath}") {
@@ -319,6 +321,10 @@ authorization.filter.enable=false
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/core/domain") {
             "${entityName}TransactionalRepository.java" template: "/templates/springboot/rest/mongo/mongo-transactional-repository.java.tmpl",
                                              entityName: entityName, packageName: "${servicePackage}.core.domain"
+        }
+
+        if (basicProject.findOptionalFile("CosmosConfig.java") == null) {
+            new DatasourceProject(this).initCosmos()
         }
 
         ProjectFile cosmosConfig = basicProject.findFile("CosmosConfig.java")

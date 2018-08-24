@@ -1,9 +1,5 @@
 ext.artifactId = "${artifactId}-service-bus-client"
 
-dependencies {
-    compile "com.blackbaud:common-async-service-bus-api:${commonAsyncServiceBusVersion}"
-}
-
 publishing_ext {
     publication('mainTest')
 }

@@ -160,8 +160,8 @@ class AsyncProject {
             ${formatter.propertiesClassName} serviceBusProperties,
             @Qualifier("${formatter.topicNameCamelCase}MessageHandler") ValidatingServiceBusMessageHandler<${formatter.payloadClassName}> messageHandler) {
         return serviceBusConsumerFactory.create()
-                .serviceBus(serviceBusProperties)
-                .jsonMessageHandler(messageHandler, ${formatter.payloadClassName}.class, ${sessionEnabled})
+                .${topicType.consumerBuilderMethodName}(serviceBusProperties)
+                .jsonMessageHandler(messageHandler, ${formatter.payloadClassName}.class)
                 .build();
     }
 """)

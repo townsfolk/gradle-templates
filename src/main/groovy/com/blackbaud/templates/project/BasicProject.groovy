@@ -276,15 +276,15 @@ class BasicProject {
 
     void addInternalApiObject(String type, String resourceName, boolean upperCamel) {
         String apiPackage = "${servicePackage}.${type.replaceAll("-", "")}"
-        addApiObject(type, resourceName, "src", apiPackage, upperCamel)
+        addApiObject(type, resourceName, "src", "src/sharedTest", apiPackage, upperCamel)
     }
 
     void addExternalApiObject(String type, String resourceName, boolean upperCamel) {
         addClientSubmodule(type)
-        addApiObject(type, resourceName, "${type}-client/src", "${servicePackage}.api", upperCamel)
+        addApiObject(type, resourceName, "${type}-client/src", "${type}-client/src/mainTest", "${servicePackage}.api", upperCamel)
     }
 
-    private void addApiObject(String type, String resourceName, String srcDir, String apiPackage, boolean upperCamel) {
+    private void addApiObject(String type, String resourceName, String srcDir, String testDir, String apiPackage, boolean upperCamel) {
         String apiPackagePath = packageToPath(apiPackage)
         String typeUpperCamelCase = LOWER_HYPHEN.to(UPPER_CAMEL, type)
         String typeLowerCamelCase = LOWER_HYPHEN.to(LOWER_CAMEL, type)
@@ -296,15 +296,15 @@ class BasicProject {
                                    resourceName: resourceName, packageName: apiPackage,
                                    upperCamel: upperCamel
         }
-        applyTemplate("${srcDir}/mainTest/groovy/${apiPackagePath}") {
+        applyTemplate("${testDir}/groovy/${apiPackagePath}") {
             "Random${resourceName}Builder.groovy" template: "/templates/test/random-client-builder.groovy.tmpl",
                                                   targetClass: resourceName, packageName: apiPackage,
                                                   qualifier: "${typeUpperCamelCase}Client"
         }
 
-        ProjectFile randomClientBuilderSupport = getProjectFile("${srcDir}/mainTest/groovy/${apiPackagePath}/${randomBuilderSupportClassName}.java")
+        ProjectFile randomClientBuilderSupport = getProjectFile("${testDir}/groovy/${apiPackagePath}/${randomBuilderSupportClassName}.java")
         if (randomClientBuilderSupport.exists() == false) {
-            applyTemplate("${srcDir}/mainTest/groovy/${apiPackagePath}") {
+            applyTemplate("${testDir}/groovy/${apiPackagePath}") {
                 "${typeUpperCamelCase}ClientARandom.java" template: "/templates/test/client-arandom.java.tmpl",
                         packageName: apiPackage, qualifier: "${typeUpperCamelCase}Client"
                 "${typeUpperCamelCase}ClientRandomBuilderSupport.java" template: "/templates/test/random-builder-support.java.tmpl",

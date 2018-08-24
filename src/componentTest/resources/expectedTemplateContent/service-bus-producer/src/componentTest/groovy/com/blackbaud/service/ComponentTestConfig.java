@@ -38,8 +38,8 @@ public class ComponentTestConfig extends BaseTestConfig {
             ProducerServiceBusProperties serviceBusProperties,
             @Qualifier("ProducerMessageHandler") ValidatingServiceBusMessageHandler<ProducerPayload> messageHandler) {
         return serviceBusConsumerFactory.create()
-                .serviceBus(serviceBusProperties)
-                .jsonMessageHandler(messageHandler, ProducerPayload.class, false)
+                .dataSyncTopicServiceBus(serviceBusProperties)
+                .jsonMessageHandler(messageHandler, ProducerPayload.class)
                 .build();
     }
 

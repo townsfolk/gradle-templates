@@ -153,7 +153,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         RestProject restProject = createRestProject()
 
         when:
-        restProject.initRestProject(false, false)
+        restProject.initRestProject(false, true)
 
         then:
         greenwashOrAssertExpectedContent(restProject, "deployable")
@@ -189,7 +189,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         RestProject restProject = createRestProject()
 
         when:
-        restProject.initRestProject(false, false)
+        restProject.initRestProject(false, true)
         restProject.initCosmos()
 
         then:

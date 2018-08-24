@@ -2,6 +2,7 @@ package com.blackbaud.service.core.domain;
 
 import com.blackbaud.cosmos.AuditableEntity;
 import com.blackbaud.cosmos.VersionedEntity;
+import com.blackbaud.cosmos.sharded.ContributorEntity;
 import com.blackbaud.cosmos.sharded.ShardKey;
 import com.blackbaud.cosmos.sharded.ShardedEntity;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = AccountEntity.COLLECTION_NAME)
+@Document(collection = CarEntity.COLLECTION_NAME)
 public class CarEntity implements ShardedEntity<ObjectId, String>, VersionedEntity {
 
     public static final String COLLECTION_NAME = "cars";
