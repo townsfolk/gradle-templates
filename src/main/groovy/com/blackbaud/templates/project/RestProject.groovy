@@ -116,7 +116,8 @@ authorization.filter.enable=false
         }
 
         basicProject.applyTemplate("src/main/resources") {
-            "bootstrap.properties" template: "/templates/springboot/bootstrap.properties.tmpl", serviceId: "${serviceId}"
+            "bootstrap.properties" template: "/templates/springboot/bootstrap.properties.tmpl",
+                                   serviceId: "${serviceId}", useConfigServer: vsts ? "false" : "true"
         }
 
         if (vsts) {

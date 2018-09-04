@@ -14,7 +14,7 @@ public class CosmosConfig extends MongoCosmosConfig {
     @Value("${spring.data.mongodb.uri}")
     private String databaseUri;
 
-    @Value("${spring.application.name}-db")
+    @Value("${spring.application.name}")
     private String databaseName;
 
     @Override
