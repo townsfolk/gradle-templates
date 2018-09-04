@@ -168,10 +168,10 @@ spring.datasource.validation-query=SELECT 1;
     }
 
     private void applyCosmosApplicationProperties() {
-        File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
+        ProjectFile componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         componentTestPropertiesFile.addPropertyWithSeparator("spring.data.mongodb.database", '${spring.application.name}-test')
 
-        File applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
+        ProjectFile applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
         applicationPropertiesFile.addPropertyWithSeparator("spring.data.mongodb.uri", "mongodb://docker.localhost:27017")
     }
 

@@ -119,7 +119,10 @@ authorization.filter.enable=false
             "bootstrap.properties" template: "/templates/springboot/bootstrap.properties.tmpl", serviceId: "${serviceId}"
         }
 
-        if (vsts == false) {
+        if (vsts) {
+            ProjectFile applicationProperties = basicProject.getProjectFileOrFail("src/main/resources/bootstrap.properties")
+            applicationProperties.addProperty("spring.cloud.config.enabled", "false")
+        } else {
             basicProject.applyTemplate("src/main/resources") {
                 "bootstrap-cloud.properties" template: "/templates/springboot/bootstrap-cloud.properties.tmpl"
             }

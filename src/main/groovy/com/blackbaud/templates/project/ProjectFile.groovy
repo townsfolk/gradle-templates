@@ -110,6 +110,9 @@ import ${importToAdd}${eol}""")
     }
 
     void addProperty(String key, String value) {
+        if (exists() && text.endsWith(LINE_SEPARATOR) == false) {
+            append(LINE_SEPARATOR)
+        }
         append("""${key}=${value}
 """)
     }
