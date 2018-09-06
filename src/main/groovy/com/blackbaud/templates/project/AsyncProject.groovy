@@ -183,6 +183,9 @@ class AsyncProject {
             if (topicName.contains("_")) {
                 topicNameSnakeCase = topicName
                 topicNameCamelCase = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, topicName)
+            } else if (topicName.contains("-")) {
+                topicNameSnakeCase = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_UNDERSCORE, topicName)
+                topicNameCamelCase = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, topicName)
             } else {
                 if (Character.isLowerCase(topicName.charAt(0))) {
                     topicNameCamelCase = topicName
