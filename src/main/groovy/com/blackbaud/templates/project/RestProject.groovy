@@ -41,6 +41,10 @@ class RestProject {
 
     void initRestProject(boolean shouldDisableAuthFilter, boolean vsts) {
         basicProject.initGradleProject()
+
+        basicProject.addLombokConfig()
+        basicProject.commitProjectFiles("add lombok config")
+
         createRestBase(vsts)
 
         if (shouldDisableAuthFilter) {

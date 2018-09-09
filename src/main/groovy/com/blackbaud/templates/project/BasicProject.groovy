@@ -326,4 +326,12 @@ class BasicProject {
 """)
     }
 
+    void addLombokConfig() {
+        ProjectFile lombokConfig = getProjectFile("lombok.config")
+        lombokConfig.text = """\
+config.stopBubbling = true
+lombok.addLombokGeneratedAnnotation = true
+"""
+    }
+
 }

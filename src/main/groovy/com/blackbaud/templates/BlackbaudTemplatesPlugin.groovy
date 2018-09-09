@@ -22,6 +22,7 @@ import com.blackbaud.templates.tasks.AddCosmosObjectTask
 import com.blackbaud.templates.tasks.AddEventHubsTask
 import com.blackbaud.templates.tasks.AddEventHubsMessageTask
 import com.blackbaud.templates.tasks.AddKafkaMessageTask
+import com.blackbaud.templates.tasks.AddLombokConfigTask
 import com.blackbaud.templates.tasks.AddPerformanceTestsTask
 import com.blackbaud.templates.tasks.AddRestApiObjectTask
 import com.blackbaud.templates.tasks.AddJpaObjectTask
@@ -67,6 +68,7 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
         project.task 'addCosmosObject', type: AddCosmosObjectTask
         project.task 'addServiceBusTopicConfig', type: AddServiceBusTopicConfigTask
         project.task 'addPerformanceTests', type: AddPerformanceTestsTask
+        project.task 'addLombokConfig', type: AddLombokConfigTask
     }
 
 }
