@@ -12,7 +12,6 @@ import com.blackbaud.templates.GitRepo
 import com.blackbaud.templates.project.ProjectProps
 import spock.lang.Ignore
 
-@Ignore
 class TemplateGenerationSpec extends AbstractProjectSpecification {
 
 
@@ -93,11 +92,23 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         List<String> paths = []
         projectDir.eachFileRecurse { File file ->
             String path = file.absolutePath - projectDir.absolutePath
-            if (!path.startsWith("/.") && !path.startsWith("/gradle")) {
+            if (!path.startsWith("/.") && !path.startsWith("/gradle") && isEmptyDirectory(file) == false) {
                 paths << path
             }
         }
         paths
+    }
+
+    private boolean isEmptyDirectory(File file) {
+        if (file.isDirectory() == false) {
+            return false
+        }
+        for (File subdir : file.listFiles()) {
+            if (isEmptyDirectory(subdir) == false) {
+                return false
+            }
+        }
+        true
     }
 
     private void assertExpectedContent(File expectedScenarioDir, File actualScenarioDir) {
