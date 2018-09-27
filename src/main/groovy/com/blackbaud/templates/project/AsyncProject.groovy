@@ -61,19 +61,19 @@ class AsyncProject {
         ProjectFile componentTestConfigFile = basicProject.findComponentTestConfig()
 
         ProjectFile applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")
-        applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameSnakeCase}.session_enabled", "${sessionEnabled}")
+        applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.session-enabled", "${sessionEnabled}")
 
         ProjectFile applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
-        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameSnakeCase}.producer_connection_url",
-                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2Ftest&sig=test")
-        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameSnakeCase}.consumer_connection_url",
-                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2Ftest%2Fsubscriptions%2Ftest&sig=test")
+        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
+                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=test")
+        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
+                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Ftest&sig=test")
         if (publisher) {
-            applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameSnakeCase}.producer_connection_url",
+            applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
                                                   "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Send}")
         }
         if (consumer) {
-            applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameSnakeCase}.consumer_connection_url",
+            applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
                                                   "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Listen}")
         }
 
@@ -81,11 +81,11 @@ class AsyncProject {
             "${formatter.propertiesClassName}.java" template: "/templates/springboot/service-bus/service-bus-properties.java.tmpl",
                                                     packageName: "${servicePackage}.servicebus",
                                                     className: formatter.propertiesClassName,
-                                                    topicPrefix: "servicebus.${formatter.topicNameSnakeCase}"
+                                                    topicPrefix: "servicebus.${formatter.topicNameKebabCase}"
         }
 
         ProjectFile serviceBusConfigFile = basicProject.findFile("ServiceBusConfig.java")
-        serviceBusConfigFile.addClassAnnotation("@EnableConfigurationProperties(${formatter.propertiesClassName}.class)")
+        serviceBusConfigFile.enableConfigurationProperties("${formatter.propertiesClassName}.class")
 
         ProjectFile applicationClass = basicProject.findFile("${basicProject.serviceName}.java")
         applicationClass.addImport("${servicePackage}.servicebus.ServiceBusConfig")
@@ -150,7 +150,7 @@ class AsyncProject {
             componentTestConfigFile.addImport("org.springframework.beans.factory.annotation.Qualifier")
             componentTestConfigFile.appendToClass("""
     @Bean
-    public ValidatingServiceBusMessageHandler<${formatter.payloadClassName}> ${formatter.messageHandlerClassName}() {
+    public ValidatingServiceBusMessageHandler<${formatter.payloadClassName}> ${formatter.topicNameCamelCase}MessageHandler() {
         return new ValidatingServiceBusMessageHandler<>("${formatter.topicNameCamelCase}Handler");
     }
 
@@ -178,21 +178,26 @@ class AsyncProject {
     private static class ServiceBusNameResolver {
         String topicNameCamelCase
         String topicNameSnakeCase
+        String topicNameKebabCase
 
         ServiceBusNameResolver(String topicName) {
             if (topicName.contains("_")) {
                 topicNameSnakeCase = topicName
                 topicNameCamelCase = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, topicName)
+                topicNameKebabCase = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, topicName)
             } else if (topicName.contains("-")) {
                 topicNameSnakeCase = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_UNDERSCORE, topicName)
                 topicNameCamelCase = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, topicName)
+                topicNameKebabCase = topicName
             } else {
                 if (Character.isLowerCase(topicName.charAt(0))) {
                     topicNameCamelCase = topicName
                     topicNameSnakeCase = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, topicName)
+                    topicNameKebabCase = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, topicName)
                 } else {
-                    topicNameCamelCase = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_CAMEL, topicName)
+                    topicNameCamelCase = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, topicName)
                     topicNameSnakeCase = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, topicName)
+                    topicNameKebabCase = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, topicName)
                 }
             }
         }

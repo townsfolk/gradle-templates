@@ -28,15 +28,15 @@ public class ComponentTestConfig extends BaseTestConfig {
     }
 
     @Bean
-    public ValidatingServiceBusMessageHandler<ProducerPayload> ProducerMessageHandler() {
-        return new ValidatingServiceBusMessageHandler<>("ProducerHandler");
+    public ValidatingServiceBusMessageHandler<ProducerPayload> producerMessageHandler() {
+        return new ValidatingServiceBusMessageHandler<>("producerHandler");
     }
 
     @Bean
     public ServiceBusConsumer sessionConsumer(
             ServiceBusConsumerBuilder.Factory serviceBusConsumerFactory,
             ProducerServiceBusProperties serviceBusProperties,
-            @Qualifier("ProducerMessageHandler") ValidatingServiceBusMessageHandler<ProducerPayload> messageHandler) {
+            @Qualifier("producerMessageHandler") ValidatingServiceBusMessageHandler<ProducerPayload> messageHandler) {
         return serviceBusConsumerFactory.create()
                 .dataSyncTopicServiceBus(serviceBusProperties)
                 .jsonMessageHandler(messageHandler, ProducerPayload.class)

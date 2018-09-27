@@ -19,18 +19,18 @@ import org.springframework.context.annotation.Import;
 public class ServiceBusConfig {
 
     @Bean
-    public ProducerMessageHandler ProducerMessageHandler() {
+    public ProducerMessageHandler producerMessageHandler() {
         return new ProducerMessageHandler();
     }
 
     @Bean
-    public ServiceBusConsumer ProducerConsumer(
+    public ServiceBusConsumer producerConsumer(
             ServiceBusConsumerBuilder.Factory serviceBusConsumerFactory,
-            ProducerMessageHandler ProducerMessageHandler,
+            ProducerMessageHandler producerMessageHandler,
             ProducerServiceBusProperties serviceBusProperties) {
         return serviceBusConsumerFactory.create()
                 .dataSyncTopicServiceBus(serviceBusProperties)
-                .jsonMessageHandler(ProducerMessageHandler, ProducerPayload.class)
+                .jsonMessageHandler(producerMessageHandler, ProducerPayload.class)
                 .build();
     }
 

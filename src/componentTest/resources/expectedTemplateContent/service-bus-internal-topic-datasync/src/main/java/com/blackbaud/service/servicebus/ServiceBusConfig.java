@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Import;
 public class ServiceBusConfig {
 
     @Bean
-    public JsonMessagePublisher DatasyncPublisher(
+    public JsonMessagePublisher datasyncPublisher(
             ServiceBusPublisherBuilder.Factory serviceBusPublisherFactory,
             DatasyncServiceBusProperties serviceBusProperties) {
         return serviceBusPublisherFactory.create()
@@ -27,18 +27,18 @@ public class ServiceBusConfig {
     }
 
     @Bean
-    public DatasyncMessageHandler DatasyncMessageHandler() {
+    public DatasyncMessageHandler datasyncMessageHandler() {
         return new DatasyncMessageHandler();
     }
 
     @Bean
-    public ServiceBusConsumer DatasyncConsumer(
+    public ServiceBusConsumer datasyncConsumer(
             ServiceBusConsumerBuilder.Factory serviceBusConsumerFactory,
-            DatasyncMessageHandler DatasyncMessageHandler,
+            DatasyncMessageHandler datasyncMessageHandler,
             DatasyncServiceBusProperties serviceBusProperties) {
         return serviceBusConsumerFactory.create()
                 .dataSyncTopicServiceBus(serviceBusProperties)
-                .jsonMessageHandler(DatasyncMessageHandler, DatasyncPayload.class)
+                .jsonMessageHandler(datasyncMessageHandler, DatasyncPayload.class)
                 .build();
     }
 

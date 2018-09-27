@@ -26,7 +26,7 @@ public class ComponentTestConfig extends BaseTestConfig {
     }
 
     @Bean
-    public JsonMessagePublisher ConsumerPublisher(
+    public JsonMessagePublisher consumerPublisher(
             ServiceBusPublisherBuilder.Factory serviceBusPublisherFactory,
             ConsumerServiceBusProperties serviceBusProperties) {
         return serviceBusPublisherFactory.create()

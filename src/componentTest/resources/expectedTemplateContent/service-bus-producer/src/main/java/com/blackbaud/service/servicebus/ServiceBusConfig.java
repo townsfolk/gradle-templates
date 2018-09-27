@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
 public class ServiceBusConfig {
 
     @Bean
-    public JsonMessagePublisher ProducerPublisher(
+    public JsonMessagePublisher producerPublisher(
             ServiceBusPublisherBuilder.Factory serviceBusPublisherFactory,
             ProducerServiceBusProperties serviceBusProperties) {
         return serviceBusPublisherFactory.create()

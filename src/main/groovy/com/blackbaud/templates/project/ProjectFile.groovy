@@ -35,16 +35,26 @@ import ${importToAdd}${eol}""")
     }
 
     void addConfigurationImport(String importToAdd) {
+        addClassToAnnotation("Import", importToAdd)
+    }
+
+    void enableConfigurationProperties(String classToAdd) {
+        addClassToAnnotation("EnableConfigurationProperties", classToAdd)
+    }
+
+    private void addClassToAnnotation(String annotationName, String classToAdd) {
         List<String> lines = readLines()
-        int index = indexOf(lines, /@Import/)
+        int index = indexOf(lines, /@${annotationName}/)
 
         if (index >= 0) {
-            String importLine = lines[index]
-            String imports = (importLine =~ /@Import\(\{?([^}]+)\}?\)/)[0][1]
-            lines[index] = "@Import({${imports}, ${importToAdd}})".toString()
-            text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
+            String configPropLine = lines[index]
+            String existingClasses = (configPropLine =~ /@${annotationName}\(\{?([^}]+)\}?\)/)[0][1]
+            if (existingClasses.contains(classToAdd) == false) {
+                lines[index] = "@${annotationName}({${existingClasses}, ${classToAdd}})".toString()
+                text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
+            }
         } else {
-            appendBeforeLine(/class\s+/, "@Import(${importToAdd})")
+            appendBeforeLine(/class\s+/, "@${annotationName}(${classToAdd})")
         }
     }
 

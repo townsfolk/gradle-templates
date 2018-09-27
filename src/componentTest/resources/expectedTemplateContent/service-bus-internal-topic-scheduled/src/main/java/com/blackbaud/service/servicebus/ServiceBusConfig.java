@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Import;
 public class ServiceBusConfig {
 
     @Bean
-    public JsonMessagePublisher ScheduledPublisher(
+    public JsonMessagePublisher scheduledPublisher(
             ServiceBusPublisherBuilder.Factory serviceBusPublisherFactory,
             ScheduledServiceBusProperties serviceBusProperties) {
         return serviceBusPublisherFactory.create()
@@ -27,18 +27,18 @@ public class ServiceBusConfig {
     }
 
     @Bean
-    public ScheduledMessageHandler ScheduledMessageHandler() {
+    public ScheduledMessageHandler scheduledMessageHandler() {
         return new ScheduledMessageHandler();
     }
 
     @Bean
-    public ServiceBusConsumer ScheduledConsumer(
+    public ServiceBusConsumer scheduledConsumer(
             ServiceBusConsumerBuilder.Factory serviceBusConsumerFactory,
-            ScheduledMessageHandler ScheduledMessageHandler,
+            ScheduledMessageHandler scheduledMessageHandler,
             ScheduledServiceBusProperties serviceBusProperties) {
         return serviceBusConsumerFactory.create()
                 .schedulingTopicServiceBus(serviceBusProperties)
-                .jsonMessageHandler(ScheduledMessageHandler, ScheduledPayload.class)
+                .jsonMessageHandler(scheduledMessageHandler, ScheduledPayload.class)
                 .build();
     }
 
