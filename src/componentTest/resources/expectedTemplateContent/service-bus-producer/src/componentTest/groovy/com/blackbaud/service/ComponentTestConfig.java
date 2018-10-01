@@ -1,5 +1,7 @@
 package com.blackbaud.service;
 
+import com.blackbaud.service.servicebus.ProducerServiceBusProperties;
+import com.blackbaud.service.api.ProducerPayload;
 import com.blackbaud.azure.servicebus.consumer.handlers.ValidatingServiceBusMessageHandler;
 import com.blackbaud.azure.servicebus.consumer.ServiceBusConsumerBuilder;
 import com.blackbaud.azure.servicebus.consumer.ServiceBusConsumer;

@@ -37,8 +37,11 @@ class AsyncProject {
         buildFile.appendAfterLine(/sharedTestCompile/,
                 '    sharedTestCompile "com.blackbaud:common-async-service-bus-test:${commonAsyncServiceBusVersion}"')
 
-        ProjectFile applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
-        applicationPropertiesFile.addPropertyWithSeparator("servicebus.stub", "true")
+        ProjectFile applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
+        applicationLocalPropertiesFile.addPropertyWithSeparator("servicebus.stub", "true")
+
+        ProjectFile applicationComponentTestPropertiesFile = basicProject.getProjectFile("src/main/resources/application-componentTest.properties")
+        applicationComponentTestPropertiesFile.addProperty("servicebus.stub", "true")
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/servicebus") {
             "ServiceBusConfig.java" template: "/templates/springboot/service-bus/service-bus-config.java.tmpl",
@@ -60,22 +63,7 @@ class AsyncProject {
         ServiceBusNameResolver formatter = new ServiceBusNameResolver(topicName)
         ProjectFile componentTestConfigFile = basicProject.findComponentTestConfig()
 
-        ProjectFile applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")
-        applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.session-enabled", "${sessionEnabled}")
-
-        ProjectFile applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
-        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
-                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=test")
-        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
-                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Ftest&sig=test")
-        if (publisher) {
-            applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
-                                                  "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Send}")
-        }
-        if (consumer) {
-            applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
-                                                  "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Listen}")
-        }
+        addTopicToPropertiesFiles(formatter, sessionEnabled, publisher, consumer)
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/servicebus") {
             "${formatter.propertiesClassName}.java" template: "/templates/springboot/service-bus/service-bus-properties.java.tmpl",
@@ -148,6 +136,8 @@ class AsyncProject {
             addConsumerImports(componentTestConfigFile)
             componentTestConfigFile.addImport("com.blackbaud.azure.servicebus.consumer.handlers.ValidatingServiceBusMessageHandler")
             componentTestConfigFile.addImport("org.springframework.beans.factory.annotation.Qualifier")
+            componentTestConfigFile.addImport("${servicePackage}.api.${formatter.payloadClassName}")
+            componentTestConfigFile.addImport("${servicePackage}.servicebus.${formatter.propertiesClassName}")
             componentTestConfigFile.appendToClass("""
     @Bean
     public ValidatingServiceBusMessageHandler<${formatter.payloadClassName}> ${formatter.topicNameCamelCase}MessageHandler() {
@@ -165,6 +155,47 @@ class AsyncProject {
                 .build();
     }
 """)
+        }
+    }
+
+    private void addTopicToPropertiesFiles(ServiceBusNameResolver formatter, boolean sessionEnabled, boolean publisher, boolean consumer) {
+        ProjectFile applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")
+        applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.session-enabled", "${sessionEnabled}")
+
+        ProjectFile applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
+        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer_connection_url",
+                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=test")
+        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer_connection_url",
+                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Ftest&sig=test")
+
+        ProjectFile applicationVstsProdPropertiesFile = basicProject.getProjectFile("src/main/resources/application-vstsprod.properties")
+        if (publisher) {
+            applicationVstsProdPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer_connection_url",
+                                                          "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Send}")
+        }
+        if (consumer) {
+            applicationVstsProdPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer_connection_url",
+                                                          "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Listen}")
+        }
+
+        ProjectFile applicationVstsTestPropertiesFile = basicProject.getProjectFile("src/main/resources/application-vststest.properties")
+        if (publisher) {
+            applicationVstsTestPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer_connection_url",
+                                                          "Endpoint=sb://namespace.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Fnamespace.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=token&skn=shared_access_profile_send // TODO: Create REX service bus topic and replace")
+        }
+        if (consumer) {
+            applicationVstsTestPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer_connection_url",
+                                                          "Endpoint=sb://namespace.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Fnamespace.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Fsubscription_name&sig=token&se=1696020226&skn=shared_access_profile_listen // TODO: Create REX service bus topic and replace")
+        }
+
+        ProjectFile applicationComponentTestPropertiesFile = basicProject.getProjectFile("src/main/resources/application-componentTest.properties")
+        if (publisher) {
+            applicationComponentTestPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer_connection_url",
+                                                               "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=test")
+        }
+        if (consumer) {
+            applicationComponentTestPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer_connection_url",
+                                                               "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Ftest&sig=test")
         }
     }
 

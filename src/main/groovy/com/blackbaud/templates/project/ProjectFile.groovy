@@ -116,7 +116,14 @@ import ${importToAdd}${eol}""")
     }
 
     void addPropertyWithSeparator(String key, String value) {
-        addProperty("${LINE_SEPARATOR}${key}", value)
+        if (exists()) {
+            if (text.contains("${key}=${value}") == false) {
+                addProperty("${LINE_SEPARATOR}${key}", value)
+            }
+        }
+        else {
+            addProperty("${LINE_SEPARATOR}${key}", value)
+        }
     }
 
     void addProperty(String key, String value) {
