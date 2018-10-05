@@ -47,6 +47,17 @@ class AsyncProject {
             "ServiceBusConfig.java" template: "/templates/springboot/service-bus/service-bus-config.java.tmpl",
                                     packageName: "${servicePackage}.servicebus"
         }
+
+        ProjectFile logbackFile = basicProject.getProjectFile("src/main/resources/logback.xml")
+        if (logbackFile != null) {
+            String logbackText = logbackFile.text
+            if (logbackText.contains("common-async.xml") == false) {
+                logbackFile.appendAfterLine(/include resource/, '    <include resource="com/blackbaud/async/logback/common-async.xml"/>')
+            }
+            if (logbackText.contains("common-service-bus") == false) {
+                logbackFile.appendAfterLine(/Add custom rules here/, '        <applyCustomRuleSets>common-service-bus</applyCustomRuleSets>')
+            }
+        }
     }
 
     void addInternalTopic(String topicName, TopicType topicType, boolean sessionEnabled) {

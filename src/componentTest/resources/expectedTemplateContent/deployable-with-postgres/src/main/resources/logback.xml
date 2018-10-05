@@ -4,9 +4,14 @@
 
 	<logger name="com.blackbaud" level="DEBUG"/>
 
-	<root level="INFO">
-		<appender-ref ref="CONSOLE" />
-		<appender-ref ref="FILE" />
-	</root>
+    <appender name="CUSTOM_LOGGING" class="com.blackbaud.logging.custom.CustomLoggingAppender">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <!-- Add custom rules here -->
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CUSTOM_LOGGING" />
+    </root>
 
 </configuration>

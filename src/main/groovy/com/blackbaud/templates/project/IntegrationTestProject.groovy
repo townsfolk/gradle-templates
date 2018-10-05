@@ -45,8 +45,7 @@ class IntegrationTestProject {
                     'resources' {
                         'application-integrationTest.properties' template: "/templates/springboot/integrationtest/application-integrationTest.properties.tmpl",
                                                                  artifactId: repoName
-                        'logback.xml' template: "/templates/logback/logback.tmpl",
-                                includeFileName: vsts ? "common-vsts.xml" : "common.xml"
+                        'logback.xml' template: "/templates/logback/logback-${vsts ? "vsts": "aws"}.tmpl"
                     }
                 }
                 'integrationTest' {
