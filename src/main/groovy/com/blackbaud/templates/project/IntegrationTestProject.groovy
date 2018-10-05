@@ -32,7 +32,7 @@ class IntegrationTestProject {
         basicProject.servicePackagePath
     }
 
-    void initIntegrationTestProject(boolean vsts, boolean includeGeb) {
+    void initIntegrationTestProject(boolean aws, boolean includeGeb) {
         basicProject.initBlackbaudGradleWrapper()
 
         basicProject.applyTemplate {
@@ -45,7 +45,7 @@ class IntegrationTestProject {
                     'resources' {
                         'application-integrationTest.properties' template: "/templates/springboot/integrationtest/application-integrationTest.properties.tmpl",
                                                                  artifactId: repoName
-                        'logback.xml' template: "/templates/logback/logback-${vsts ? "vsts": "aws"}.tmpl"
+                        'logback.xml' template: "/templates/logback/logback-${aws ? "aws" : "vsts"}.tmpl"
                     }
                 }
                 'integrationTest' {

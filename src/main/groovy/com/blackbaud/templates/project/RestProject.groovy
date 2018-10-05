@@ -39,32 +39,26 @@ class RestProject {
         basicProject
     }
 
-    void initRestProject(boolean shouldDisableAuthFilter, boolean vsts) {
+    void initRestProject(boolean shouldDisableAuthFilter, boolean aws) {
         basicProject.initGradleProject()
 
         basicProject.addLombokConfig()
         basicProject.commitProjectFiles("add lombok config")
 
-        createRestBase(vsts)
+        createRestBase(aws)
 
         if (shouldDisableAuthFilter) {
             disableAuthFilter()
         } else {
-            enableAuthFilter(vsts)
+            enableAuthFilter(aws)
         }
     }
 
-    private void enableAuthFilter(boolean vsts) {
+    private void enableAuthFilter(boolean aws) {
         basicProject.buildFile.appendBeforeLine(/compile "com.blackbaud:common-spring-boot-rest.*/,
                 "    compile \"com.blackbaud:tokens-client:${CurrentVersions.TOKENS_CLIENT_MAJOR_VERSION}.+\"")
 
-        if (vsts) {
-            File applicationProperties = basicProject.getProjectFileOrFail("src/main/resources/application.properties")
-            applicationProperties << """\
-bbauth.enabled=true
-long.token.enabled=false
-"""
-        } else {
+        if (aws) {
             ProjectFile applicationClassFile = basicProject.findFile("${serviceName}.java")
             applicationClassFile.addImport("com.blackbaud.security.CoreSecurityEcosystemParticipantRequirementsProvider")
             applicationClassFile.appendAfterLine(/public class .*/, """
@@ -72,6 +66,12 @@ long.token.enabled=false
     public CoreSecurityEcosystemParticipantRequirementsProvider coreSecurityEcosystemParticipantRequirementsProvider() {
         return new CoreSecurityEcosystemParticipantRequirementsProvider();
     }""")
+        } else {
+            File applicationProperties = basicProject.getProjectFileOrFail("src/main/resources/application.properties")
+            applicationProperties << """\
+bbauth.enabled=true
+long.token.enabled=false
+"""
         }
 
         basicProject.commitProjectFiles("enable auth filter")
@@ -113,7 +113,7 @@ authorization.filter.enable=false
         basicProject.commitProjectFiles("initialize kafka")
     }
 
-    private void createRestBase(boolean vsts) {
+    private void createRestBase(boolean aws) {
         basicProject.applyTemplate("src/main/java/${servicePackagePath}") {
             "${serviceName}.java" template: "/templates/springboot/application-class.java.tmpl",
                     serviceName: serviceName, servicePackage: servicePackage
@@ -121,10 +121,10 @@ authorization.filter.enable=false
 
         basicProject.applyTemplate("src/main/resources") {
             "bootstrap.properties" template: "/templates/springboot/bootstrap.properties.tmpl",
-                                   serviceId: "${serviceId}", useConfigServer: vsts ? "false" : "true"
+                                   serviceId: "${serviceId}", useConfigServer: aws ? "true" : "false"
         }
 
-        if (vsts == false) {
+        if (aws) {
             basicProject.applyTemplate("src/main/resources") {
                 "bootstrap-cloud.properties" template: "/templates/springboot/bootstrap-cloud.properties.tmpl"
             }
@@ -165,7 +165,7 @@ authorization.filter.enable=false
                     'resources' {
                         'application.properties' template: "/templates/springboot/rest/application.properties.tmpl",
                                                  resourcePackageName: "${servicePackage}.resources"
-                        'logback.xml' template: "/templates/logback/logback-${vsts ? "vsts": "aws"}.tmpl"
+                        'logback.xml' template: "/templates/logback/logback-${aws ? "aws" : "vsts"}.tmpl"
                     }
                 }
                 'test' {

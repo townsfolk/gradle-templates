@@ -7,17 +7,17 @@ import org.gradle.api.tasks.TaskAction
 class CreateIntegrationTestProjectTask extends AbstractTemplateTask {
 
     CreateIntegrationTestProjectTask() {
-        super("Create an integration test project (options: -PrepoName=?, [-Pvsts -Pclean, -Pgeb])")
+        super("Create an integration test project (options: -PrepoName=?, [-Paws -Pclean, -Pgeb])")
     }
 
     @TaskAction
     void createIntegrationTestProject() {
         boolean clean = projectProps.isPropertyDefined("clean")
-        boolean vsts = projectProps.isPropertyDefined("vsts")
+        boolean aws = projectProps.isPropertyDefined("aws")
         boolean includeGeb = projectProps.isPropertyDefined("geb")
         BasicProject basicProject = createBasicProject(clean)
         IntegrationTestProject integrationTestProject = new IntegrationTestProject(basicProject)
-        integrationTestProject.initIntegrationTestProject(vsts, includeGeb)
+        integrationTestProject.initIntegrationTestProject(aws, includeGeb)
     }
 
 }
