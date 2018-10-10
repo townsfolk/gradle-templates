@@ -237,8 +237,8 @@ authorization.filter.enable=false
         if (testConfig == null) {
             testConfig = basicProject.findFile("TestConfig.java")
         }
-        testConfig.addImport("import org.springframework.context.annotation.Bean")
-        testConfig.addImport("import ${servicePackage}.client.${resourceName}Client")
+        testConfig.addImport("org.springframework.context.annotation.Bean")
+        testConfig.addImport("${servicePackage}.client.${resourceName}Client")
         testConfig.appendToClass("""
     @Bean
     public ${resourceName}Client ${resourceNameLowerCamel}Client() {

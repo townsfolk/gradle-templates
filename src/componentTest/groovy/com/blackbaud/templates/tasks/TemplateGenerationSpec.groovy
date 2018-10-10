@@ -320,4 +320,15 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         greenwashOrAssertExpectedContent(restProject, "add-cosmos-auditable-entity-message")
     }
 
+    def "should create rest resource"() {
+        given:
+        RestProject restProject = initRestProject()
+
+        when:
+        restProject.createResource("Hello", false, false)
+
+        then:
+        greenwashOrAssertExpectedContent(restProject, "add-rest-resource")
+    }
+
 }
