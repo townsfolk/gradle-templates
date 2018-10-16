@@ -31,10 +31,24 @@ class ${upperCamelName}Test extends Simulation {
   val httpConf = http
     .baseURL(baseURL)
 
-  val workflow = scenario(scenarioName)
-    .exec(http(requestName)
-      .get("/your_endpoint")
-      .header("Content-Type", "application/json"))
+  val workflow = exitBlockOnFail {
+      group("Blackbaud Authentication") {
+        exec(BBAuth.getBBAuthAccessToken(username, password))
+          .exec(BBAuth.putAccessTokenInSession())
+      }
+
+      group("Test Setup") {
+         exec(http("requestName")
+            .get("/setupUri")
+            .header("Authorization", "${access_token}"))
+      }
+
+      .repeat(30) {
+         exec(http(requestName)
+            .get("yourEndpoint")
+            .header("Authorization", "${access_token}"))
+      }
+    }
 
   val closed_test_scenario = scenario("Gatling Test").exec(
     forever() {
