@@ -1,10 +1,10 @@
-package com.blackbaud.${lowerCaseName}
+package com.blackbaud.service
 
 import io.gatling.core.Predef.{exec, forever, scenario}
 import io.gatling.http.Predef.http
 import io.gatling.core.Predef._
 
-class ${upperCamelName}Test extends Simulation {
+class ServiceTest extends Simulation {
 
   var maxTestRuntimeSec: Int = Option(System.getProperty("max.test.runtime.sec")).map(_.toInt).getOrElse(30)
   var debug = false
@@ -40,13 +40,13 @@ class ${upperCamelName}Test extends Simulation {
       group("Test Setup") {
          exec(http("requestName")
             .get("/setupUri")
-            .header("Authorization", "\${access_token}"))
+            .header("Authorization", "${access_token}"))
       }
 
       .repeat(30) {
          exec(http(requestName)
             .get("yourEndpoint")
-            .header("Authorization", "\${access_token}"))
+            .header("Authorization", "${access_token}"))
       }
     }
 

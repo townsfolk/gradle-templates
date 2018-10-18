@@ -1,7 +1,5 @@
 package com.blackbaud.templates.project
 
-import com.blackbaud.templates.project.BasicProject;
-
 class PerformanceTestsProject {
 
     private BasicProject basicProject

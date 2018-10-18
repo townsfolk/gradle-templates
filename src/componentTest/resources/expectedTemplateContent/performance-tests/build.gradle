@@ -1,0 +1,19 @@
+buildscript {
+    dependencies {
+        classpath "com.blackbaud:gradle-internal:4.+"
+    }
+}
+
+apply plugin: "blackbaud-internal"
+
+dependencies {
+    compile "com.google.guava:guava:23.6.1-jre"
+    compileOnly "org.projectlombok:lombok:1.18.2"
+
+    testCompile "com.blackbaud:common-test:4.+"
+    testCompile "org.codehaus.groovy:groovy-all:2.4.7"
+    testCompile ("org.spockframework:spock-core:1.1-groovy-2.4") {
+        exclude group: "org.codehaus.groovy"
+    }
+}
+

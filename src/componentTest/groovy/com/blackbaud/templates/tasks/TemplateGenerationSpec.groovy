@@ -5,6 +5,7 @@ import com.blackbaud.templates.project.AsyncProject
 import com.blackbaud.templates.project.BasicProject
 import com.blackbaud.templates.project.IntegrationTestProject
 import com.blackbaud.templates.project.KafkaProject
+import com.blackbaud.templates.project.PerformanceTestsProject
 import com.blackbaud.templates.project.RestProject
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -329,6 +330,18 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
 
         then:
         greenwashOrAssertExpectedContent(restProject, "add-rest-resource")
+    }
+
+    def "should create performance test submodule"() {
+        given:
+        BasicProject basicProject = initBasicProject()
+        PerformanceTestsProject performanceTestsProject = new PerformanceTestsProject(basicProject)
+
+        when:
+        performanceTestsProject.initPerformanceTests()
+
+        then:
+        greenwashOrAssertExpectedContent(basicProject, "performance-tests")
     }
 
 }
