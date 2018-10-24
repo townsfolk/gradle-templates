@@ -5,10 +5,15 @@ buildscript {
 }
 
 apply plugin: "blackbaud-internal"
+apply plugin: "performance-test"
 
 dependencies {
     compile "com.google.guava:guava:23.6.1-jre"
     compileOnly "org.projectlombok:lombok:1.18.2"
+
+    performanceTestCompile "com.blackbaud:common-gatling:0.+"
+
+    sharedTestCompile 'placeholder'
 
     testCompile "com.blackbaud:common-test:4.+"
     testCompile "org.codehaus.groovy:groovy-all:2.4.7"
@@ -17,3 +22,10 @@ dependencies {
     }
 }
 
+
+performance_test {
+    simulation {
+        className "com.blackbaud.service.ServiceTest"
+        description "Runs ServiceTest performance test"
+    }
+}

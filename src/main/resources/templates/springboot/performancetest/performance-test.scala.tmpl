@@ -1,10 +1,10 @@
-package com.blackbaud.${lowerCaseName}
+package ${packageName}
 
 import io.gatling.core.Predef.{exec, forever, scenario}
 import io.gatling.http.Predef.http
 import io.gatling.core.Predef._
 
-class ${upperCamelName}Test extends Simulation {
+class ${className} extends Simulation {
 
   var maxTestRuntimeSec: Int = Option(System.getProperty("max.test.runtime.sec")).map(_.toInt).getOrElse(30)
   var debug = false

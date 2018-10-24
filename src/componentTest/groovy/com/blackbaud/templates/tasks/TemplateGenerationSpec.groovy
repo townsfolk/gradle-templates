@@ -11,7 +11,6 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import com.blackbaud.templates.GitRepo
 import com.blackbaud.templates.project.ProjectProps
-import spock.lang.Ignore
 
 class TemplateGenerationSpec extends AbstractProjectSpecification {
 
@@ -332,10 +331,11 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         greenwashOrAssertExpectedContent(restProject, "add-rest-resource")
     }
 
-    def "should create performance test submodule"() {
+    def "should apply performance-test plugin"() {
         given:
         BasicProject basicProject = initBasicProject()
         PerformanceTestsProject performanceTestsProject = new PerformanceTestsProject(basicProject)
+        basicProject.buildFile.appendBeforeLine(/testCompile/, "    sharedTestCompile 'placeholder'\n")
 
         when:
         performanceTestsProject.initPerformanceTests()

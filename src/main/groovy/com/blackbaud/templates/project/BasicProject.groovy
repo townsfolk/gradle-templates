@@ -91,17 +91,27 @@ class BasicProject {
     }
 
     void initPerformanceTestProject() {
-        File performanceTestsBuildFile = getProjectFile("performance-tests/build.gradle")
-        if (performanceTestsBuildFile.exists() == false) {
-            addPerformanceTestsSubmodule()
-            new File("${repoDir}/performance-tests", "src/main/scala").mkdirs()
+        buildFile.applyPlugin("performance-test")
 
-            applyTemplate("performance-tests/src/main/scala/${servicePackage}") {
-                "${LOWER_HYPHEN.to(UPPER_CAMEL, repoName)}Test.scala" template: "/templates/springboot/performancetest/performance-test.scala.tmpl",
-                        lowerCamelName: LOWER_HYPHEN.to(LOWER_CAMEL, repoName),
-                        upperCamelName: LOWER_HYPHEN.to(UPPER_CAMEL, repoName),
-                        lowerCaseName: repoName.toLowerCase().replace("-", "")
-            }
+        buildFile.appendBeforeLine(/sharedTestCompile/, """\
+    performanceTestCompile "com.blackbaud:common-gatling:0.+"
+""")
+
+        String testClassName = "${LOWER_HYPHEN.to(UPPER_CAMEL, repoName)}Test"
+
+        buildFile.append("""
+performance_test {
+    simulation {
+        className "${servicePackage}.${testClassName}"
+        description "Runs ${testClassName} performance test"
+    }
+}
+""")
+
+        applyTemplate("src/performanceTest/scala/${servicePackagePath}") {
+            "${testClassName}.scala" template: "/templates/springboot/performancetest/performance-test.scala.tmpl",
+                    packageName: servicePackage,
+                    className: testClassName
         }
     }
 
