@@ -16,7 +16,7 @@ class AddEventHubsTask extends AbstractTemplateTask {
         String name = projectProps.getRequiredProjectProperty("name")
         BasicProject basicProject = openBasicProject()
         EventHubsProject eventhubs = new EventHubsProject(basicProject)
-        eventhubs.initEventHubs(name)
+        eventhubs.initEventHubsIfNotAlreadyInitialized(name)
     }
 
 }

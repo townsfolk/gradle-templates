@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="com/blackbaud/boot/logback/common-logback.xml" />
+
+	<logger name="com.blackbaud" level="DEBUG"/>
+
+    <appender name="CUSTOM_LOGGING" class="com.blackbaud.logging.custom.CustomLoggingAppender">
+        <springProfile name="vsts">
+                <appender-ref ref="SPLUNK"/>
+        </springProfile>
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <!-- Add custom rules here -->
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CUSTOM_LOGGING" />
+    </root>
+
+</configuration>

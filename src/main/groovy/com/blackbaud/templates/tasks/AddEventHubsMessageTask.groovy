@@ -16,6 +16,7 @@ class AddEventHubsMessageTask extends AbstractTemplateTask {
         boolean internal = projectProps.isPropertyDefined("internal")
         BasicProject basicProject = openBasicProject()
         EventHubsProject eventhubs = new EventHubsProject(basicProject)
+        eventhubs.initEventHubsIfNotAlreadyInitialized(name)
         if(internal) {
             eventhubs.addInternalApiObject(name)
         } else {

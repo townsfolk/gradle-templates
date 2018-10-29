@@ -10,6 +10,7 @@ buildscript {
 }
 
 apply plugin: "blackbaud-internal-rest"
+apply plugin: "async-stub"
 apply plugin: "blackbaud-templates"
 apply plugin: "spring-boot"
 

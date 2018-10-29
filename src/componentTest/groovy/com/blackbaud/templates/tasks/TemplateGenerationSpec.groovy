@@ -3,6 +3,7 @@ package com.blackbaud.templates.tasks
 import com.blackbaud.gradle.test.AbstractProjectSpecification
 import com.blackbaud.templates.project.AsyncProject
 import com.blackbaud.templates.project.BasicProject
+import com.blackbaud.templates.project.EventHubsProject
 import com.blackbaud.templates.project.IntegrationTestProject
 import com.blackbaud.templates.project.KafkaProject
 import com.blackbaud.templates.project.PerformanceTestsProject
@@ -51,12 +52,21 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         new AsyncProject(restProject.basicProject)
     }
 
+    private EventHubsProject initEventHubsProject() {
+        RestProject restProject = initRestProject()
+        new EventHubsProject(restProject.basicProject)
+    }
+
     private void greenwashOrAssertExpectedContent(RestProject restProject, String scenarioName) {
         greenwashOrAssertExpectedContent(restProject.basicProject, scenarioName)
     }
 
     private void greenwashOrAssertExpectedContent(AsyncProject asyncProject, String scenarioName) {
         greenwashOrAssertExpectedContent(asyncProject.basicProject, scenarioName)
+    }
+
+    private void greenwashOrAssertExpectedContent(EventHubsProject eventHubsProject, String scenarioName) {
+        greenwashOrAssertExpectedContent(eventHubsProject.basicProject, scenarioName)
     }
 
     private void greenwashOrAssertExpectedContent(BasicProject basicProject, String scenarioName) {
@@ -227,6 +237,33 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
 
         then:
         greenwashOrAssertExpectedContent(asyncProject, "service-bus-internal-topic-scheduled")
+    }
+
+    def "should add an event hubs message to the api"() {
+        given:
+        EventHubsProject eventHubsProject = initEventHubsProject()
+        String name = "TopicName"
+
+        when:
+        eventHubsProject.initEventHubsIfNotAlreadyInitialized(name)
+        eventHubsProject.addExternalApiObject(name)
+
+
+        then:
+        greenwashOrAssertExpectedContent(eventHubsProject, "eventhubs-message")
+    }
+
+    def "should add an event hubs container idempotently"() {
+        given:
+        EventHubsProject eventHubsProject = initEventHubsProject()
+        String name = "TopicName"
+
+        when:
+        eventHubsProject.initEventHubsIfNotAlreadyInitialized(name)
+        eventHubsProject.initEventHubsIfNotAlreadyInitialized(name)
+
+        then:
+        greenwashOrAssertExpectedContent(eventHubsProject, "eventhubs")
     }
 
     def "should add service bus consumer"() {

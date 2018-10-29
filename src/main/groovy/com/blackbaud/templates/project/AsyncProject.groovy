@@ -37,6 +37,7 @@ class AsyncProject {
         buildFile.appendAfterLine(/sharedTestCompile/,
                 '    sharedTestCompile "com.blackbaud:common-async-service-bus-test:${commonAsyncServiceBusVersion}"')
 
+        buildFile.applyPlugin("async-stub")
         ProjectFile applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
         applicationLocalPropertiesFile.addPropertyWithSeparator("servicebus.stub", "true")
 

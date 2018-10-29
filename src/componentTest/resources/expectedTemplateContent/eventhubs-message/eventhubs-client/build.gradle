@@ -1,0 +1,5 @@
+ext.artifactId = "${artifactId}-eventhubs-client"
+
+publishing_ext {
+    publication('mainTest')
+}
