@@ -38,12 +38,12 @@ allprojects {
 }
 
 dependencies {
-    compile project("service-bus-client")
+    compile project(":service-bus-client")
     compile "com.blackbaud:tokens-client:3.+"
     compile "com.blackbaud:common-spring-boot-rest:${commonSpringBootVersion}"
     compile "com.blackbaud:common-async-service-bus:${commonAsyncServiceBusVersion}"
 
-    sharedTestCompile project(path: "service-bus-client", configuration: "mainTestRuntime")
+    sharedTestCompile project(path: ":service-bus-client", configuration: "mainTestRuntime")
     sharedTestCompile "com.blackbaud:common-spring-boot-rest-test:${commonSpringBootVersion}"
     sharedTestCompile "com.blackbaud:common-async-service-bus-test:${commonAsyncServiceBusVersion}"
     sharedTestCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"

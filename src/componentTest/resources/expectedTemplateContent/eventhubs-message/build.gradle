@@ -38,12 +38,12 @@ allprojects {
 }
 
 dependencies {
-    compile project("eventhubs-client")
+    compile project(":eventhubs-client")
     compile "com.blackbaud:tokens-client:3.+"
     compile "com.blackbaud:common-spring-boot-rest:${commonSpringBootVersion}"
     compile "com.blackbaud:common-async-event-hubs:${commonAsyncEventHubsVersion}"
 
-    sharedTestCompile project(path: "eventhubs-client", configuration: "mainTestRuntime")
+    sharedTestCompile project(path: ":eventhubs-client", configuration: "mainTestRuntime")
     sharedTestCompile "com.blackbaud:common-spring-boot-rest-test:${commonSpringBootVersion}"
     sharedTestCompile "com.blackbaud:common-async-event-hubs-test:${commonAsyncEventHubsVersion}"
     sharedTestCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"

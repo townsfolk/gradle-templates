@@ -36,11 +36,11 @@ allprojects {
 }
 
 dependencies {
-    compile project("rest-client")
+    compile project(":rest-client")
     compile "com.blackbaud:tokens-client:3.+"
     compile "com.blackbaud:common-spring-boot-rest:${commonSpringBootVersion}"
 
-    sharedTestCompile project(path: "rest-client", configuration: "mainTestRuntime")
+    sharedTestCompile project(path: ":rest-client", configuration: "mainTestRuntime")
     sharedTestCompile "com.blackbaud:common-spring-boot-rest-test:${commonSpringBootVersion}"
     sharedTestCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     sharedTestCompile 'cglib:cglib-nodep:2.2.2'

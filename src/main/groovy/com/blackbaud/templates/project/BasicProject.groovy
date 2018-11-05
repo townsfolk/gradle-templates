@@ -265,8 +265,8 @@ performance_test {
 
             includeGradleSubmodule("${type}-client")
 
-            buildFile.appendAfterLine(/^dependencies \{/, "    compile project(\"${type}-client\")")
-            buildFile.appendBeforeLine(/sharedTest/, "    sharedTestCompile project(path: \"${type}-client\", configuration: \"mainTestRuntime\")")
+            buildFile.appendAfterLine(/^dependencies \{/, "    compile project(\":${type}-client\")")
+            buildFile.appendBeforeLine(/sharedTest/, "    sharedTestCompile project(path: \":${type}-client\", configuration: \"mainTestRuntime\")")
         }
     }
 
