@@ -300,11 +300,12 @@ performance_test {
         String typeLowerCamelCase = LOWER_HYPHEN.to(LOWER_CAMEL, type)
         String resourceNameLowerCamel = UPPER_CAMEL.to(LOWER_CAMEL, resourceName)
         String randomBuilderSupportClassName = "${typeUpperCamelCase}ClientRandomBuilderSupport"
+        String caseStrategy = upperCamel ? "UpperCamel" : "Snake"
 
         applyTemplate("${srcDir}/main/java/${apiPackagePath}") {
-            "${resourceName}.java" template: "/templates/springboot/${type}/resource-api.java.tmpl",
+            "${resourceName}.java" template: "/templates/springboot/resource-api.java.tmpl",
                                    resourceName: resourceName, packageName: apiPackage,
-                                   upperCamel: upperCamel
+                                   caseStrategy: caseStrategy
         }
         applyTemplate("${testDir}/groovy/${apiPackagePath}") {
             "Random${resourceName}Builder.groovy" template: "/templates/test/random-client-builder.groovy.tmpl",

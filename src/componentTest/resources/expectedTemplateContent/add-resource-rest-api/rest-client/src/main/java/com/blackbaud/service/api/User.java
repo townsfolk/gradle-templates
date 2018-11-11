@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class User {
 
-    String replaceme;
+    private String replaceme;
 
 }

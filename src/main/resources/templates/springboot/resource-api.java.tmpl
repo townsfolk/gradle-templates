@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-<% if (upperCamel) { %>@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)<% } else { %>@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)<% } %>
+@JsonNaming(PropertyNamingStrategy.${caseStrategy}CaseStrategy.class)
 public class ${resourceName} {
 
-    String replaceme;
+    private String replaceme;
 
 }
