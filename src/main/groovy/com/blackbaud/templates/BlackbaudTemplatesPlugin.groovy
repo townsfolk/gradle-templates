@@ -17,6 +17,7 @@
 package com.blackbaud.templates
 
 import com.blackbaud.templates.project.ProjectProps
+import com.blackbaud.templates.tasks.AddConsumerPactTask
 import com.blackbaud.templates.tasks.AddCosmosContainerTask
 import com.blackbaud.templates.tasks.AddCosmosObjectTask
 import com.blackbaud.templates.tasks.AddEventHubsTask
@@ -69,6 +70,7 @@ class BlackbaudTemplatesPlugin implements Plugin<Project> {
         project.task 'addServiceBusTopicConfig', type: AddServiceBusTopicConfigTask
         project.task 'addPerformanceTests', type: AddPerformanceTestsTask
         project.task 'addLombokConfig', type: AddLombokConfigTask
+        project.task 'addConsumerPact', type: AddConsumerPactTask
     }
 
 }

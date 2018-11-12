@@ -1,0 +1,75 @@
+package ${packageName}.pacttest
+
+import au.com.dius.pact.consumer.PactVerificationResult
+import au.com.dius.pact.consumer.groovy.PactBuilder
+import ${packageName}.api.${objectName}
+import ${packageName}.core.domain.${objectName.toLowerCase()}.Get${objectName}Client
+import ${packageName}.core.domain.${objectName.toLowerCase()}.Get${objectName}ClientSasProperties<% if (sasProviderService) {
+out << """
+import com.blackbaud.sasquatch.FakeSASClient
+import com.blackbaud.sasquatch.TestSasquatchConfiguration"""} %>
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.test.context.SpringBootTest
+import spock.lang.Specification
+
+@SpringBootTest(classes = [Get${objectName}ClientConfig<% if (sasProviderService) {out << ", TestSasquatchConfiguration"} %>], webEnvironment = SpringBootTest.WebEnvironment.NONE)
+class ${providerServiceNameUpperCamelCase}PactSpec extends Specification {
+    @Autowired
+    Get${objectName}Client get${objectName}Client
+<% if (sasProviderService) {
+        out << """
+    @Autowired
+    FakeSASClient fakeSASClient
+
+    @Value('\${sas.${providerServiceName.replace("-", "")}.pod}')
+    String ${providerServiceName.replace("-", "")}SasPod
+"""} %>
+    int pactPort = 8000
+
+    PactBuilder ${providerServiceNameLowerCamelCase}Pact = new PactBuilder()
+
+    def setup() {<% if (sasProviderService) {
+            out << """
+        fakeSASClient.useLocalhostForAudience(${providerServiceNameUpperCamelCase}SasPod, Get${objectName}ClientSasProperties.${objectName.toUpperCase()}_SERVICE_TYPE, pactPort)"""} %>
+        ${providerServiceNameUpperCamelCase}Pact.with {
+            serviceConsumer "${consumerServiceName}"
+            hasPactWith "${providerServiceName}"
+            port pactPort
+        }
+    }
+
+    def "${consumerServiceName} can get ${objectName}"() {
+        given:
+        UUID id = UUID.randomUUID()
+        ${providerServiceNameLowerCamelCase}Pact.with {
+            uponReceiving "${consumerServiceName} can get ${objectName}"
+            withAttributes(
+                    method: "GET",
+                    path: Get${objectName}Client.${objectName.toUpperCase()}_PATH,
+                    query: "id=\${id}".toString(),
+                    headers: [<% if (sasProviderService) {
+                                out << '''
+                            "Authorization": "Bearer mock_access_token_sas",'''
+                            } %>
+                            "Accept" : "application/json"
+                    ]
+            )
+            given("requires pre-existing data")
+            willRespondWith(status: 200)
+            withBody
+                    {
+                        "${objectNameLowerUnderscore}": "\${id}"
+                    }
+        }
+
+        when:
+        PactVerificationResult result = ${providerServiceNameLowerCamelCase}Pact.runTest {
+            ${objectName} result = get${objectName}Client.get${objectName}(id)
+            assert result.id = id
+        }
+
+        then:
+        assert result == PactVerificationResult.Ok.INSTANCE
+    }
+}

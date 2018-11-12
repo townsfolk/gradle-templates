@@ -381,4 +381,25 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         greenwashOrAssertExpectedContent(basicProject, "performance-tests")
     }
 
+    def "should add consumer pact spec"() {
+        given:
+        BasicProject basicProject = initBasicProject()
+
+        when:
+        basicProject.addConsumerPact("foo", "Foo", false)
+
+        then:
+        greenwashOrAssertExpectedContent(basicProject, "add-consumer-pact-spec")
+    }
+
+    def "should add SAS consumer pact spec"() {
+        given:
+        BasicProject basicProject = initBasicProject()
+
+        when:
+        basicProject.addConsumerPact("foo", "Foo", true)
+
+        then:
+        greenwashOrAssertExpectedContent(basicProject, "add-consumer-pact-sas-spec")
+    }
 }
