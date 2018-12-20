@@ -32,7 +32,7 @@ class EventHubsProject {
 
         buildFile.applyPlugin("async-stub")
         buildFile.appendAfterLine(/commonSpringBootVersion\s*=\s*"\$\{springBootVersion}/,
-                                      "        commonAsyncEventHubsVersion = \"${CurrentVersions.COMMON_ASYNC_MAJOR_VERSION}.+\"")
+                                      "        commonAsyncEventHubsVersion = \"${CurrentVersions.COMMON_SERVICE_BUS_MAJOR_VERSION}.+\"")
         buildFile.appendAfterLine(/compile.*common-spring-boot/,
                 '    compile "com.blackbaud:common-async-event-hubs:${commonAsyncEventHubsVersion}"')
         buildFile.appendAfterLine(/sharedTestCompile/,

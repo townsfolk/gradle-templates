@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath "com.blackbaud:gradle-internal:4.+"
+        classpath "com.blackbaud:gradle-internal:5.+"
     }
 }
 
@@ -9,20 +9,20 @@ apply plugin: 'integration-test'
 apply plugin: 'blackbaud-internal-ui' 
 
 ext {
-    springBootVersion = "1.4.1.RELEASE"
+    springBootVersion = "2.1.1.RELEASE"
 }
 
 dependencies {
-    integrationTestCompile "com.google.guava:guava:23.6.1-jre"
-    integrationTestCompile "com.blackbaud:common-spring-boot-rest-test:${springBootVersion}-3.+"
+    integrationTestCompile "com.google.guava:guava:27.0.1-jre"
+    integrationTestCompile "com.blackbaud:common-deployable-spring-boot-rest-test:${springBootVersion}-0.+"
     integrationTestCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     integrationTestCompile "com.blackbaud:common-geb:3.+" 
     integrationTestCompile "com.blackbaud:common-test:4.+"
-    integrationTestCompile "org.codehaus.groovy:groovy-all:2.4.7"
-    integrationTestCompile ("org.spockframework:spock-spring:1.1-groovy-2.4") {
+    integrationTestCompile "org.codehaus.groovy:groovy-all:2.4.15"
+    integrationTestCompile ("org.spockframework:spock-spring:1.2-groovy-2.4") {
         exclude group: "org.codehaus.groovy"
     }
-    integrationTestCompileOnly "org.projectlombok:lombok:1.18.2"
+    integrationTestCompileOnly "org.projectlombok:lombok:1.18.4"
 }
 
 task configureForInt << {

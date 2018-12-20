@@ -8,17 +8,16 @@ class CreateDeployableProjectTask extends AbstractTemplateTask {
 
     CreateDeployableProjectTask() {
         super("Create a SpringBoot REST project (options: -PrepoName=?, [-Pclean, -Ppostgres, -Pmybatis, -Pcosmos, " +
-                      "-Pkafka, -PdisableAuthFilter -Paws -PserviceName=<app name>, -PservicePackageName=<package name>])")
+                      "-Pkafka, -PdisableAuthFilter -PserviceName=<app name>, -PservicePackageName=<package name>])")
     }
 
     @TaskAction
     void createDeployableProject() {
         boolean clean = projectProps.isPropertyDefined("clean")
-        boolean aws = projectProps.isPropertyDefined("aws")
         boolean disableAuthFilter = projectProps.isPropertyDefined("disableAuthFilter")
         BasicProject basicProject = createBasicProject(clean)
         RestProject restProject = new RestProject(basicProject)
-        restProject.initRestProject(disableAuthFilter, aws)
+        restProject.initRestProject(disableAuthFilter)
         if (projectProps.isPropertyDefined("mybatis")) {
             restProject.initPostgres()
             restProject.initMybatis()

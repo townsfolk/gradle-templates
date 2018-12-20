@@ -25,7 +25,7 @@ public class ComponentTestConfig extends BaseTestConfig {
 
     @Bean
     public HelloClient helloClient() {
-        return testClientSupport.createClientWithTestToken(HelloClient.class);
+        return testClientSupport.createClientWithBbAuthToken(HelloClient.class);
     }
 
 }

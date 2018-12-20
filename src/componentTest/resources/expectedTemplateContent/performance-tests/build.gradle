@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath "com.blackbaud:gradle-internal:4.+"
+        classpath "com.blackbaud:gradle-internal:5.+"
     }
 }
 
@@ -8,16 +8,16 @@ apply plugin: "blackbaud-internal"
 apply plugin: "performance-test"
 
 dependencies {
-    compile "com.google.guava:guava:23.6.1-jre"
-    compileOnly "org.projectlombok:lombok:1.18.2"
+    compile "com.google.guava:guava:27.0.1-jre"
+    compileOnly "org.projectlombok:lombok:1.18.4"
 
     performanceTestCompile "com.blackbaud:common-gatling:0.+"
 
     sharedTestCompile 'placeholder'
 
     testCompile "com.blackbaud:common-test:4.+"
-    testCompile "org.codehaus.groovy:groovy-all:2.4.7"
-    testCompile ("org.spockframework:spock-core:1.1-groovy-2.4") {
+    testCompile "org.codehaus.groovy:groovy-all:2.4.15"
+    testCompile ("org.spockframework:spock-core:1.2-groovy-2.4") {
         exclude group: "org.codehaus.groovy"
     }
 }

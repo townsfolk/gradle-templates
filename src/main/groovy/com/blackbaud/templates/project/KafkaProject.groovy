@@ -33,7 +33,7 @@ class KafkaProject {
         buildFile.appendAfterLine(/sharedTestCompile/,
                 '    sharedTestCompile "com.blackbaud:common-kafka-test:${commonKafkaVersion}"')
 
-        basicProject.appendServiceToAppDescriptor("kafka")
+//        basicProject.appendServiceToAppDescriptor("kafka")
 
         File componentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         componentTestPropertiesFile.append("""

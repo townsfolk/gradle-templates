@@ -11,7 +11,6 @@ import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.*;
 class GitRepo {
 
     private static final String VSTS_GIT_BASE_URL = "https://blackbaud.visualstudio.com/Products/_git/"
-    private static final String GITHUB_BASE_URL = "https://github.com/blackbaud/"
 
     private Git git
 
@@ -83,7 +82,7 @@ class GitRepo {
         if (clean) {
             repoDir.deleteDir()
         }
-        repoDir.exists() ? openGitRepo(repoDir) : initGitHubRepo(repoDir.name, repoDir)
+        repoDir.exists() ? openGitRepo(repoDir) : initVstsGitRepo(repoDir.name, repoDir)
     }
 
     static GitRepo openGitRepo(File repoDir) {
@@ -91,13 +90,6 @@ class GitRepo {
             throw new RuntimeException("Cannot open git project, dir=${repoDir.absolutePath}")
         }
         open(repoDir)
-    }
-
-    static GitRepo initGitHubRepo(String name, File repoDir) {
-        repoDir.mkdirs()
-        GitRepo git = init(repoDir)
-        git.setRemoteUrl("origin", GITHUB_BASE_URL + "${name}.git")
-        git
     }
 
     static GitRepo initVstsGitRepo(String name, File repoDir) {

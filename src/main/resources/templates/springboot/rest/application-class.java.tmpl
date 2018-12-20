@@ -1,0 +1,22 @@
+package ${servicePackage};
+
+import com.blackbaud.boot.config.WebMvcRestServiceConfig;
+import ${servicePackage}.core.CoreConfig;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+@Configuration
+@ComponentScan("${servicePackage}.resources")
+@Import({
+        CoreConfig.class,
+        WebMvcRestServiceConfig.class,
+})
+public class ${serviceName} {
+
+    public static void main(String[] args) {
+        SpringApplication.run(${serviceName}.class, args);
+    }
+
+}

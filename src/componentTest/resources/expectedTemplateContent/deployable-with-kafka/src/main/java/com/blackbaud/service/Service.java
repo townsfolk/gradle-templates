@@ -1,24 +1,19 @@
 package com.blackbaud.service;
 
-import com.blackbaud.security.CoreSecurityEcosystemParticipantRequirementsProvider;
-import com.blackbaud.boot.config.CommonSpringConfig;
+import com.blackbaud.boot.config.WebMvcRestServiceConfig;
+import com.blackbaud.service.core.CoreConfig;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
-@SpringBootApplication
-@ComponentScan({"com.blackbaud.service.core", "com.blackbaud.service.resources"})
-public class Service extends CommonSpringConfig {
-
-    @Bean
-    public CoreSecurityEcosystemParticipantRequirementsProvider coreSecurityEcosystemParticipantRequirementsProvider() {
-        return new CoreSecurityEcosystemParticipantRequirementsProvider();
-    }
+@Configuration
+@ComponentScan("com.blackbaud.service.resources")
+@Import({
+        CoreConfig.class,
+        WebMvcRestServiceConfig.class,
+})
+public class Service {
 
     public static void main(String[] args) {
         SpringApplication.run(Service.class, args);

@@ -31,8 +31,8 @@ class AsyncProject {
         }
 
         buildFile.appendAfterLastLine(/ext \{/,
-                "        commonAsyncServiceBusVersion = \"${CurrentVersions.COMMON_ASYNC_MAJOR_VERSION}.+\"")
-        buildFile.appendAfterLine(/compile.*common-spring-boot/,
+                "        commonAsyncServiceBusVersion = \"${CurrentVersions.COMMON_SERVICE_BUS_MAJOR_VERSION}.+\"")
+        buildFile.appendAfterLine(/compile.*common-deployable-spring-boot/,
                 '    compile "com.blackbaud:common-async-service-bus:${commonAsyncServiceBusVersion}"')
         buildFile.appendAfterLine(/sharedTestCompile/,
                 '    sharedTestCompile "com.blackbaud:common-async-service-bus-test:${commonAsyncServiceBusVersion}"')
@@ -87,10 +87,8 @@ class AsyncProject {
         ProjectFile serviceBusConfigFile = basicProject.findFile("ServiceBusConfig.java")
         serviceBusConfigFile.enableConfigurationProperties("${formatter.propertiesClassName}.class")
 
-        ProjectFile applicationClass = basicProject.findFile("${basicProject.serviceName}.java")
-        applicationClass.addImport("${servicePackage}.servicebus.ServiceBusConfig")
-        applicationClass.addImport("org.springframework.context.annotation.Import")
-        applicationClass.addConfigurationImport("ServiceBusConfig.class")
+        ProjectFile coreConfigClass = basicProject.findFile("CoreConfig.java")
+        coreConfigClass.addConfigurationImport("${servicePackage}.servicebus.ServiceBusConfig")
 
         ProjectFile publisherConfigFile
         if (publisher) {

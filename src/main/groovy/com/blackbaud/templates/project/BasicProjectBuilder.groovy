@@ -9,7 +9,6 @@ class BasicProjectBuilder {
     File gradleUserHome;
     String blackbaudGradleVersion;
     boolean clean = false;
-    boolean vsts = false;
 
     private BasicProjectBuilder() {}
 
@@ -42,18 +41,8 @@ class BasicProjectBuilder {
         this
     }
 
-    public BasicProjectBuilder useVsts() {
-        this.vsts = true
-        this
-    }
-
     public BasicProject build() {
-        GitRepo gitRepo;
-        if (vsts) {
-            gitRepo = GitRepo.initVstsGitRepo(name, repoDir)
-        } else {
-            gitRepo = GitRepo.initGitHubRepo(name, repoDir)
-        }
+        GitRepo gitRepo = GitRepo.initVstsGitRepo(name, repoDir)
         BasicProject basicProject = new BasicProject(blackbaudGradleVersion, gitRepo, gradleUserHome)
         basicProject.initGradleProject()
         basicProject

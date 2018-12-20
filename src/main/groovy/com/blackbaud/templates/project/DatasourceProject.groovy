@@ -44,7 +44,7 @@ class DatasourceProject {
         applyPostgresCompileDependencies()
         applyPostgresApplicationProperties()
         applyTestCleanupSql()
-        basicProject.appendServiceToAppDescriptor("postgres-shared")
+//        basicProject.appendServiceToAppDescriptor("postgres-shared")
     }
 
     private void applyTestCleanupSql() {
@@ -137,33 +137,19 @@ spring.datasource.validation-query=SELECT 1;
     private applyCommonCosmosCompileDependencies() {
         BuildFile buildFile = basicProject.buildFile
 
-        if (buildFile.text.contains("commonSpringBootMajorVersion") == false) {
-            buildFile.appendAfterLine(/springBootVersion\s*=/, """\
-        commonSpringBootMajorVersion = "${CurrentVersions.COMMON_SPRING_BOOT_MAJOR_VERSION}\"""")
-            buildFile.replaceLine(/commonSpringBootVersion\s*=/, '''\
-        commonSpringBootVersion = "${springBootVersion}-${commonSpringBootMajorVersion}.+"''')
-        }
-        buildFile.appendAfterLine(/commonSpringBootVersion\s*=/, """\
-        commonCosmosVersion = "\${springBootVersion}-\${commonSpringBootMajorVersion}-${CurrentVersions.COMMON_COSMOS_MAJOR_VERSION}.+\"""")
+        buildFile.appendAfterLine('compile "com.blackbaud:common-deployable-spring-boot-rest:', '''\
+    compile "com.blackbaud:common-deployable-spring-boot-cosmos:${commonSpringBootVersion}"''')
+        buildFile.appendAfterLine('sharedTestCompile "com.blackbaud:common-deployable-spring-boot-rest-test:', '''\
+    sharedTestCompile "com.blackbaud:common-deployable-spring-boot-cosmos-test:${commonSpringBootVersion}"''')
 
-        // TODO: for some reason, if spring-data-commons and spring-data-mongodb are not included (they are transitive
-        // deps of common-cosmos), the wrong version will be pulled in... this is possibly due to default versions
-        // pulled in by the spring-boot plugin.  need to investigate.
-        buildFile.appendAfterLine('compile "com.blackbaud:common-spring-boot-rest:', '''\
-    compile "com.blackbaud:common-cosmos:${commonCosmosVersion}"
-    compile "org.springframework.data:spring-data-commons:1.13.8.RELEASE"
-    compile "org.springframework.data:spring-data-mongodb:1.10.11.RELEASE"''')
-
-        ProjectFile applicationClass = basicProject.findFile("${basicProject.serviceName}.java")
-        applicationClass.addImport("${servicePackage}.config.CosmosConfig")
-        applicationClass.addImport("org.springframework.context.annotation.Import")
-        applicationClass.addConfigurationImport("CosmosConfig.class")
+        ProjectFile coreConfigClass = basicProject.findFile("CoreConfig.java")
+        coreConfigClass.addConfigurationImport("${servicePackage}.core.CosmosConfig")
     }
 
     private void addCosmosConfig() {
-        basicProject.applyTemplate("src/main/java/${servicePackagePath}/config") {
-            "CosmosConfig.java" template: "/templates/cosmos/cosmos-config.java.tmpl",
-                    servicePackage: "${servicePackage}.config", basePackage: "${servicePackage}.core.domain"
+        basicProject.applyTemplate("src/main/java/${servicePackagePath}/core") {
+            "CosmosConfig.java" template: "/templates/springboot/cosmos/cosmos-config.java.tmpl",
+                    servicePackage: "${servicePackage}.core", basePackage: "${servicePackage}.core.domain"
         }
     }
 

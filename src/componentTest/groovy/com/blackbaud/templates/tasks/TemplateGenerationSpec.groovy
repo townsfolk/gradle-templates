@@ -22,7 +22,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
     boolean greenwash
 
     def setup() {
-        project.ext["blackbaudGradleVersion"] = "2.14.1-bb.1.2"
+        project.ext["blackbaudGradleVersion"] = "4.10.3-bb.1.0"
         greenwash = Boolean.getBoolean("greenwash")
     }
 
@@ -41,9 +41,9 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         new RestProject(basicProject)
     }
 
-    private RestProject initRestProject(boolean aws = false) {
+    private RestProject initRestProject() {
         RestProject restProject = createRestProject()
-        restProject.initRestProject(false, aws)
+        restProject.initRestProject(false)
         restProject
     }
 
@@ -163,7 +163,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         IntegrationTestProject integrationTestProject = new IntegrationTestProject(basicProject)
 
         when:
-        integrationTestProject.initIntegrationTestProject(false, true)
+        integrationTestProject.initIntegrationTestProject(true)
 
         then:
         greenwashOrAssertExpectedContent(basicProject.targetDir, "integration-test")
@@ -174,7 +174,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         RestProject restProject = createRestProject()
 
         when:
-        restProject.initRestProject(false, false)
+        restProject.initRestProject(false)
 
         then:
         greenwashOrAssertExpectedContent(restProject, "deployable")
@@ -185,7 +185,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         RestProject restProject = createRestProject()
 
         when:
-        restProject.initRestProject(false, true)
+        restProject.initRestProject(false)
         restProject.initPostgres()
         restProject.initMybatis()
 
@@ -198,7 +198,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         RestProject restProject = createRestProject()
 
         when:
-        restProject.initRestProject(false, true)
+        restProject.initRestProject(false)
         restProject.initKafka()
 
         then:
@@ -210,7 +210,7 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         RestProject restProject = createRestProject()
 
         when:
-        restProject.initRestProject(false, false)
+        restProject.initRestProject(false)
         restProject.initCosmos()
 
         then:
@@ -402,4 +402,19 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
         then:
         greenwashOrAssertExpectedContent(basicProject, "add-consumer-pact-sas-spec")
     }
+
+    def "should add multiple CoreConfig annotations"() {
+        given:
+        RestProject restProject = initRestProject()
+        restProject.initCosmos()
+
+        when:
+        restProject.addJpaEntityObject("Account")
+        restProject.addCosmosEntityObject("Truck", true)
+
+        then:
+        greenwashOrAssertExpectedContent(restProject, "add-multiple-coreconfig-annotations")
+    }
+
+
 }

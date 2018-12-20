@@ -10,7 +10,6 @@ class RestProjectBuilder {
     boolean postgres = false
     boolean kafka = false
     boolean clean = false
-    boolean vsts = false
     boolean disableAuthFilter = false
 
     private RestProjectBuilder() {}
@@ -59,11 +58,6 @@ class RestProjectBuilder {
         this
     }
 
-    public RestProjectBuilder useVsts() {
-        this.vsts = true;
-        this
-    }
-
     RestProjectBuilder disableAuthFilter() {
         this.disableAuthFilter = true
         this
@@ -72,7 +66,7 @@ class RestProjectBuilder {
     public RestProject build() {
         BasicProject basicProject = createBasicProject()
         RestProject restProject = new RestProject(basicProject)
-        restProject.initRestProject(disableAuthFilter, vsts == false)
+        restProject.initRestProject(disableAuthFilter)
         if (mybatis) {
             restProject.initPostgres()
             restProject.initMybatis()
@@ -93,9 +87,6 @@ class RestProjectBuilder {
                 .blackbaudGradleVersion(blackbaudGradleVersion)
         if(clean) {
             basicProjectBuilder.clean()
-        }
-        if (vsts) {
-            basicProjectBuilder.useVsts()
         }
         basicProjectBuilder.build()
     }

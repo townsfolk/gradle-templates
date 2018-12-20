@@ -4,6 +4,7 @@ package com.blackbaud.templates.project
 class ProjectFile extends File {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator")
+    private static final String ANNOTATION_REGEX = /\s*\(\s*\{?([^})]+)\s*\}?\s*\)/
 
     ProjectFile(File file) {
         super(file.toURI())
@@ -34,7 +35,13 @@ import ${importToAdd}${eol}""")
         }
     }
 
-    void addConfigurationImport(String importToAdd) {
+    void addConfigurationImport(String qualifiedClassName) {
+        addImport("org.springframework.context.annotation.Import")
+        addImport(qualifiedClassName)
+
+        int packageEnd = qualifiedClassName.lastIndexOf('.')
+        String importToAdd = qualifiedClassName.substring(packageEnd + 1) + ".class"
+
         addClassToAnnotation("Import", importToAdd)
     }
 
@@ -42,20 +49,36 @@ import ${importToAdd}${eol}""")
         addClassToAnnotation("EnableConfigurationProperties", classToAdd)
     }
 
-    private void addClassToAnnotation(String annotationName, String classToAdd) {
-        List<String> lines = readLines()
-        int index = indexOf(lines, /@${annotationName}/)
+    void addEntityScanAndEnableJpaRepositories(String packageName) {
+        addImport("org.springframework.boot.autoconfigure.domain.EntityScan")
+        addImport("org.springframework.data.jpa.repository.config.EnableJpaRepositories")
 
-        if (index >= 0) {
-            String configPropLine = lines[index]
-            String existingClasses = (configPropLine =~ /@${annotationName}\(\{?([^}]+)\}?\)/)[0][1]
-            if (existingClasses.contains(classToAdd) == false) {
-                lines[index] = "@${annotationName}({${existingClasses}, ${classToAdd}})".toString()
-                text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
+        addClassToAnnotation("EntityScan", "\"${packageName}\"")
+        addClassToAnnotation("EnableJpaRepositories", "\"${packageName}\"")
+    }
+
+    private void addClassToAnnotation(String annotationName, String classToAdd) {
+        if (text.contains(/@${annotationName}/)) {
+            List<String> existingAnnotations = extractExistingAnnotations(annotationName)
+            if (existingAnnotations.contains(classToAdd) == false) {
+                String annotationsToReplace = (existingAnnotations + classToAdd).collect {
+                    "        ${it}"
+                }.join(",${LINE_SEPARATOR}")
+
+                this.text = text.replaceFirst(/@${annotationName}${ANNOTATION_REGEX}/,
+                                              "@${annotationName}({${LINE_SEPARATOR}${annotationsToReplace}${LINE_SEPARATOR}})")
             }
         } else {
             appendBeforeLine(/class\s+/, "@${annotationName}(${classToAdd})")
         }
+    }
+
+    private List<String> extractExistingAnnotations(String annotationName) {
+        String text = this.text.replaceAll(/\s+/, ' ')
+        String regex = /.*@${annotationName}${ANNOTATION_REGEX}.*/
+        def matcher = text =~ regex
+        String annotations = matcher[0][1]
+        annotations.split(/\s*,\s*/).collect { it.trim() }
     }
 
     boolean addClassAnnotation(String annotation) {
@@ -77,6 +100,24 @@ import ${importToAdd}${eol}""")
             text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
         }
         index >= 0
+    }
+
+    boolean appendAfterFirstSetOfLines(String match, String lineToAdd) {
+        List<String> lines = readLines()
+        int index = indexOf(lines, match)
+
+        if (index >= 0) {
+            for (int i = index + 1; i < lines.size(); i++) {
+                if (lines[i] =~ /${match}/) {
+                    index = i
+                }
+                if (index != i) {
+                    lines.add(i, lineToAdd)
+                    break
+                }
+            }
+            text = lines.join(LINE_SEPARATOR) + LINE_SEPARATOR
+        }
     }
 
     void appendAfterLastLine(String match, String lineToAdd) {
@@ -120,8 +161,7 @@ import ${importToAdd}${eol}""")
             if (text.contains("${key}=${value}") == false) {
                 addProperty("${LINE_SEPARATOR}${key}", value)
             }
-        }
-        else {
+        } else {
             addProperty("${LINE_SEPARATOR}${key}", value)
         }
     }

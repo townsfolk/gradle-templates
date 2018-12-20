@@ -14,7 +14,7 @@ ext {
 
 dependencies {
     integrationTestCompile "com.google.guava:guava:${guavaVersion}"
-    integrationTestCompile "com.blackbaud:common-spring-boot-rest-test:\${springBootVersion}-${commonSpringBootMajorVersion}.+"
+    integrationTestCompile "com.blackbaud:common-deployable-spring-boot-rest-test:\${springBootVersion}-${commonDeployableMajorVersion}.+"
     integrationTestCompile "org.springframework.boot:spring-boot-starter-test:\${springBootVersion}"
     <% if (includeGeb) { %>integrationTestCompile "com.blackbaud:common-geb:${commonGebMajorVersion}.+" <% } else { %><% } %>
     integrationTestCompile "com.blackbaud:common-test:${commonTestMajorVersion}.+"

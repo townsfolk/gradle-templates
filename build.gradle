@@ -1,12 +1,16 @@
 buildscript {
+    ext {
+        gradleInternalMajorVersion = "5.+"
+    }
     dependencies {
-        classpath "com.blackbaud:gradle-internal:3.+"
+        classpath "com.blackbaud:gradle-internal:${gradleInternalMajorVersion}"
     }
 }
 
 apply plugin: "blackbaud-internal"
 apply plugin: "blackbaud-templates"
 apply plugin: "integration-test"
+apply plugin: "com.blackbaud.dependencies"
 
 setGradleVersions()
 println "Using gradle version: ${gradleVersion}"
@@ -16,16 +20,10 @@ dependencies {
     compile localGroovy()
     compile 'com.google.guava:guava:18.0'
     compile 'org.eclipse.jgit:org.eclipse.jgit:4.0.2.201509141540-r'
-    compile "org.gradle:gradle-tooling-api:${gradleVersion}"
 
-    testCompile gradleTestKit()
-    testCompile ('com.blackbaud:gradle-internal-test:4.+') {
-        exclude group: 'org.spockframework'
-    }
-    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
-        exclude group: 'org.codehaus.groovy'
-    }
-    testCompile 'junit:junit:4.11'
+    sharedTestCompile gradleTestKit()
+    sharedTestCompile "com.blackbaud:gradle-internal-test:${gradleInternalMajorVersion}"
+    sharedTestCompile "org.spockframework:spock-core"
 }
 
 check.dependsOn integrationTest
