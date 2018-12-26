@@ -36,13 +36,13 @@ class InitScalaProjectTaskTest extends AbstractTaskTester {
 
         task.init()
 
-        assertFileExists folder.root, 'src/main/scala'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/scala'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
+        assertFileExists testRoot, 'src/main/scala'
+        assertFileExists testRoot, 'src/main/resources'
+        assertFileExists testRoot, 'src/test/scala'
+        assertFileExists testRoot, 'src/test/resources'
+        assertFileExists testRoot, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'scalaVersion = \'2.9.0\'', 'scalaCompileOptions.useCompileDaemon = true', 'group = \'test-group\''
-        assertFileContains folder.root, 'gradle.properties', 'version=0.1'
+        assertFileContains testRoot, 'build.gradle', 'scalaVersion = \'2.9.0\'', 'scalaCompileOptions.useCompileDaemon = true', 'group = \'test-group\''
+        assertFileContains testRoot, 'gradle.properties', 'version=0.1'
     }
 }

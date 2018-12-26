@@ -17,41 +17,55 @@
 
 package templates
 
+import groovy.util.logging.Slf4j
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 
 /**
  * Base class for template-based task testers.
  */
+@Slf4j
 abstract class AbstractTaskTester {
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder()
-
+    protected File testRoot
     protected Project project
     protected Task task
 
     private final Class taskClass
 
-    AbstractTaskTester( final Class taskClass ){
+    AbstractTaskTester(final Class taskClass) {
         this.taskClass = taskClass
     }
 
     @Before
-    void before(){
-        System.setProperty( 'init.dir', folder.root as String )
+    void before() {
+        final testsDir = System.properties['tests.dir'] ?: "${System.properties['user.dir']}/build/tests"
+        final testProjectName = "${taskClass.simpleName}_Tests"
+        final initDir = "${testsDir}/${testProjectName}"
+        testRoot = new File(initDir)
 
-        project = ProjectBuilder.builder().build()
-        task = project.task( 'targetTask', type:taskClass )
+        project = ProjectBuilder.builder()
+                .withName(testProjectName)
+                .withProjectDir(new File(initDir))
+                .build()
+
+        log.debug("user.dir: ${System.properties['user.dir']}")
+        log.debug("Project: ${project}")
+        log.debug("    Dir: ${project.projectDir}")
+        log.debug("   Root: ${project.rootDir}")
+        log.debug("  Build: ${project.buildDir}")
+
+        System.setProperty('init.dir', initDir)
+
+        task = project.task('targetTask', type: taskClass)
     }
 
-    @After void after(){
-        System.setProperty( 'init.dir', '' )
+    @After
+    void after() {
+        System.setProperty('init.dir', '')
     }
 
     /**
@@ -60,8 +74,8 @@ abstract class AbstractTaskTester {
      * @param root the root directory
      * @param path the path to the file
      */
-    protected void assertFileExists( File root, String path ){
-        assert new File( root, path ).exists()
+    protected void assertFileExists(File root, String path) {
+        assert new File(root, path).exists()
     }
 
     /**
@@ -72,13 +86,13 @@ abstract class AbstractTaskTester {
      * @param path the path to the file
      * @param contents the content string to be tested
      */
-    protected void assertFileContains( File root, String path, String... contents ){
+    protected void assertFileContains(File root, String path, String... contents) {
         assertFileExists root, path
 
-        String text = new File( root, path ).text
+        String text = new File(root, path).text
 
         contents.each { String str ->
-            assert text.contains( str )
+            assert text.contains(str)
         }
     }
 }

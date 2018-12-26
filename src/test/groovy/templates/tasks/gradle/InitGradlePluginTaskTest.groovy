@@ -28,7 +28,7 @@ class InitGradlePluginTaskTest extends AbstractTaskTester{
     }
 
     @Test void init(){
-        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[PROJECT_PARENT_DIR] = "${testRoot}"
         project.ext[PROJECT_GROUP] = 'test-group'
         project.ext[PROJECT_VERSION] = '1.1.1'
         project.ext[PLUGIN_APPLY_LABEL] = 'test-foo'
@@ -36,13 +36,13 @@ class InitGradlePluginTaskTest extends AbstractTaskTester{
 
         task.init()
 
-        assertFileExists folder.root, 'src/main/groovy'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/groovy'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
+        assertFileExists testRoot, 'src/main/groovy'
+        assertFileExists testRoot, 'src/main/resources'
+        assertFileExists testRoot, 'src/test/groovy'
+        assertFileExists testRoot, 'src/test/resources'
+        assertFileExists testRoot, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'group = \'test-group\''
-        assertFileContains folder.root, 'gradle.properties', 'version=1.1.1'
+        assertFileContains testRoot, 'build.gradle', 'group = \'test-group\''
+        assertFileContains testRoot, 'gradle.properties', 'version=1.1.1'
     }
 }

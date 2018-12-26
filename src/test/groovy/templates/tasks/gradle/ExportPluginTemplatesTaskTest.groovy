@@ -28,8 +28,8 @@ class ExportPluginTemplatesTaskTest extends AbstractTaskTester {
     @Test void export(){
         task.export()
 
-        assertFileExists folder.root, 'templates/plugin/build.gradle.tmpl'
-        assertFileExists folder.root, 'templates/plugin/convention-class.tmpl'
-        assertFileExists folder.root, 'templates/plugin/plugin-class.tmpl'
+        assertFileExists testRoot, 'templates/plugin/build.gradle.tmpl'
+        assertFileExists testRoot, 'templates/plugin/convention-class.tmpl'
+        assertFileExists testRoot, 'templates/plugin/plugin-class.tmpl'
     }
 }

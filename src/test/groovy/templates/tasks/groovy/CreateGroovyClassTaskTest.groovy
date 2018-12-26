@@ -37,6 +37,6 @@ class CreateGroovyClassTaskTest extends AbstractTaskTester {
 
         task.create()
 
-        assertFileContains folder.root, 'src/main/groovy/foo/Something.groovy', 'class Something'
+        assertFileContains testRoot, 'src/main/groovy/foo/Something.groovy', 'class Something'
     }
 }

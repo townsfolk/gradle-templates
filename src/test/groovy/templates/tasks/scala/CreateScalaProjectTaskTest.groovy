@@ -34,7 +34,7 @@ class CreateScalaProjectTaskTest extends AbstractTaskTester {
 
     @Test
     void create(){
-        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[PROJECT_PARENT_DIR] = "${testRoot}"
         project.ext[NEW_PROJECT_NAME] = 'tester'
         project.ext[PROJECT_GROUP] = 'test-group'
         project.ext[PROJECT_VERSION] = '1.1.1'
@@ -43,13 +43,13 @@ class CreateScalaProjectTaskTest extends AbstractTaskTester {
 
         task.create()
 
-        assertFileExists folder.root, 'tester/src/main/scala'
-        assertFileExists folder.root, 'tester/src/main/resources'
-        assertFileExists folder.root, 'tester/src/test/scala'
-        assertFileExists folder.root, 'tester/src/test/resources'
-        assertFileExists folder.root, 'tester/LICENSE.txt'
+        assertFileExists testRoot, 'tester/src/main/scala'
+        assertFileExists testRoot, 'tester/src/main/resources'
+        assertFileExists testRoot, 'tester/src/test/scala'
+        assertFileExists testRoot, 'tester/src/test/resources'
+        assertFileExists testRoot, 'tester/LICENSE.txt'
 
-        assertFileContains folder.root, 'tester/build.gradle', 'scalaVersion = \'2.9.0\'', 'scalaCompileOptions.useCompileDaemon = true', 'group = \'test-group\''
-        assertFileContains folder.root, 'tester/gradle.properties', 'version=1.1.1'
+        assertFileContains testRoot, 'tester/build.gradle', 'scalaVersion = \'2.9.0\'', 'scalaCompileOptions.useCompileDaemon = true', 'group = \'test-group\''
+        assertFileContains testRoot, 'tester/gradle.properties', 'version=1.1.1'
     }
 }

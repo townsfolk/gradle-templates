@@ -30,7 +30,7 @@ class ExportWebappTemplatesTaskTest extends AbstractTaskTester {
     @Test void export(){
         task.export()
 
-        assertFileExists folder.root, 'templates/webapp/build.gradle.tmpl'
-        assertFileExists folder.root, 'templates/webapp/web-xml.tmpl'
+        assertFileExists testRoot, 'templates/webapp/build.gradle.tmpl'
+        assertFileExists testRoot, 'templates/webapp/web-xml.tmpl'
     }
 }

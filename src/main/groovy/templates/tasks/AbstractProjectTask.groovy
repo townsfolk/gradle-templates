@@ -31,7 +31,7 @@ abstract class AbstractProjectTask extends DefaultTask {
     static final String PROJECT_PARENT_DIR = 'projectParentDir'
 
     AbstractProjectTask( final String name, final String description ){
-        this.name = name
+        //this.name = name
         this.group = TemplatesPlugin.group
         this.description = description
     }

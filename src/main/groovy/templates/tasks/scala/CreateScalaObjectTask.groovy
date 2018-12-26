@@ -26,7 +26,7 @@ class CreateScalaObjectTask extends CreateScalaClassTask {
 
     CreateScalaObjectTask(){
         super()
-        name = 'createScalaObject'
+        //name = 'createScalaObject'
         description = 'Creates a new Scala object in the current project.'
     }
 

@@ -36,7 +36,7 @@ abstract class AbstractTemplateExportTask extends DefaultTask {
      * @param paths the template paths
      */
     protected AbstractTemplateExportTask( final String name, final String description, final paths = []){
-        this.name = name
+        //this.name = name
         this.group = TemplatesPlugin.group
         this.description = description
         this.templatePaths = paths

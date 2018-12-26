@@ -29,7 +29,7 @@ class ExportGroovyTemplatesTaskTest extends AbstractTaskTester {
     @Test void export(){
         task.export()
 
-        assertFileExists folder.root, 'templates/groovy/build.gradle.tmpl'
-        assertFileExists folder.root, 'templates/groovy/groovy-class.tmpl'
+        assertFileExists testRoot, 'templates/groovy/build.gradle.tmpl'
+        assertFileExists testRoot, 'templates/groovy/groovy-class.tmpl'
     }
 }

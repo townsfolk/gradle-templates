@@ -34,6 +34,6 @@ class CreateScalaClassTaskTest extends AbstractTaskTester {
 
         task.create()
 
-        assertFileContains folder.root, 'src/main/scala/foo/Something.scala', 'class Something'
+        assertFileContains testRoot, 'src/main/scala/foo/Something.scala', 'class Something'
     }
 }

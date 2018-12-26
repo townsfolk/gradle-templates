@@ -34,6 +34,6 @@ class CreateJavaClassTaskTest extends AbstractTaskTester {
 
         task.create()
 
-        assertFileContains folder.root, 'src/main/java/foo/Something.java', 'class Something'
+        assertFileContains testRoot, 'src/main/java/foo/Something.java', 'class Something'
     }
 }

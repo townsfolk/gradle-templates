@@ -19,7 +19,6 @@ package templates.tasks.scala
 
 import org.junit.Test
 import templates.AbstractTaskTester
-import templates.tasks.scala.ExportScalaTemplatesTask
 
 class ExportScalaTemplatesTaskTest extends AbstractTaskTester {
 
@@ -30,7 +29,7 @@ class ExportScalaTemplatesTaskTest extends AbstractTaskTester {
     @Test void export(){
         task.export()
 
-        assertFileExists folder.root, 'templates/scala/build.gradle.tmpl'
-        assertFileExists folder.root, 'templates/scala/scala-class.tmpl'
+        assertFileExists testRoot, 'templates/scala/build.gradle.tmpl'
+        assertFileExists testRoot, 'templates/scala/scala-class.tmpl'
     }
 }

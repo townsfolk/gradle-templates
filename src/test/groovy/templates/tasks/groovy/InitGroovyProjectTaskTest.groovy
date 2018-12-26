@@ -32,12 +32,12 @@ class InitGroovyProjectTaskTest extends AbstractTaskTester {
 
         task.init()
 
-        assertFileExists folder.root, 'src/main/groovy'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/groovy'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
+        assertFileExists testRoot, 'src/main/groovy'
+        assertFileExists testRoot, 'src/main/resources'
+        assertFileExists testRoot, 'src/test/groovy'
+        assertFileExists testRoot, 'src/test/resources'
+        assertFileExists testRoot, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'groovy\''
+        assertFileContains testRoot, 'build.gradle', 'apply plugin: \'groovy\''
     }
 }

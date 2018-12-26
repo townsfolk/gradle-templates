@@ -34,13 +34,13 @@ class InitWebappProjectTaskTest extends AbstractTaskTester {
 
         task.init()
 
-        assertFileExists folder.root, 'src/main/java'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/java'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
+        assertFileExists testRoot, 'src/main/java'
+        assertFileExists testRoot, 'src/main/resources'
+        assertFileExists testRoot, 'src/test/java'
+        assertFileExists testRoot, 'src/test/resources'
+        assertFileExists testRoot, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'jetty\''
+        assertFileContains testRoot, 'build.gradle', 'apply plugin: \'jetty\''
     }
 
     @Test void 'init: war'(){
@@ -49,12 +49,12 @@ class InitWebappProjectTaskTest extends AbstractTaskTester {
 
         task.init()
 
-        assertFileExists folder.root, 'src/main/java'
-        assertFileExists folder.root, 'src/main/resources'
-        assertFileExists folder.root, 'src/test/java'
-        assertFileExists folder.root, 'src/test/resources'
-        assertFileExists folder.root, 'LICENSE.txt'
+        assertFileExists testRoot, 'src/main/java'
+        assertFileExists testRoot, 'src/main/resources'
+        assertFileExists testRoot, 'src/test/java'
+        assertFileExists testRoot, 'src/test/resources'
+        assertFileExists testRoot, 'LICENSE.txt'
 
-        assertFileContains folder.root, 'build.gradle', 'apply plugin: \'war\''
+        assertFileContains testRoot, 'build.gradle', 'apply plugin: \'war\''
     }
 }

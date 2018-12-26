@@ -39,7 +39,7 @@ class JavaTemplatesPlugin implements Plugin<Project> {
 	static getClassParts( final String fullClassName ){
 		def classParts = fullClassName.split(/\./) as List
 		[
-				className: classParts.pop(),
+				className: classParts.removeLast(),
 				classPackagePath: classParts.join(File.separator),
 				classPackage: classParts.join('.')
 		]

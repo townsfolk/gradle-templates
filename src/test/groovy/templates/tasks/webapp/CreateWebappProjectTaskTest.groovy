@@ -32,7 +32,7 @@ class CreateWebappProjectTaskTest extends AbstractTaskTester {
     }
 
     @Test void 'create: jetty'(){
-        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[PROJECT_PARENT_DIR] = "${testRoot}"
         project.ext[NEW_PROJECT_NAME] = 'tester'
         project.ext[PROJECT_GROUP] = 'test-group'
         project.ext[PROJECT_VERSION] = '1.1.1'
@@ -40,18 +40,18 @@ class CreateWebappProjectTaskTest extends AbstractTaskTester {
 
         task.create()
 
-        assertFileExists folder.root, 'tester/src/main/java'
-        assertFileExists folder.root, 'tester/src/main/resources'
-        assertFileExists folder.root, 'tester/src/test/java'
-        assertFileExists folder.root, 'tester/src/test/resources'
-        assertFileExists folder.root, 'tester/LICENSE.txt'
+        assertFileExists testRoot, 'tester/src/main/java'
+        assertFileExists testRoot, 'tester/src/main/resources'
+        assertFileExists testRoot, 'tester/src/test/java'
+        assertFileExists testRoot, 'tester/src/test/resources'
+        assertFileExists testRoot, 'tester/LICENSE.txt'
 
-        assertFileContains folder.root, 'tester/build.gradle', 'group = \'test-group\'', 'apply plugin: \'jetty\''
-        assertFileContains folder.root, 'tester/gradle.properties', 'version=1.1.1'
+        assertFileContains testRoot, 'tester/build.gradle', 'group = \'test-group\'', 'apply plugin: \'jetty\''
+        assertFileContains testRoot, 'tester/gradle.properties', 'version=1.1.1'
     }
 
     @Test void 'create: war'(){
-        project.ext[PROJECT_PARENT_DIR] = folder.getRoot() as String
+        project.ext[PROJECT_PARENT_DIR] = "${testRoot}"
         project.ext[NEW_PROJECT_NAME] = 'tester'
         project.ext[PROJECT_GROUP] = 'test-group'
         project.ext[PROJECT_VERSION] = '1.1.1'
@@ -59,13 +59,13 @@ class CreateWebappProjectTaskTest extends AbstractTaskTester {
 
         task.create()
 
-        assertFileExists folder.root, 'tester/src/main/java'
-        assertFileExists folder.root, 'tester/src/main/resources'
-        assertFileExists folder.root, 'tester/src/test/java'
-        assertFileExists folder.root, 'tester/src/test/resources'
-        assertFileExists folder.root, 'tester/LICENSE.txt'
+        assertFileExists testRoot, 'tester/src/main/java'
+        assertFileExists testRoot, 'tester/src/main/resources'
+        assertFileExists testRoot, 'tester/src/test/java'
+        assertFileExists testRoot, 'tester/src/test/resources'
+        assertFileExists testRoot, 'tester/LICENSE.txt'
 
-        assertFileContains folder.root, 'tester/build.gradle', 'group = \'test-group\'', 'apply plugin: \'war\''
-        assertFileContains folder.root, 'tester/gradle.properties', 'version=1.1.1'
+        assertFileContains testRoot, 'tester/build.gradle', 'group = \'test-group\'', 'apply plugin: \'war\''
+        assertFileContains testRoot, 'tester/gradle.properties', 'version=1.1.1'
     }
 }
