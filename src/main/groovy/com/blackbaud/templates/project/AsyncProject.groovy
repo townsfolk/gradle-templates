@@ -41,7 +41,7 @@ class AsyncProject {
         ProjectFile applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
         applicationLocalPropertiesFile.addPropertyWithSeparator("servicebus.stub", "true")
 
-        ProjectFile applicationComponentTestPropertiesFile = basicProject.getProjectFile("src/main/resources/application-componentTest.properties")
+        ProjectFile applicationComponentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         applicationComponentTestPropertiesFile.addProperty("servicebus.stub", "true")
 
         basicProject.applyTemplate("src/main/java/${servicePackagePath}/servicebus") {
@@ -180,7 +180,7 @@ class AsyncProject {
 
         ProjectFile applicationVstsProdPropertiesFile = basicProject.getProjectFile("src/main/resources/application-vstsProd.properties")
         ProjectFile applicationVstsTestPropertiesFile = basicProject.getProjectFile("src/main/resources/application-vstsTest.properties")
-        ProjectFile applicationComponentTestPropertiesFile = basicProject.getProjectFile("src/main/resources/application-componentTest.properties")
+        ProjectFile applicationComponentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         if (publisher) {
             applicationVstsProdPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
                                                           "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Send}")
