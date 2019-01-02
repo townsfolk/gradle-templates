@@ -93,24 +93,14 @@ class BasicProject {
     }
 
     void initPerformanceTestProject() {
-        buildFile.applyPlugin("performance-test")
-
-        buildFile.appendBeforeLine(/sharedTestCompile/, """\
-    performanceTestCompile "com.blackbaud:common-gatling:0.+"
-""")
-
         String testClassName = "${LOWER_HYPHEN.to(UPPER_CAMEL, repoName)}Test"
 
-        buildFile.append("""
-performance_test {
-    simulation {
-        className "${servicePackage}.${testClassName}"
-        description "Runs ${testClassName} performance test"
-    }
-}
-""")
-
-        applyTemplate("src/performanceTest/scala/${servicePackagePath}") {
+        applyTemplate("performance-test") {
+            "build.gradle" template: "/templates/springboot/performancetest/build.gradle.tmpl",
+                           packageName: servicePackage,
+                           className: testClassName
+        }
+        applyTemplate("performance-test/src/performanceTest/scala/${servicePackagePath}") {
             "${testClassName}.scala" template: "/templates/springboot/performancetest/performance-test.scala.tmpl",
                     packageName: servicePackage,
                     className: testClassName
