@@ -1,0 +1,12 @@
+apply plugin: "performance-test"
+
+dependencies {
+    compile "com.blackbaud:common-gatling:0.+"
+}
+
+performance_test {
+    simulation {
+        className "com.blackbaud.service.ServiceTest"
+        description "Runs ServiceTest performance test"
+    }
+}
