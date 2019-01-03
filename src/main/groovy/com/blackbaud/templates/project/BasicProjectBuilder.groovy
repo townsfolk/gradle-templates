@@ -6,8 +6,6 @@ class BasicProjectBuilder {
 
     File repoDir;
     String name;
-    File gradleUserHome;
-    String blackbaudGradleVersion;
     boolean clean = false;
 
     private BasicProjectBuilder() {}
@@ -18,16 +16,6 @@ class BasicProjectBuilder {
 
     public BasicProjectBuilder repoDir(File repoDir) {
         this.repoDir = repoDir
-        this
-    }
-
-    public BasicProjectBuilder blackbaudGradleVersion(String blackbaudGradleVersion) {
-        this.blackbaudGradleVersion = blackbaudGradleVersion
-        this
-    }
-
-    public BasicProjectBuilder gradleUserHome(File gradleUserHome) {
-        this.gradleUserHome = gradleUserHome
         this
     }
 
@@ -43,7 +31,7 @@ class BasicProjectBuilder {
 
     public BasicProject build() {
         GitRepo gitRepo = GitRepo.initVstsGitRepo(name, repoDir)
-        BasicProject basicProject = new BasicProject(blackbaudGradleVersion, gitRepo, gradleUserHome)
+        BasicProject basicProject = new BasicProject(gitRepo)
         basicProject.initGradleProject()
         basicProject
     }

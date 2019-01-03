@@ -12,8 +12,6 @@ apply plugin: "blackbaud-templates"
 apply plugin: "integration-test"
 apply plugin: "com.blackbaud.dependencies"
 
-setGradleVersions()
-println "Using gradle version: ${gradleVersion}"
 
 dependencies {
     compileOnly gradleApi()
@@ -41,22 +39,4 @@ componentTest.mustRunAfter setGreenwashProperty
 
 componentTest.doFirst {
     systemProperties project.ext.getProperties()
-}
-
-def setGradleVersions() {
-    def group
-    try {
-      def props = new Properties()
-      File propFile = new File('gradle/wrapper/gradle-wrapper.properties')
-      props.load(propFile.newDataInputStream())
-      String distUrl = props.getProperty('distributionUrl')
-      group = (distUrl =~ "gradle-blackbaud-((.*)-bb.[0-9]+.[0-9]+)-bin.zip")
-    } catch (Exception ex) {
-      throw new RuntimeException("Failed to parse gradle version from gradle-wrapper.properties. Please ensure distributionUrl is set!")
-    }
-
-    ext {
-        gradleVersion=group[0][2]
-        blackbaudGradleVersion=group[0][1]
-    }
 }

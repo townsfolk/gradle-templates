@@ -1,6 +1,7 @@
 package com.blackbaud.templates.project
 
 import com.blackbaud.templates.CurrentVersions
+import com.google.common.io.Resources
 import org.gradle.api.GradleException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
@@ -19,8 +20,6 @@ class BasicProject {
     private GitRepo gitRepo
     private File targetDir
     String repoName
-    private File gradleUserHomeDir
-    private String blackbaudGradleVersion
     private ProjectProps projectProps
 
     BasicProject(ProjectProps projectProps, GitRepo gitRepo) {
@@ -30,12 +29,10 @@ class BasicProject {
         this.projectProps = projectProps
     }
 
-    BasicProject(String blackbaudGradleVersion, GitRepo gitRepo, File gradleUserHomeDir) {
+    BasicProject(GitRepo gitRepo) {
         this.gitRepo = gitRepo
         this.repoName = gitRepo.repoDir.name
         this.targetDir = gitRepo.repoDir
-        this.blackbaudGradleVersion = blackbaudGradleVersion
-        this.gradleUserHomeDir = gradleUserHomeDir
     }
 
     GitRepo getGitRepo() {
@@ -112,9 +109,24 @@ class BasicProject {
             initGradleWrapper()
             initGitignore()
             gitRepo.commitProjectFiles("initial commit, gradle wrapper")
+        }
+    }
 
-            replaceGradleWrapperDistributionUrl()
-            gitRepo.commitProjectFiles("use blackbaud gradle")
+    private void initGradleWrapper() {
+        new File(repoDir, "gradle/wrapper").mkdirs()
+        copyGradleWrapperResource("gradle/wrapper/gradle-wrapper.jar")
+        copyGradleWrapperResource("gradle/wrapper/gradle-wrapper.properties")
+        copyGradleWrapperResource("gradlew")
+        copyGradleWrapperResource("gradlew.bat")
+    }
+
+    private void copyGradleWrapperResource(String path) {
+        new File(repoDir, path).bytes = Resources.getResource("gradle-wrapper/${path}").bytes
+    }
+
+    private void initGitignore() {
+        applyTemplate {
+            '.gitignore' template: "/templates/git/gitignore.tmpl"
         }
     }
 
@@ -132,46 +144,6 @@ class BasicProject {
             'build.gradle' ([template: "/templates/basic/build.gradle.tmpl"] + CurrentVersions.VERSION_MAP)
             'gradle.properties' template: "/templates/basic/gradle.properties.tmpl",
                     artifactId: repoName
-        }
-    }
-
-    private void replaceGradleWrapperDistributionUrl() {
-        File gradleWrapperProperties = new File(repoDir, "gradle/wrapper/gradle-wrapper.properties")
-        String text = gradleWrapperProperties.text
-        String blackbaudGradleVersion = getBlackbaudGradleVersion()
-        String distributionUrl = "https://raw.githubusercontent.com/blackbaud/blackbaud-gradle-distributions/master/gradle-blackbaud-${blackbaudGradleVersion}-bin.zip"
-        gradleWrapperProperties.text = text.replaceFirst(/(?m)^distributionUrl=.*/, /distributionUrl=${distributionUrl}/)
-    }
-
-    private String getBlackbaudGradleVersion() {
-        if (this.blackbaudGradleVersion != null) {
-            return this.blackbaudGradleVersion
-        } else if (this.projectProps != null) {
-            return projectProps.getRequiredProjectProperty("blackbaudGradleVersion")
-        } else {
-            throw new RuntimeException("Missing property blackbaudGradleVersion!")
-        }
-    }
-
-    private void initGradleWrapper() {
-        GradleConnector connector = GradleConnector.newConnector()
-                .forProjectDirectory(repoDir)
-
-        if (gradleUserHomeDir != null) {
-            connector.useGradleUserHomeDir(gradleUserHomeDir)
-        }
-
-        ProjectConnection connection = connector.connect()
-        try {
-            connection.newBuild().forTasks("wrapper").run()
-        } finally {
-            connection.close()
-        }
-    }
-
-    private void initGitignore() {
-        applyTemplate {
-            '.gitignore' template: "/templates/git/gitignore.tmpl"
         }
     }
 
