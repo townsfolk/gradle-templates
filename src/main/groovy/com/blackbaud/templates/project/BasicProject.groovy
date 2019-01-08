@@ -1,15 +1,12 @@
 package com.blackbaud.templates.project
 
 import com.blackbaud.templates.CurrentVersions
-import com.google.common.io.Resources
-import org.gradle.api.GradleException
-import org.gradle.tooling.GradleConnector
-import org.gradle.tooling.ProjectConnection
 import com.blackbaud.templates.GitRepo
 import com.blackbaud.templates.ProjectTemplate
+import com.google.common.io.Resources
+import org.gradle.api.GradleException
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL
-import static com.google.common.base.CaseFormat.LOWER_HYPHEN
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN
 import static com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import static com.google.common.base.CaseFormat.UPPER_CAMEL
@@ -97,11 +94,13 @@ class BasicProject {
                            packageName: servicePackage,
                            className: testClassName
         }
-        applyTemplate("performance-test/src/performanceTest/scala/${servicePackagePath}") {
+        applyTemplate("performance-test/src/main/scala/${servicePackagePath}") {
             "${testClassName}.scala" template: "/templates/springboot/performancetest/performance-test.scala.tmpl",
                     packageName: servicePackage,
                     className: testClassName
         }
+        File gradleSettingsFile = new File(repoDir, "settings.gradle")
+        gradleSettingsFile.createNewFile()
     }
 
     void initBlackbaudGradleWrapper() {

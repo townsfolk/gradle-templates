@@ -16,6 +16,10 @@ class PerformanceTestsProject {
 # Performance test results
 results/
 """)
+        File gradleSettingsFile = basicProject.getProjectFileOrFail("settings.gradle")
+        gradleSettingsFile.append("""
+include "performance-test"
+""")
     }
 
 }
