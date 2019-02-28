@@ -168,34 +168,38 @@ class AsyncProject {
         }
     }
 
+    private addTestProducerConnectionUrl(ProjectFile projectFile, ServiceBusNameResolver formatter, String postfix = "") {
+        projectFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
+                                "Endpoint=sb://namespace.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=test&se=2147483646${postfix}")
+    }
+
+    private addTestConsumerConnectionUrl(ProjectFile projectFile, ServiceBusNameResolver formatter, String postfix = "") {
+        projectFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
+                                "Endpoint=sb://namespace.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Ftest&sig=test&se=2147483646${postfix}")
+    }
+
     private void addTopicToPropertiesFiles(ServiceBusNameResolver formatter, boolean sessionEnabled, boolean publisher, boolean consumer) {
         ProjectFile applicationPropertiesFile = basicProject.getProjectFile("src/main/resources/application.properties")
         applicationPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.session-enabled", "${sessionEnabled}")
 
         ProjectFile applicationLocalPropertiesFile = basicProject.getProjectFile("src/main/resources/application-local.properties")
-        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
-                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=test")
-        applicationLocalPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
-                                                   "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Ftest&sig=test")
+        addTestProducerConnectionUrl(applicationLocalPropertiesFile, formatter)
+        addTestConsumerConnectionUrl(applicationLocalPropertiesFile, formatter)
 
         ProjectFile applicationVstsProdPropertiesFile = basicProject.getProjectFile("src/main/resources/application-vstsProd.properties")
         ProjectFile applicationVstsTestPropertiesFile = basicProject.getProjectFile("src/main/resources/application-vstsTest.properties")
         ProjectFile applicationComponentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         if (publisher) {
             applicationVstsProdPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
-                                                          "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Send}")
-            applicationVstsTestPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
-                                                          "Endpoint=sb://namespace.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Fnamespace.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=token&skn=shared_access_profile_send // TODO: Create REX service bus topic and replace")
-            applicationComponentTestPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
-                                                               "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}&sig=test")
+                                                          "\${ServiceBus__${formatter.topicNameSnakeCase}__Send}")
+            addTestProducerConnectionUrl(applicationVstsTestPropertiesFile, formatter, " // TODO: Create REX service bus topic and replace")
+            addTestProducerConnectionUrl(applicationComponentTestPropertiesFile, formatter)
         }
         if (consumer) {
             applicationVstsProdPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
-                                                          "\${APPSETTING_ServiceBus__${formatter.topicNameSnakeCase}__Listen}")
-            applicationVstsTestPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
-                                                          "Endpoint=sb://namespace.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Fnamespace.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Fsubscription_name&sig=token&se=1696020226&skn=shared_access_profile_listen // TODO: Create REX service bus topic and replace")
-            applicationComponentTestPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
-                                                               "Endpoint=sb://test.servicebus.windows.net/;SharedAccessSignature=SharedAccessSignature sr=amqp%3A%2F%2Ftest.servicebus.windows.net%2F${formatter.topicNameKebabCase}%2Fsubscriptions%2Ftest&sig=test")
+                                                          "\${ServiceBus__${formatter.topicNameSnakeCase}__Listen}")
+            addTestConsumerConnectionUrl(applicationVstsTestPropertiesFile, formatter, " // TODO: Create REX service bus topic and replace")
+            addTestConsumerConnectionUrl(applicationComponentTestPropertiesFile, formatter)
         }
     }
 
