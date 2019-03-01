@@ -188,18 +188,15 @@ class AsyncProject {
 
         ProjectFile applicationVstsProdPropertiesFile = basicProject.getProjectFile("src/main/resources/application-vstsProd.properties")
         ProjectFile applicationVstsTestPropertiesFile = basicProject.getProjectFile("src/main/resources/application-vstsTest.properties")
-        ProjectFile applicationComponentTestPropertiesFile = basicProject.getProjectFile("src/componentTest/resources/application-componentTest.properties")
         if (publisher) {
             applicationVstsProdPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.producer-connection-url",
                                                           "\${ServiceBus__${formatter.topicNameSnakeCase}__Send}")
             addTestProducerConnectionUrl(applicationVstsTestPropertiesFile, formatter, " // TODO: Create REX service bus topic and replace")
-            addTestProducerConnectionUrl(applicationComponentTestPropertiesFile, formatter)
         }
         if (consumer) {
             applicationVstsProdPropertiesFile.addProperty("servicebus.${formatter.topicNameKebabCase}.consumer-connection-url",
                                                           "\${ServiceBus__${formatter.topicNameSnakeCase}__Listen}")
             addTestConsumerConnectionUrl(applicationVstsTestPropertiesFile, formatter, " // TODO: Create REX service bus topic and replace")
-            addTestConsumerConnectionUrl(applicationComponentTestPropertiesFile, formatter)
         }
     }
 
