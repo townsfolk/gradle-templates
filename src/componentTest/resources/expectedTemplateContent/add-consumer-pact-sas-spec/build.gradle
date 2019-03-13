@@ -18,8 +18,6 @@ dependencies {
         exclude group: "org.codehaus.groovy"
     }
 
-    sharedTestCompile ("au.com.dius:pact-jvm-consumer-groovy_2.11:3.4.1") {
-        exclude group: "org.codehaus.groovy"
-    }
+    sharedTestCompile "com.blackbaud:common-deployable-spring-boot-rest-test:${commonSpringBootVersion}"
     sharedTestCompile "com.blackbaud:sasquatch-test:2.+"
 }

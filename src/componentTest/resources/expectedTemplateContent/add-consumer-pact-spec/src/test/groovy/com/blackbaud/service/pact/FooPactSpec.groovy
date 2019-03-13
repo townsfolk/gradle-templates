@@ -1,4 +1,4 @@
-package com.blackbaud.service.pacttest
+package com.blackbaud.service.pact
 
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder

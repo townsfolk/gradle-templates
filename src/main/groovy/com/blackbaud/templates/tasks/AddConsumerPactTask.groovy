@@ -1,7 +1,7 @@
 package com.blackbaud.templates.tasks
 
-import com.blackbaud.templates.project.BasicProject
-import com.blackbaud.templates.project.RestProject
+
+import com.blackbaud.templates.project.PactProject
 import org.gradle.api.tasks.TaskAction
 
 class AddConsumerPactTask extends AbstractTemplateTask {
@@ -16,7 +16,7 @@ class AddConsumerPactTask extends AbstractTemplateTask {
         String providerServiceName = projectProps.getRequiredProjectProperty("providerServiceName")
         String objectTypeReturnedByProvider = projectProps.getRequiredProjectProperty("objectTypeReturnedByProvider")
         boolean sasProviderService = projectProps.isPropertyDefined("sasProviderService")
-        BasicProject basicProject = openBasicProject()
-        basicProject.addConsumerPact(providerServiceName, objectTypeReturnedByProvider, sasProviderService)
+        PactProject pactProject = new PactProject(openBasicProject())
+        pactProject.addConsumerPact(providerServiceName, objectTypeReturnedByProvider, sasProviderService)
     }
 }

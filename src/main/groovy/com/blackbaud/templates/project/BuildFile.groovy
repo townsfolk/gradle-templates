@@ -18,6 +18,10 @@ class BuildFile extends ProjectFile {
     }
 
     void addDependency(String type, String dependency, String exclusion = null) {
+        if (text.contains(dependency)) {
+            return
+        }
+
         String dependencyString = makeDependencyString(type, dependency, exclusion)
 
         List<String> lines = readLines()

@@ -6,6 +6,7 @@ import com.blackbaud.templates.project.BasicProject
 import com.blackbaud.templates.project.EventHubsProject
 import com.blackbaud.templates.project.IntegrationTestProject
 import com.blackbaud.templates.project.KafkaProject
+import com.blackbaud.templates.project.PactProject
 import com.blackbaud.templates.project.PerformanceTestsProject
 import com.blackbaud.templates.project.RestProject
 import org.junit.Rule
@@ -26,7 +27,11 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
     }
 
     private BasicProject initBasicProject() {
-        File serviceDir = new File(projectDir.root, "service")
+        initBasicProject("service")
+    }
+
+    private BasicProject initBasicProject(String repoName) {
+        File serviceDir = new File(projectDir.root, repoName)
         serviceDir.deleteDir()
         GitRepo repo = GitRepo.init(serviceDir)
         ProjectProps projectProps = new ProjectProps(project)
@@ -383,9 +388,10 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
     def "should add consumer pact spec"() {
         given:
         BasicProject basicProject = initBasicProject()
+        PactProject pactProject = new PactProject(basicProject)
 
         when:
-        basicProject.addConsumerPact("foo", "Foo", false)
+        pactProject.addConsumerPact("foo", "Foo", false)
 
         then:
         greenwashOrAssertExpectedContent(basicProject, "add-consumer-pact-spec")
@@ -394,12 +400,25 @@ class TemplateGenerationSpec extends AbstractProjectSpecification {
     def "should add SAS consumer pact spec"() {
         given:
         BasicProject basicProject = initBasicProject()
+        PactProject pactProject = new PactProject(basicProject)
 
         when:
-        basicProject.addConsumerPact("foo", "Foo", true)
+        pactProject.addConsumerPact("foo", "Foo", true)
 
         then:
         greenwashOrAssertExpectedContent(basicProject, "add-consumer-pact-sas-spec")
+    }
+
+    def "should add provider pact spec"() {
+        given:
+        BasicProject basicProject = initBasicProject("some-service")
+        PactProject pactProject = new PactProject(basicProject)
+
+        when:
+        pactProject.addProviderPact()
+
+        then:
+        greenwashOrAssertExpectedContent(basicProject, "add-provider-pact-spec")
     }
 
     def "should add multiple CoreConfig annotations"() {
