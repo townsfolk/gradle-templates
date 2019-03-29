@@ -6,6 +6,12 @@ import com.blackbaud.templates.ProjectTemplate
 import com.google.common.io.Resources
 import org.gradle.api.GradleException
 
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.attribute.FileAttribute
+import java.nio.file.attribute.PosixFilePermission
+import java.nio.file.attribute.PosixFilePermissions
+
 import static com.google.common.base.CaseFormat.LOWER_CAMEL
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN
 import static com.google.common.base.CaseFormat.UPPER_CAMEL
@@ -114,12 +120,20 @@ class BasicProject {
         new File(repoDir, "gradle/wrapper").mkdirs()
         copyGradleWrapperResource("gradle/wrapper/gradle-wrapper.jar")
         copyGradleWrapperResource("gradle/wrapper/gradle-wrapper.properties")
-        copyGradleWrapperResource("gradlew")
-        copyGradleWrapperResource("gradlew.bat")
+        copyGradleWrapperResourceAndMakeExecutable("gradlew")
+        copyGradleWrapperResourceAndMakeExecutable("gradlew.bat")
     }
 
-    private void copyGradleWrapperResource(String path) {
-        new File(repoDir, path).bytes = Resources.getResource("gradle-wrapper/${path}").bytes
+    private File copyGradleWrapperResource(String path) {
+        File file = new File(repoDir, path)
+        file.bytes = Resources.getResource("gradle-wrapper/${path}").bytes
+        file
+    }
+
+    private void copyGradleWrapperResourceAndMakeExecutable(String path) {
+        File file = copyGradleWrapperResource(path)
+        Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxr-xr-x")
+        Files.setPosixFilePermissions(file.toPath(), permissions)
     }
 
     private void initGitignore() {
