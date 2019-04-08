@@ -49,7 +49,7 @@ class AsyncProject {
                                     packageName: "${servicePackage}.servicebus"
         }
 
-        ProjectFile logbackFile = basicProject.getProjectFile("src/main/resources/logback.xml")
+        ProjectFile logbackFile = basicProject.getProjectFile("src/main/resources/logback-spring.xml")
         if (logbackFile != null) {
             String logbackText = logbackFile.text
             if (logbackText.contains("common-async.xml") == false) {

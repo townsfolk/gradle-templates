@@ -140,7 +140,7 @@ authorization.filter.enable=false
                     'resources' {
                         'application.properties' template: "/templates/springboot/rest/application.properties.tmpl",
                                                  serviceId: "${serviceId}", resourcePackageName: "${servicePackage}.resources"
-                        'logback.xml' template: "/templates/logback/logback-vsts.tmpl"
+                        'logback-spring.xml' template: "/templates/logback/logback-vsts.tmpl"
                     }
                 }
                 'test' {
