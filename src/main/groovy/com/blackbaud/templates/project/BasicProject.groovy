@@ -94,12 +94,17 @@ class BasicProject {
     void initPerformanceTestProject() {
         String testClassName = "${LOWER_HYPHEN.to(UPPER_CAMEL, repoName)}Test"
 
-        applyTemplate("performance-test") {
+        applyTemplate("performance-tests") {
             "build.gradle" template: "/templates/springboot/performancetest/build.gradle.tmpl",
                            packageName: servicePackage,
                            className: testClassName
         }
-        applyTemplate("performance-test/src/main/scala/${servicePackagePath}") {
+        applyTemplate("performance-tests") {
+            "performance-test-options.yml" template: "/templates/springboot/performancetest/performance-test-options.yml.tmpl",
+                    packageName: servicePackage,
+                    className: testClassName
+        }
+        applyTemplate("performance-tests/src/main/scala/${servicePackagePath}") {
             "${testClassName}.scala" template: "/templates/springboot/performancetest/performance-test.scala.tmpl",
                     packageName: servicePackage,
                     className: testClassName

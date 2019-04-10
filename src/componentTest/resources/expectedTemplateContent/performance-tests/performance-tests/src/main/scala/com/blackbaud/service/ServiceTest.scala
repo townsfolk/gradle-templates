@@ -1,4 +1,4 @@
-package ${packageName}
+package com.blackbaud.service
 
 import com.blackbaud.gatling.bbauth.BBAuthHelper
 import io.gatling.core.Predef.{exec, forever, scenario}
@@ -9,7 +9,7 @@ import io.gatling.http.protocol.HttpProtocolBuilder
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class ${className} extends Simulation {
+class ServiceTest extends Simulation {
 
   var maxTestRuntimeSec: Int = Option(System.getProperty("max.test.runtime.sec")).map(_.toInt).getOrElse(30)
   var authScenarioWaitTime: Int = Option(System.getProperty("auth.scenario.wait.time.sec")).map(_.toInt).getOrElse(35)
@@ -67,7 +67,7 @@ class ${className} extends Simulation {
 
     val yourTestScenario: ScenarioBuilder = scenario("Receipt Manager Get Gifts Performance Test")
       .exec(
-        forever() { 
+        forever() {
           exec(workflow)
         }
       )

@@ -10,3 +10,9 @@ performance_test {
         description "Runs ${className} performance test"
     }
 }
+
+publishing_ext {
+    publication('main') {
+        enabled = false
+    }
+}

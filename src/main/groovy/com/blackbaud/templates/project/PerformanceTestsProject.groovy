@@ -18,7 +18,7 @@ results/
 """)
         File gradleSettingsFile = basicProject.getProjectFileOrFail("settings.gradle")
         gradleSettingsFile.append("""
-include "performance-test"
+include "performance-tests"
 """)
     }
 
