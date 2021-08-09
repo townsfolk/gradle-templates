@@ -22,8 +22,8 @@ The standard way to install this plugin is by adding the following to your build
 buildscript {
     repositories {
         maven {
-			url 'http://dl.bintray.com/cjstehno/public'
-		}
+		url 'http://dl.bintray.com/cjstehno/public'
+	}
     }
     dependencies {
         classpath 'gradle-templates:gradle-templates:1.5'
